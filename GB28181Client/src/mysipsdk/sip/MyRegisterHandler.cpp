@@ -60,6 +60,6 @@ void CMyRegisterHandler::UpdateDeviceStatus()
 	auto devicemaps = CMyGBDeviceManager::GetInstance().GetAllDevice();
 	for (const auto& it : devicemaps)
 	{
-		CMySipContext::GetInstance().QueryDeviveInfo(it.second.get(), m_dstIp, m_dstPort);
+		CMySipContext::GetInstance().QueryDeviceInfo(it.second.get(), m_dstIp, m_dstPort);
 	}
 }

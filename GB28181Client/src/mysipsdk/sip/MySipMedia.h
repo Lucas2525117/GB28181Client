@@ -66,7 +66,7 @@ public:
 
 	int QueryDeviceStatus(int type, const std::string& gbid);
 
-	void QueryRecordInfo(GB28181MediaContext& mediaContext) const {}
+	int QueryRecordInfo(const std::string& gbid, const GB28181MediaContext& mediaContext);
 
 private:
 	CMySipMedia();

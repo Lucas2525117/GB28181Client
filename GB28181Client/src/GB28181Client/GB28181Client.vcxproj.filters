@@ -70,6 +70,9 @@
     <ClCompile Include="XFFmpeg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GBRecordInfoDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h">
@@ -96,6 +99,9 @@
     <QtMoc Include="GBVideoPlayDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="GBRecordInfoDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="GBRegisterDlg.ui">
@@ -120,6 +126,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="GBVideoPlayDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="GBRecordInfoDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

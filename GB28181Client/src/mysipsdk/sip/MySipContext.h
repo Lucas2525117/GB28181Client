@@ -44,7 +44,9 @@ public:
 
 	pjsip_response_addr GetResponseAddr(pjsip_rx_data* rdata);
 
-	void QueryDeviveInfo(CMyGBDevice* device, const std::string& dstIP, int dstPort, const std::string& scheme = "Catalog");
+	void QueryDeviceInfo(CMyGBDevice* device, const std::string& dstIP, int dstPort, const std::string& scheme = "Catalog");
+
+	void QueryRecordInfo(CMyGBDevice* device, const std::string& gbid, const std::string& startTime, const std::string& endTime, const std::string& scheme);
 
 	std::string GetMessageBody(pjsip_rx_data* rdata);
 

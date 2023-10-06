@@ -99,6 +99,13 @@ void GB28181Client::InitUi()
 		connect(m_GBVideoPlayDlg, &GBVideoPlayDlg::sigStopVideoPlay, this, &GB28181Client::slotStopVideoPlay);
 	}
 
+	// 视音频文件检索
+	m_GBRecordInfoDlg = new(std::nothrow) GBRecordInfoDlg();
+	if (m_GBRecordInfoDlg)
+	{
+		connect(m_GBRecordInfoDlg, &GBRecordInfoDlg::sigRecordInfo, this, &GB28181Client::slotQueryRecordInfo);
+	}
+
 	m_tabWidget = new(std::nothrow) QTabWidget();
 	if (m_tabWidget)
 	{
@@ -111,6 +118,7 @@ void GB28181Client::InitUi()
 		m_tabWidget->addTab(m_GBDeviceInfoDlg, QString::fromLocal8Bit("设备信息"));
 		m_tabWidget->addTab(m_GBDeviceStatusDlg, QString::fromLocal8Bit("设备状态"));
 		m_tabWidget->addTab(m_GBVideoPlayDlg, QString::fromLocal8Bit("视频点播"));
+		m_tabWidget->addTab(m_GBRecordInfoDlg, QString::fromLocal8Bit("视音频文件检索"));
 	}
 
 	// 添加组织界面
@@ -456,6 +464,19 @@ void GB28181Client::slotStopVideoPlay()
 	m_receiver->DeleteThis();
 	m_receiver = nullptr;
 	GB_Bye(m_token);
+}
+
+void GB28181Client::slotQueryRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime)
+{
+	if (gbid.isEmpty() || startTime.isEmpty() || endTime.isEmpty())
+	{
+		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("请输入正确的参数"), QMessageBox::Ok);
+		return;
+	}
+
+	GB28181MediaContext mediaContext("");
+	mediaContext.SetTime(startTime.toStdString(), endTime.toStdString());
+	GB_QueryRecordInfo(gbid.toStdString(), mediaContext);
 }
 
 void GB28181Client::HandleGBMsgCB(int type, void* data)

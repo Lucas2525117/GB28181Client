@@ -107,7 +107,7 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>.\sip;..\include\pjsip;..\include\Poco;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\sip;..\include\pjsip;..\include\Poco;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -116,13 +116,13 @@
       <AdditionalDependencies>mysipsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GB28181_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;..\mysipsdk\xml;..\tinyXml;..\..\include\pjsip;..\jsoncpp\include;..\GBStreamReceiver;..\..\include\ffmpeg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;..\mysipsdk\xml;..\tinyXml;..\..\include\pjsip;..\jsoncpp\include;..\GBStreamReceiver;..\..\include\ffmpeg\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>__x86_64;GB28181_EXPORTS;GB_STREAM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -133,7 +133,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;..\mysipsdk\xml;..\tinyXml;..\..\include\pjsip;..\jsoncpp\include;..\GBStreamReceiver;..\..\include\ffmpeg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;..\mysipsdk\xml;..\tinyXml;..\..\include\pjsip;..\jsoncpp\include;..\GBStreamReceiver;..\..\include\ffmpeg\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>GB28181_EXPORTS;GB_STREAM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -191,6 +191,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GBRecordInfoDlg.cpp" />
     <ClCompile Include="PlayWidget.cpp" />
     <ClCompile Include="XFFmpeg.cpp" />
     <QtRcc Include="GB28181Client.qrc" />
@@ -212,6 +213,7 @@
     <QtUic Include="GBCataLogDlg.ui" />
     <QtUic Include="GBDeviceInfoDlg.ui" />
     <QtUic Include="GBDeviceStatusDlg.ui" />
+    <QtUic Include="GBRecordInfoDlg.ui" />
     <QtUic Include="GBRegisterDlg.ui" />
     <QtUic Include="GBVideoPlayDlg.ui" />
   </ItemGroup>
@@ -219,6 +221,7 @@
     <QtMoc Include="GBRegisterDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="GBRecordInfoDlg.h" />
     <ClInclude Include="PlayWidget.h" />
     <ClInclude Include="XFFmpeg.h" />
     <QtMoc Include="AddChannelDlg.h" />

@@ -10,6 +10,7 @@
 #include "MyCatalogRecvHandler.h"
 #include "MyDeviceInfoHandler.h"
 #include "MyDeviceStatusHandler.h"
+#include "MyRecordInfoHandler.h"
 #include <vector>
 #include <memory>
 

@@ -20,9 +20,9 @@ int GB_QueryNetDeviceInfo(int type, const std::string& gbid)
 	return CMySipMedia::GetInstance().QueryDeviceStatus(type, gbid);
 }
 
-void GB_QueryRecordInfo(GB28181MediaContext mediaContext)
+void GB_QueryRecordInfo(const std::string& gbid, const GB28181MediaContext& mediaContext)
 {
-	CMySipMedia::GetInstance().QueryRecordInfo(mediaContext);
+	CMySipMedia::GetInstance().QueryRecordInfo(gbid, mediaContext);
 }
 
 bool GB_Bye(const std::string& token)

@@ -148,7 +148,7 @@ pjsip_response_addr CMySipContext::GetResponseAddr(pjsip_rx_data* rdata)
 	return addr;
 }
 
-void CMySipContext::QueryDeviveInfo(CMyGBDevice* device, const std::string& dstIP, int dstPort, const std::string& scheme)
+void CMySipContext::QueryDeviceInfo(CMyGBDevice* device, const std::string& dstIP, int dstPort, const std::string& scheme)
 {
 	char szQuerInfo[200] = { 0 };
 	pj_ansi_snprintf(szQuerInfo, 200,
@@ -163,6 +163,34 @@ void CMySipContext::QueryDeviveInfo(CMyGBDevice* device, const std::string& dstI
 	pjsip_tx_data* tdata = nullptr;
 	const pjsip_method method = { PJSIP_OTHER_METHOD,{ (char*)"MESSAGE", 7 } };
 	auto text = StrToPjstr(std::string(szQuerInfo));
+	auto target = StrToPjstr(device->GetSipIpUrl());
+	auto from = StrToPjstr(m_concat);
+	auto to = StrToPjstr(device->GetSipCodecUrl());
+	auto contact = StrToPjstr(m_concat);
+	pjsip_endpt_create_request(m_endPoint, &method, &target, &from, &to, &contact, nullptr, -1, &text, &tdata);
+
+	tdata->msg->body->content_type.type = pj_str((char*)"Application");
+	tdata->msg->body->content_type.subtype = pj_str((char*)"MANSCDP+xml");
+	pjsip_endpt_send_request(m_endPoint, tdata, -1, nullptr, nullptr);
+}
+
+void CMySipContext::QueryRecordInfo(CMyGBDevice* device, const std::string& gbid, const std::string& startTime, const std::string& endTime, const std::string& scheme)
+{
+	char szRecordInfo[400] = { 0 };
+	pj_ansi_snprintf(szRecordInfo, 400,
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+		"<Query>\n"
+		"<CmdType>%s</CmdType>\n"
+		"<SN>17430</SN>\n"
+		"<DeviceID>%s</DeviceID>\n"
+		"<StartTime>%s</StartTime>\n"
+		"<EndTime>%s</EndTime>\n"
+		"</Query>\n", scheme.c_str(), gbid.c_str(), startTime.c_str(), endTime.c_str()
+	);
+
+	pjsip_tx_data* tdata = nullptr;
+	const pjsip_method method = { PJSIP_OTHER_METHOD,{ (char*)"MESSAGE", 7 } };
+	auto text = StrToPjstr(std::string(szRecordInfo));
 	auto target = StrToPjstr(device->GetSipIpUrl());
 	auto from = StrToPjstr(m_concat);
 	auto to = StrToPjstr(device->GetSipCodecUrl());

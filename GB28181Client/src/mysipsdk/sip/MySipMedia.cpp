@@ -171,12 +171,22 @@ int CMySipMedia::QueryDeviceStatus(int type, const std::string& gbid)
 		return -1;
 
 	if(Type_RecvCatalog == type)
-		CMySipContext::GetInstance().QueryDeviveInfo(device.get(), device->GetNetIP(), device->GetNetPort(), "Catalog");
+		CMySipContext::GetInstance().QueryDeviceInfo(device.get(), device->GetNetIP(), device->GetNetPort(), "Catalog");
 	else if(Type_RecvDeviceInfo == type)
-		CMySipContext::GetInstance().QueryDeviveInfo(device.get(), device->GetNetIP(), device->GetNetPort(), "DeviceInfo");
+		CMySipContext::GetInstance().QueryDeviceInfo(device.get(), device->GetNetIP(), device->GetNetPort(), "DeviceInfo");
 	else if(Type_RecvDeviceStatus == type)
-		CMySipContext::GetInstance().QueryDeviveInfo(device.get(), device->GetNetIP(), device->GetNetPort(), "DeviceStatus");
+		CMySipContext::GetInstance().QueryDeviceInfo(device.get(), device->GetNetIP(), device->GetNetPort(), "DeviceStatus");
 	
+	return 0;
+}
+
+int CMySipMedia::QueryRecordInfo(const std::string& gbid, const GB28181MediaContext& mediaContext)
+{
+	MyGBDevicePtr device = CMyGBDeviceManager::GetInstance().GetDeviceById(gbid);
+	if (!device.get())
+		return -1;
+
+	CMySipContext::GetInstance().QueryRecordInfo(device.get(), gbid, mediaContext.GetStartTime(), mediaContext.GetEndTime(), "RecordInfo");
 	return 0;
 }
 

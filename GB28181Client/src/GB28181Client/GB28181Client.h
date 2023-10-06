@@ -15,6 +15,7 @@
 #include "GBDeviceInfoDlg.h"
 #include "GBDeviceStatusDlg.h"
 #include "GBVideoPlayDlg.h"
+#include "GBRecordInfoDlg.h"
 #include "AddOrgDlg.h"
 #include "AddDeviceDlg.h"
 #include "AddChannelDlg.h"
@@ -64,6 +65,7 @@ private slots:
     void slotCatalogTimer();
     void slotStartVideoPlay(const QString& gbid, const QString& deviceIP, const QString& gbPort, const QString& localIP, const QString& localRecvPort);
     void slotStopVideoPlay();
+    void slotQueryRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime);
 
 private:
     Ui::GB28181ClientClass ui;
@@ -78,6 +80,7 @@ private:
     GBDeviceStatusDlg* m_GBDeviceStatusDlg = nullptr;
     GBDeviceInfoDlg*   m_GBDeviceInfoDlg = nullptr;
     GBVideoPlayDlg*    m_GBVideoPlayDlg  = nullptr;
+    GBRecordInfoDlg*   m_GBRecordInfoDlg = nullptr;
     AddOrgDlg*         m_addOrgDlg       = nullptr;
     AddDeviceDlg*      m_addDeviceDlg    = nullptr;
     AddChannelDlg*     m_addChannelDlg   = nullptr;

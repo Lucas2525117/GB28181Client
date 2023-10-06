@@ -40,7 +40,7 @@ GB28181_API std::string GB_Invite(GB28181MediaContext mediaContext);
 
 GB28181_API int GB_QueryNetDeviceInfo(int type, const std::string& gbid);
 
-GB28181_API void GB_QueryRecordInfo(GB28181MediaContext mediaContext);
+GB28181_API void GB_QueryRecordInfo(const std::string& gbid, const GB28181MediaContext& mediaContext);
 
 GB28181_API bool GB_Bye(const std::string& token);
 
