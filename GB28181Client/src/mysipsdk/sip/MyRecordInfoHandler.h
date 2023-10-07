@@ -4,6 +4,7 @@
 #include "MyEventHandler.h"
 #include "MyXmlParser.h"
 #include "MyDynamicStruct.h"
+#include "MySipInfo.h"
 
 class CMyRecordInfoHandler : public CMyEventHandler
 {

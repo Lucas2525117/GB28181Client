@@ -111,6 +111,11 @@ void GB28181Client::InitUi()
 	{
 		m_tabWidget->setTabsClosable(false);
 		connect(m_tabWidget, &QTabWidget::tabBarClicked, this, [=](int index) {
+			if (5 == index)
+				centralWidget()->hide();
+			else
+				centralWidget()->show();
+
 			m_tabWidget->setCurrentIndex(index);
 			});
 		m_tabWidget->addTab(m_GBRegisterDlg, QString::fromLocal8Bit("注册与注销"));
@@ -495,6 +500,9 @@ void GB28181Client::HandleGBMsgCB(int type, void* data)
 	case Type_RecvDeviceStatus:
 		HandleDeviceStatusData(data);
 		break;
+	case Type_RecvRecordInfo:
+		HandleRecordInfoData(data);
+		break;
 	default:
 		break;
 	}
@@ -543,4 +551,16 @@ void GB28181Client::HandleDeviceStatusData(void* data)
 		return;
 
 	memcpy(&m_deviceStatus, data, sizeof(CMyDeviceStatus));
+}
+
+void GB28181Client::HandleRecordInfoData(void* data)
+{
+	if (!data)
+		return;
+
+	CMyRecordInfo recordInfo;
+	memcpy(&recordInfo, data, sizeof(CMyRecordInfo));
+
+	if (m_GBRecordInfoDlg)
+		m_GBRecordInfoDlg->AddRecordInfo(recordInfo);
 }

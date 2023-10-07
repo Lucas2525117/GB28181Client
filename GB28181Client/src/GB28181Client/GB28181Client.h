@@ -47,6 +47,7 @@ private:
     void HandleRegisterData(void* data);
     void HandleDeviceInfoData(void* data);
     void HandleDeviceStatusData(void* data);
+    void HandleRecordInfoData(void* data);
 
 public slots:
     void slotItemDoubleClick(QTreeWidgetItem* item, int index);

@@ -5,6 +5,21 @@ GBRecordInfoDlg::GBRecordInfoDlg(QWidget *parent)
 {
 	ui.setupUi(this);
 
+	InitUI();
+	InitAction();
+}
+
+GBRecordInfoDlg::~GBRecordInfoDlg()
+{
+}
+
+void GBRecordInfoDlg::InitUI()
+{
+
+}
+
+void GBRecordInfoDlg::InitAction()
+{
 	connect(ui.pb_query, &QPushButton::clicked, [=]() {
 		QString gbid = ui.le_gbid->text();
 		QString startTime = ui.dte_starttime->text();
@@ -14,6 +29,7 @@ GBRecordInfoDlg::GBRecordInfoDlg(QWidget *parent)
 		});
 }
 
-GBRecordInfoDlg::~GBRecordInfoDlg()
+void GBRecordInfoDlg::AddRecordInfo(const CMyRecordInfo& recordInfo)
 {
+
 }

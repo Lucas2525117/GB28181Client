@@ -143,6 +143,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;GB28181_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\sip;..\..\include;..\..\include\pjsip;.\xml;.;..\..\include\tinyXml\inlcude;..\jsoncpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -195,4 +195,56 @@ public:
 	// todo ---> Alarmstatus:±¨¾¯×´Ì¬
 };
 
+class CMyRecordInfo
+{
+public:
+	CMyRecordInfo()
+	{
+	}
+
+	~CMyRecordInfo()
+	{
+	}
+
+	CMyRecordInfo(const CMyRecordInfo& rhs)
+	{
+		deviceID = rhs.deviceID;
+		deviceName = rhs.deviceName;
+		filePath = rhs.filePath;
+		address = rhs.address;
+		startTime = rhs.startTime;
+		endTime = rhs.endTime;
+		fileSize = rhs.fileSize;
+		secrecy = rhs.secrecy;
+		type = rhs.type;
+	}
+
+	CMyRecordInfo& operator=(const CMyRecordInfo& rhs)
+	{
+		if (this == &rhs)
+			return *this;
+
+		deviceID = rhs.deviceID;
+		deviceName = rhs.deviceName;
+		filePath = rhs.filePath;
+		address = rhs.address;
+		startTime = rhs.startTime;
+		endTime = rhs.endTime;
+		fileSize = rhs.fileSize;
+		secrecy = rhs.secrecy;
+		type = rhs.type;
+		return *this;
+	}
+
+	std::string   deviceID;
+	std::string   deviceName;
+	std::string   filePath;
+	std::string   address;
+	std::string   startTime;
+	std::string   endTime;
+	std::string   fileSize;
+	std::string   secrecy;
+	std::string   type;
+};
+
 #endif

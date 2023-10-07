@@ -39,6 +39,10 @@ DynamicStruct CMyDynamicStruct::StructAdd(TiXmlNode* rootNode)
 				{
 					DeviceListAdd(node, records);
 				}
+				else if (0 == key.compare("RecordList"))
+				{
+					DeviceListAdd(node, records);
+				}
 		
 				if (!records.empty()) 
 					result.insert(std::make_pair(key, records.toStyledString()));
