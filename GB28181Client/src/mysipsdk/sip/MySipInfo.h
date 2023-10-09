@@ -215,8 +215,8 @@ public:
 		startTime = rhs.startTime;
 		endTime = rhs.endTime;
 		fileSize = rhs.fileSize;
-		secrecy = rhs.secrecy;
-		type = rhs.type;
+		//secrecy = rhs.secrecy;
+		//type = rhs.type;
 	}
 
 	CMyRecordInfo& operator=(const CMyRecordInfo& rhs)
@@ -231,20 +231,20 @@ public:
 		startTime = rhs.startTime;
 		endTime = rhs.endTime;
 		fileSize = rhs.fileSize;
-		secrecy = rhs.secrecy;
-		type = rhs.type;
+		//secrecy = rhs.secrecy;
+		//type = rhs.type;
 		return *this;
 	}
 
-	std::string   deviceID;
-	std::string   deviceName;
-	std::string   filePath;
-	std::string   address;
-	std::string   startTime;
-	std::string   endTime;
-	std::string   fileSize;
-	std::string   secrecy;
-	std::string   type;
+	std::string   deviceID = "";
+	std::string   deviceName = "";
+	std::string   filePath = "";
+	std::string   address = "";
+	std::string   startTime = "";
+	std::string   endTime = "";
+	std::string   fileSize = "";
+	//std::string   secrecy = "";
+	//std::string   type = "";
 };
 
 #endif

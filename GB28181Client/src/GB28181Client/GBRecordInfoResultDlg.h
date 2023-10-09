@@ -4,26 +4,27 @@
 #include <QPushButton>
 #include <QAbstractItemView>
 #include <qmessagebox.h>
-#include "ui_GBRecordInfoDlg.h"
+#include "ui_GBRecordInfoResultDlg.h"
 #include "MySipInfo.h"
 
-class GBRecordInfoDlg : public QWidget
+class GBRecordInfoResultDlg : public QWidget
 {
 	Q_OBJECT
 
 public:
-	GBRecordInfoDlg(QWidget *parent = Q_NULLPTR);
-	~GBRecordInfoDlg();
+	GBRecordInfoResultDlg(QWidget *parent = Q_NULLPTR);
+	~GBRecordInfoResultDlg();
+
+	void AddRecordInfo(const CMyRecordInfo& recordInfo);
 
 private:
 	void InitUI();
-	void InitAction();
 
 signals:
 	void sigRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime);
 
 private:
-	Ui::GBRecordInfoDlg ui;
+	Ui::GBRecordInfoResultDlg ui;
 
 	int m_row = 0;
 };

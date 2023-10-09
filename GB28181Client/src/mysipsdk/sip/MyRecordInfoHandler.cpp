@@ -39,8 +39,8 @@ bool CMyRecordInfoHandler::OnReceive(pjsip_rx_data* rdata)
 			recordinfo.startTime = val["StartTime"].asString();
 			recordinfo.endTime = val["EndTime"].asString();
 			recordinfo.fileSize = val["FileSize"].asString();
-			recordinfo.secrecy = val["Secrecy"].asString();
-			recordinfo.type = val["Type"].asString();
+			//recordinfo.secrecy = val["Secrecy"].asString();
+			//recordinfo.type = val["Type"].asString();
 
 			if (m_dataCB)
 				m_dataCB(m_handleType, m_user, &recordinfo);

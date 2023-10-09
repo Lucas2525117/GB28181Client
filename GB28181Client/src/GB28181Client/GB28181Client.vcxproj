@@ -192,6 +192,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GBRecordInfoDlg.cpp" />
+    <ClCompile Include="GBRecordInfoResultDlg.cpp" />
     <ClCompile Include="PlayWidget.cpp" />
     <ClCompile Include="XFFmpeg.cpp" />
     <QtRcc Include="GB28181Client.qrc" />
@@ -214,6 +215,7 @@
     <QtUic Include="GBDeviceInfoDlg.ui" />
     <QtUic Include="GBDeviceStatusDlg.ui" />
     <QtUic Include="GBRecordInfoDlg.ui" />
+    <QtUic Include="GBRecordInfoResultDlg.ui" />
     <QtUic Include="GBRegisterDlg.ui" />
     <QtUic Include="GBVideoPlayDlg.ui" />
   </ItemGroup>
@@ -222,6 +224,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRecordInfoDlg.h" />
+    <QtMoc Include="GBRecordInfoResultDlg.h" />
     <ClInclude Include="PlayWidget.h" />
     <ClInclude Include="XFFmpeg.h" />
     <QtMoc Include="AddChannelDlg.h" />

@@ -8,6 +8,7 @@
 #include <qlistwidget.h>
 #include <qtabwidget.h>
 #include <qtimer.h>
+#include <QStackedWidget>
 #include <string>
 #include "ui_GB28181Client.h"
 #include "GBRegisterDlg.h"
@@ -16,6 +17,7 @@
 #include "GBDeviceStatusDlg.h"
 #include "GBVideoPlayDlg.h"
 #include "GBRecordInfoDlg.h"
+#include "GBRecordInfoResultDlg.h"
 #include "AddOrgDlg.h"
 #include "AddDeviceDlg.h"
 #include "AddChannelDlg.h"
@@ -82,6 +84,7 @@ private:
     GBDeviceInfoDlg*   m_GBDeviceInfoDlg = nullptr;
     GBVideoPlayDlg*    m_GBVideoPlayDlg  = nullptr;
     GBRecordInfoDlg*   m_GBRecordInfoDlg = nullptr;
+    GBRecordInfoResultDlg* m_GBRecordInfoResultDlg = nullptr;
     AddOrgDlg*         m_addOrgDlg       = nullptr;
     AddDeviceDlg*      m_addDeviceDlg    = nullptr;
     AddChannelDlg*     m_addChannelDlg   = nullptr;
@@ -89,6 +92,7 @@ private:
     QWidget*           m_widget          = nullptr;
     IStreamReceiver*   m_receiver        = nullptr;
     PlayWidget*        m_playWidget      = nullptr;
+    QStackedWidget*    m_stackedWidget   = nullptr;
 
     CMyCatalogInfo     m_catalog;
     CMyDeviceInfo      m_deviceinfo;

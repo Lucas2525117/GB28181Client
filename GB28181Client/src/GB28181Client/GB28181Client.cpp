@@ -112,12 +112,17 @@ void GB28181Client::InitUi()
 		m_tabWidget->setTabsClosable(false);
 		connect(m_tabWidget, &QTabWidget::tabBarClicked, this, [=](int index) {
 			if (5 == index)
-				centralWidget()->hide();
+			{
+				m_stackedWidget->setCurrentIndex(1);
+			}
 			else
-				centralWidget()->show();
+			{
+				m_stackedWidget->setCurrentIndex(0);
+			}
 
 			m_tabWidget->setCurrentIndex(index);
 			});
+
 		m_tabWidget->addTab(m_GBRegisterDlg, QString::fromLocal8Bit("注册与注销"));
 		m_tabWidget->addTab(m_GBCataLogDlg, QString::fromLocal8Bit("设备目录"));
 		m_tabWidget->addTab(m_GBDeviceInfoDlg, QString::fromLocal8Bit("设备信息"));
@@ -144,10 +149,15 @@ void GB28181Client::InitUi()
 		connect(m_addChannelDlg, SIGNAL(sigAddChannel(const QString&)), this, SLOT(slotAddChannel(const QString&)));
 	}
 
-	// 视频展示区(待完善)
+	// 视频展示区
+	m_stackedWidget = new(std::nothrow) QStackedWidget();
+	setCentralWidget(m_stackedWidget);
 	m_playWidget = new(std::nothrow) PlayWidget();
-	m_playWidget->Init();
-	setCentralWidget(m_playWidget);
+	if(m_playWidget)
+		m_playWidget->Init();
+	m_GBRecordInfoResultDlg = new(std::nothrow) GBRecordInfoResultDlg();
+	m_stackedWidget->insertWidget(0, m_playWidget);
+	m_stackedWidget->insertWidget(1, m_GBRecordInfoResultDlg);
 
 	// 设备/通道树展示栏
 	m_treeWidget = new(std::nothrow) QTreeWidget();
@@ -561,6 +571,6 @@ void GB28181Client::HandleRecordInfoData(void* data)
 	CMyRecordInfo recordInfo;
 	memcpy(&recordInfo, data, sizeof(CMyRecordInfo));
 
-	if (m_GBRecordInfoDlg)
-		m_GBRecordInfoDlg->AddRecordInfo(recordInfo);
+	if (m_GBRecordInfoResultDlg)
+		m_GBRecordInfoResultDlg->AddRecordInfo(recordInfo);
 }
