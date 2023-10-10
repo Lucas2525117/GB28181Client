@@ -90,161 +90,81 @@ public:
 	std::string Status;
 };
 
-class CMyDeviceInfo
+typedef struct CMyDeviceInfo
 {
-public:
+	std::string     deviceID;
+	std::string     deviceName;
+	std::string     result;
+	std::string     deviceType;
+	std::string     manufacturer;  // 设备生产商
+	std::string     model;         // 设备型号
+	std::string     firmware;      // 设备固件版本
+	std::string     maxCamera;     
+	std::string     maxAlarm;
+	std::string     channel;
+	std::string     port; 
+
 	CMyDeviceInfo()
 	{
+		deviceID = "";
+		deviceName = "";
+		result = "";
+		deviceType = "";
+		manufacturer = "";  // 设备生产商
+		model = "";         // 设备型号
+		firmware = "";      // 设备固件版本
+		maxCamera = "";
+		maxAlarm = "";
+		channel = "";
+		port = "";
 	}
+}CMyDeviceInfo;
 
-	~CMyDeviceInfo()
-	{
-	}
-
-	CMyDeviceInfo(const CMyDeviceInfo& rhs)
-	{
-		deviceID = rhs.deviceID;
-		deviceName = rhs.deviceName;
-		result = rhs.result;
-		deviceType = rhs.deviceType;
-		manufacturer = rhs.manufacturer;
-		model = rhs.model;
-		firmware = rhs.firmware;
-		maxCamera = rhs.maxCamera;
-		maxAlarm = rhs.maxAlarm;
-		channel = rhs.channel;
-		port = rhs.port;
-	}
-
-	CMyDeviceInfo& operator=(const CMyDeviceInfo& rhs)
-	{
-		if (this == &rhs)
-			return *this;
-		
-		deviceID = rhs.deviceID;
-		deviceName = rhs.deviceName;
-		result = rhs.result;
-		deviceType = rhs.deviceType;
-		manufacturer = rhs.manufacturer;
-		model = rhs.model;
-		firmware = rhs.firmware;
-		maxCamera = rhs.maxCamera;
-		maxAlarm = rhs.maxAlarm;
-		channel = rhs.channel;
-		port = rhs.port;
-		return *this;
-	}
-
-	std::string     deviceID = "";
-	std::string     deviceName = "";
-	std::string     result = "";
-	std::string     deviceType = "";
-	std::string     manufacturer = "";  // 设备生产商
-	std::string     model = "";         // 设备型号
-	std::string     firmware = "";      // 设备固件版本
-	std::string     maxCamera = "";     
-	std::string     maxAlarm = "";
-	std::string     channel = "";
-	std::string     port = ""; 
-};
-
-class CMyDeviceStatus
+typedef struct CMyDeviceStatus
 {
-public:
+	std::string deviceID;
+	std::string online;
+	std::string status;
+	std::string result;
+	std::string deviceTime;
+	std::string encode;
+	std::string record;
+	// todo ---> Alarmstatus:报警状态
+
 	CMyDeviceStatus()
 	{
+		deviceID = "";
+		online = "";
+		status = "";
+		result = "";
+		deviceTime = "";
+		encode = "";
+		record = "";
 	}
+}CMyDeviceStatus;
 
-	~CMyDeviceStatus()
-	{
-	}
-
-	CMyDeviceStatus(const CMyDeviceStatus& rhs)
-	{
-		deviceID = rhs.deviceID;
-		online = rhs.online;
-		status = rhs.status;
-		result = rhs.result;
-		deviceTime = rhs.deviceTime;
-		encode = rhs.encode;
-		record = rhs.record;
-	}
-
-	CMyDeviceStatus& operator=(const CMyDeviceStatus& rhs)
-	{
-		if (this == &rhs)
-			return *this;
-
-		deviceID = rhs.deviceID;
-		online = rhs.online;
-		status = rhs.status;
-		result = rhs.result;
-		deviceTime = rhs.deviceTime;
-		encode = rhs.encode;
-		record = rhs.record;
-		return *this;
-	}
-
-	std::string deviceID = "";
-	std::string online = "";
-	std::string status = "";
-	std::string result = "";
-	std::string deviceTime = "";
-	std::string encode = "";
-	std::string record = "";
-	// todo ---> Alarmstatus:报警状态
-};
-
-class CMyRecordInfo
+typedef struct CMyRecordInfo
 {
-public:
-	CMyRecordInfo()
-	{
-	}
-
-	~CMyRecordInfo()
-	{
-	}
-
-	CMyRecordInfo(const CMyRecordInfo& rhs)
-	{
-		deviceID = rhs.deviceID;
-		deviceName = rhs.deviceName;
-		filePath = rhs.filePath;
-		address = rhs.address;
-		startTime = rhs.startTime;
-		endTime = rhs.endTime;
-		fileSize = rhs.fileSize;
-		//secrecy = rhs.secrecy;
-		//type = rhs.type;
-	}
-
-	CMyRecordInfo& operator=(const CMyRecordInfo& rhs)
-	{
-		if (this == &rhs)
-			return *this;
-
-		deviceID = rhs.deviceID;
-		deviceName = rhs.deviceName;
-		filePath = rhs.filePath;
-		address = rhs.address;
-		startTime = rhs.startTime;
-		endTime = rhs.endTime;
-		fileSize = rhs.fileSize;
-		//secrecy = rhs.secrecy;
-		//type = rhs.type;
-		return *this;
-	}
-
-	std::string   deviceID = "";
-	std::string   deviceName = "";
-	std::string   filePath = "";
-	std::string   address = "";
-	std::string   startTime = "";
-	std::string   endTime = "";
-	std::string   fileSize = "";
+	std::string   deviceID;
+	std::string   deviceName;
+	std::string   filePath;
+	std::string   address;
+	std::string   startTime;
+	std::string   endTime;
+	std::string   fileSize;
 	//std::string   secrecy = "";
 	//std::string   type = "";
-};
+
+	CMyRecordInfo()
+	{
+		deviceID = "";
+		deviceName = "";
+		filePath = "";
+		address = "";
+		startTime = "";
+		endTime = "";
+		fileSize = "";
+	}
+}CMyRecordInfo;
 
 #endif

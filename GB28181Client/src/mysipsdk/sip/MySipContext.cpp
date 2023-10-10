@@ -221,28 +221,28 @@ pj_str_t CMySipContext::StrToPjstr(const std::string& input)
 
 std::string CMySipContext::GetAddr()
 {
-	int start = m_concat.find_first_of("@");
-	int end = m_concat.find_last_of(":");
+	size_t start = m_concat.find_first_of("@");
+	size_t end = m_concat.find_last_of(":");
 	return m_concat.substr(start + 1, end - start - 1);
 }
 
 int CMySipContext::GetPort()
 {
-	int start = m_concat.find_last_of(":");
-	int end = m_concat.find_first_of(">");
+	size_t start = m_concat.find_last_of(":");
+	size_t end = m_concat.find_first_of(">");
 	return std::stoi(m_concat.substr(start + 1, end - start - 1));
 }
 
 std::string CMySipContext::GetLocalDomain()
 {
-	int start = m_concat.find_first_of(":");
+	size_t start = m_concat.find_first_of(":");
 	int length = 10;
 	return m_concat.substr(start + 1, length);
 }
 
 std::string CMySipContext::GetCode()
 {
-	int start = m_concat.find_first_of(":");
-	int end = m_concat.find_first_of("@");
+	size_t start = m_concat.find_first_of(":");
+	size_t end = m_concat.find_first_of("@");
 	return m_concat.substr(start + 1, end - start - 1);
 }

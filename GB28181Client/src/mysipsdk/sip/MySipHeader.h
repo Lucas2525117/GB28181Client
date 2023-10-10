@@ -29,8 +29,8 @@ public:
 		, m_senderAddr("")
 		, m_deviceId("")
 	{
-		const int start = requestUrl.find_first_of(":");
-		const int end = requestUrl.find_first_of("@");
+		const size_t start = requestUrl.find_first_of(":");
+		const size_t end = requestUrl.find_first_of("@");
 		m_deviceId = requestUrl.substr(start + 1, end - start - 1);
 		m_streamRequiredType = StreamType_Play;
 	}

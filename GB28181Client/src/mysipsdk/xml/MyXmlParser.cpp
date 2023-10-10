@@ -3,7 +3,7 @@
 CMyXmlParser::CMyXmlParser(std::string url)
 {
 	std::string str;
-	str = std::string(GB2312ToUnicode(url.c_str(), url.size()));
+	str = std::string(GB2312ToUnicode(url.c_str(), (int)url.size()));
 	str = StrReplace(str, "GB2312", "UTF-8");
 	str = StrReplace(str, "gb2312", "UTF-8");
 

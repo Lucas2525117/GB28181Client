@@ -21,6 +21,7 @@ void GBRecordInfoResultDlg::InitUI()
 	ui.tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui.tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 	ui.tableWidget->setColumnCount(8);
+	ui.tableWidget->setRowCount(500);
 
 	QStringList headers;
 	headers << QStringLiteral("设备ID") << QStringLiteral("设备名") << QStringLiteral("文件路径")
@@ -32,21 +33,21 @@ void GBRecordInfoResultDlg::InitUI()
 		ui.tableWidget->horizontalHeader()->setSectionResizeMode(i, QHeaderView::Interactive);
 }
 
-void GBRecordInfoResultDlg::AddRecordInfo(const CMyRecordInfo& recordInfo)
+void GBRecordInfoResultDlg::AddRecordInfo(CMyRecordInfo* recordInfo)
 {
-	ui.tableWidget->setItem(m_row, 0, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo.deviceID.c_str())));
-	ui.tableWidget->setItem(m_row, 1, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo.deviceName.c_str())));
-	ui.tableWidget->setItem(m_row, 2, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo.filePath.c_str())));
-	ui.tableWidget->setItem(m_row, 3, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo.address.c_str())));
-	ui.tableWidget->setItem(m_row, 4, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo.startTime.c_str())));
-	ui.tableWidget->setItem(m_row, 5, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo.endTime.c_str())));
-	ui.tableWidget->setItem(m_row, 6, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo.fileSize.c_str())));
+	ui.tableWidget->setItem(m_row, 0, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo->deviceID.c_str())));
+	ui.tableWidget->setItem(m_row, 1, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo->deviceName.c_str())));
+	ui.tableWidget->setItem(m_row, 2, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo->filePath.c_str())));
+	ui.tableWidget->setItem(m_row, 3, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo->address.c_str())));
+	ui.tableWidget->setItem(m_row, 4, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo->startTime.c_str())));
+	ui.tableWidget->setItem(m_row, 5, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo->endTime.c_str())));
+	ui.tableWidget->setItem(m_row, 6, new QTableWidgetItem(QString::fromLocal8Bit(recordInfo->fileSize.c_str())));
 	QPushButton* btnPlay = new QPushButton();
 	connect(btnPlay, &QPushButton::clicked, [=] {
 		
 		});
 	btnPlay->setText(QString::fromLocal8Bit("录像播放"));
-	ui.tableWidget->setCellWidget(m_row, 7, btnPlay);
+	//ui.tableWidget->setCellWidget(m_row, 7, btnPlay);
 
 	m_row++;
 }

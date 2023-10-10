@@ -15,7 +15,7 @@ public:
 	GBRecordInfoResultDlg(QWidget *parent = Q_NULLPTR);
 	~GBRecordInfoResultDlg();
 
-	void AddRecordInfo(const CMyRecordInfo& recordInfo);
+	void AddRecordInfo(CMyRecordInfo* recordInfo);
 
 private:
 	void InitUI();

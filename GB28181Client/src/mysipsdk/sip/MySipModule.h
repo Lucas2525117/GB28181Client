@@ -33,6 +33,7 @@ private:
 
 	static pj_bool_t OnReceive(pjsip_rx_data* rdata)
 	{
+		RecursiveGuard mtx(GetInstance().m_recursive_mutex);
 		for (auto& handle : GetInstance().m_handlers)
 		{
 			if(handle)
@@ -44,6 +45,9 @@ private:
 private:
 	std::vector<MyEventHandlerPtr> m_handlers;
 	pjsip_module* m_module;
+
+	typedef std::lock_guard<std::recursive_mutex> RecursiveGuard;
+	std::recursive_mutex m_recursive_mutex;
 };
 
 #endif

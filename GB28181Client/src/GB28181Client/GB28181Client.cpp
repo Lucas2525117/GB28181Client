@@ -568,8 +568,8 @@ void GB28181Client::HandleRecordInfoData(void* data)
 	if (!data)
 		return;
 
-	CMyRecordInfo recordInfo;
-	memcpy(&recordInfo, data, sizeof(CMyRecordInfo));
+	CMyRecordInfo* recordInfo = new CMyRecordInfo();
+	memcpy(recordInfo, data, sizeof(CMyRecordInfo));
 
 	if (m_GBRecordInfoResultDlg)
 		m_GBRecordInfoResultDlg->AddRecordInfo(recordInfo);
