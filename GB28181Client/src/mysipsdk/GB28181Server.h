@@ -31,18 +31,18 @@
 #define GB28181_API GB28181_DECL
 #endif
 
-GB28181_API bool GB_Init(const std::string& concat, int loglevel);
+GB28181_API bool GB_Init(const char* concat, int loglevel);
 
 GB28181_API void GB_RegisterHandler(int handleType, DataCallback dataCB, void* user = nullptr);
 
 // ·µ»Øtoken
-GB28181_API std::string GB_Invite(GB28181MediaContext mediaContext);
+GB28181_API const char* GB_Invite(GB28181MediaContext mediaContext);
 
-GB28181_API int GB_QueryNetDeviceInfo(int type, const std::string& gbid);
+GB28181_API int GB_QueryNetDeviceInfo(int type, const char* gbid);
 
-GB28181_API void GB_QueryRecordInfo(const std::string& gbid, const GB28181MediaContext& mediaContext);
+GB28181_API void GB_QueryRecordInfo(const char* gbid, const GB28181MediaContext& mediaContext);
 
-GB28181_API bool GB_Bye(const std::string& token);
+GB28181_API bool GB_Bye(const char* token);
 
 #endif
 

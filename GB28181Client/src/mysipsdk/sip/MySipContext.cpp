@@ -185,6 +185,11 @@ void CMySipContext::QueryRecordInfo(CMyGBDevice* device, const std::string& gbid
 		"<DeviceID>%s</DeviceID>\n"
 		"<StartTime>%s</StartTime>\n"
 		"<EndTime>%s</EndTime>\n"
+		"<FilePath></FilePath>\n"
+		"<Address></Address>\n"
+		"<Secrecy>0</Secrecy>\n"
+		"<Type>all</Type>\n"
+		"<RecorderID>all</RecorderID>\n"
 		"</Query>\n", scheme.c_str(), gbid.c_str(), startTime.c_str(), endTime.c_str()
 	);
 

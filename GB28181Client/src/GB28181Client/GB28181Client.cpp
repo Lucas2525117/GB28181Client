@@ -55,7 +55,7 @@ void GB28181Client::InitUi()
 		connect(m_GBCataLogDlg, &GBCataLogDlg::sigQueryCatalog, [=]() {
 			if (!m_gbid.empty())
 			{
-				if (0 != GB_QueryNetDeviceInfo(Type_RecvCatalog, m_gbid))
+				if (0 != GB_QueryNetDeviceInfo(Type_RecvCatalog, m_gbid.c_str()))
 				{
 					QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("查询设备目录失败"), QMessageBox::Ok);
 				}
@@ -69,7 +69,7 @@ void GB28181Client::InitUi()
 		connect(m_GBDeviceInfoDlg, &GBDeviceInfoDlg::sigQueryDeviceInfo, [=]() {
 			if (!m_gbid.empty())
 			{
-				if (0 != GB_QueryNetDeviceInfo(Type_RecvDeviceInfo, m_gbid))
+				if (0 != GB_QueryNetDeviceInfo(Type_RecvDeviceInfo, m_gbid.c_str()))
 				{
 					QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("查询设备信息失败"), QMessageBox::Ok);
 				}
@@ -83,7 +83,7 @@ void GB28181Client::InitUi()
 		connect(m_GBDeviceStatusDlg, &GBDeviceStatusDlg::sigQueryDeviceStatus, [=]() {
 			if (!m_gbid.empty())
 			{
-				if (0 != GB_QueryNetDeviceInfo(Type_RecvDeviceStatus, m_gbid))
+				if (0 != GB_QueryNetDeviceInfo(Type_RecvDeviceStatus, m_gbid.c_str()))
 				{
 					QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("查询设备状态失败"), QMessageBox::Ok);
 				}
@@ -395,8 +395,8 @@ void GB28181Client::slotAddChannel(const QString& channelNum)
 void GB28181Client::Start(const std::string& gbid, const std::string& ip, int sipport)
 {
 	// 初始化协议栈并启动
-	const auto localcontact = "SIP:" + gbid +"@" + ip + ":" + std::to_string(sipport);
-	if (!GB_Init(localcontact, 3))
+	std::string localcontact = "SIP:" + gbid +"@" + ip + ":" + std::to_string(sipport);
+	if (!GB_Init(localcontact.c_str(), 3))
 	{
 		QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("SIP初始化失败"), QMessageBox::Ok);
 		return;
@@ -478,7 +478,7 @@ void GB28181Client::slotStopVideoPlay()
 	m_receiver->Stop();
 	m_receiver->DeleteThis();
 	m_receiver = nullptr;
-	GB_Bye(m_token);
+	GB_Bye(m_token.c_str());
 }
 
 void GB28181Client::slotQueryRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime)
@@ -491,7 +491,7 @@ void GB28181Client::slotQueryRecordInfo(const QString& gbid, const QString& star
 
 	GB28181MediaContext mediaContext("");
 	mediaContext.SetTime(startTime.toStdString(), endTime.toStdString());
-	GB_QueryRecordInfo(gbid.toStdString(), mediaContext);
+	GB_QueryRecordInfo(gbid.toStdString().c_str(), mediaContext);
 }
 
 void GB28181Client::HandleGBMsgCB(int type, void* data)
@@ -572,5 +572,5 @@ void GB28181Client::HandleRecordInfoData(void* data)
 	memcpy(recordInfo, data, sizeof(CMyRecordInfo));
 
 	if (m_GBRecordInfoResultDlg)
-		m_GBRecordInfoResultDlg->AddRecordInfo(recordInfo);
+		m_GBRecordInfoResultDlg->AddRecordInfo(m_gbid.c_str(), recordInfo);
 }
