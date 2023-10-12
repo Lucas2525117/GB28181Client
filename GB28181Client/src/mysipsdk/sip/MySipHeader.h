@@ -81,6 +81,22 @@ public:
 		m_endTime = endTime;
 	}
 
+	int64_t GetPBStartTime() const
+	{
+		return m_pbStartTime;
+	}
+
+	int64_t GetPBEndTime() const
+	{
+		return m_pbEndTime;
+	}
+
+	void SetPBTime(int64_t startTime, int64_t endTime)
+	{
+		m_pbStartTime = startTime;
+		m_pbEndTime = endTime;
+	}
+
 	void SetDeviceId(std::string deviceId)
 	{
 		m_deviceId = deviceId;
@@ -103,6 +119,8 @@ private:
 	std::string    m_deviceId;
 	std::string    m_startTime;
 	std::string    m_endTime;
+	int64_t        m_pbStartTime;
+	int64_t        m_pbEndTime;
 	unsigned short m_recvPort;
 	StreamRequiredType  m_streamRequiredType;
 };

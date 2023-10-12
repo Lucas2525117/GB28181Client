@@ -115,6 +115,10 @@ std::string CMySipMedia::Invite(GB28181MediaContext mediaContext)
 	{
 		sdp = CreateRealStreamSDP(mediaContext);
 	}
+	else if (mediaContext.GetStreamType() == StreamRequiredType::StreamType_Playback)
+	{
+		sdp = CreatePlayBackSDP(mediaContext);
+	}
 
 	CMySipContext::GetInstance().Invite(dlg, mediaContext, sdp);
 	return token;

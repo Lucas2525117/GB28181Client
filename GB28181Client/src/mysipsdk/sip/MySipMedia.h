@@ -148,6 +148,31 @@ private:
 		return str;
 	}
 
+	static std::string CreatePlayBackSDP(GB28181MediaContext& mediaContext)
+	{
+		char str[500] = { 0 };
+		pj_ansi_snprintf(str, 500,
+			"v=0\n"
+			"o=%s 0 0 IN IP4 %s\n"
+			"s=Playback\n"
+			"c=IN IP4 %s\n"
+			"t=%lld %lld\n"
+			"m=video %d RTP/AVP 96 98 97\n"
+			"a=recvonly\n"
+			"a=rtpmap:96 PS/90000\n"
+			"a=rtpmap:98 H264/90000\n"
+			"a=rtpmap:97 MPEG4/90000\n"
+			"y=0100000001\n",
+			mediaContext.GetDeviceId().c_str(),
+			mediaContext.GetRecvAddress().c_str(),
+			mediaContext.GetRecvAddress().c_str(),
+			mediaContext.GetPBStartTime(),
+			mediaContext.GetPBEndTime(),
+			mediaContext.GetRecvPort()
+		);
+		return str;
+	}
+
 private:
 	std::unordered_map<std::string, std::shared_ptr<MySipDialog>> m_dialogs;
 	pjsip_module*     m_mainModule = nullptr;

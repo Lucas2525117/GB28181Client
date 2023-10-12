@@ -76,6 +76,12 @@
     <ClCompile Include="GBRecordInfoResultDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PlayBackWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayBackDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h">
@@ -106,6 +112,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="GBRecordInfoResultDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="PlayBackDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -140,6 +149,9 @@
     <QtUic Include="GBRecordInfoResultDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="PlayBackDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="public.h">
@@ -149,6 +161,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="XFFmpeg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayBackWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

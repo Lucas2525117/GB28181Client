@@ -99,8 +99,18 @@ void GBRecordInfoResultDlg::slotStartPlayBack()
 	}
 
 	std::string deviceID = tableDataList[0].toStdString();
-	time_t sTime = StringToDatetime(tableDataList[4].toStdString().c_str())*1000;
-	time_t eTime = StringToDatetime(tableDataList[5].toStdString().c_str())*1000;
+	time_t sTime = StringToDatetime(tableDataList[4].toStdString().c_str());
+	time_t eTime = StringToDatetime(tableDataList[5].toStdString().c_str());
+
+	if (!m_playBackDlg)
+	{
+		m_playBackDlg = new(std::nothrow) PlayBackDlg();
+		if (m_playBackDlg)
+		{
+			m_playBackDlg->Start(deviceID, sTime, eTime);
+			m_playBackDlg->show();
+		}
+	}
 }
 
 void GBRecordInfoResultDlg::AddRecordInfo(const QString& gbid, CMyRecordInfo* recordInfo)

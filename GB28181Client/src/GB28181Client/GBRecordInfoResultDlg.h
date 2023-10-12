@@ -8,6 +8,7 @@
 #include <mutex>
 #include <set>
 #include "ui_GBRecordInfoResultDlg.h"
+#include "PlayBackDlg.h"
 #include "MySipInfo.h"
 #include "public.h"
 
@@ -40,6 +41,7 @@ signals:
 private:
 	Ui::GBRecordInfoResultDlg ui;
 	QMenu* m_tabMenu = nullptr;
+	PlayBackDlg* m_playBackDlg = nullptr;
 
 	int m_row = 0;
 
