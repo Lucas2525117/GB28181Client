@@ -23,8 +23,17 @@ PlayBackDlg::PlayBackDlg(QWidget *parent)
 	ui.setupUi(this);
 	resize(800, 600);
 
+	InitUI();
 	InitAction();
+}
 
+PlayBackDlg::~PlayBackDlg()
+{
+	Stop();
+}
+
+void PlayBackDlg::InitUI()
+{
 	if (!m_playBackWidget)
 	{
 		m_playBackWidget = new(std::nothrow) PlayBackWidget();
@@ -32,11 +41,6 @@ PlayBackDlg::PlayBackDlg(QWidget *parent)
 			m_playBackWidget->Init();
 	}
 	ui.horizontalLayout->addWidget(m_playBackWidget);
-}
-
-PlayBackDlg::~PlayBackDlg()
-{
-	Stop();
 }
 
 void PlayBackDlg::InitAction()
@@ -51,9 +55,9 @@ void PlayBackDlg::closeEvent(QCloseEvent* event)
 
 void PlayBackDlg::Start(const std::string& devID, time_t startTime, time_t endTime)
 {
-	std::string requestUrl = "sip:34020000001310000002@100.18.141.85:5060";
+	std::string requestUrl = "sip:34020000001320000001@192.168.0.111:5060";
 	GB28181MediaContext mediaContext(requestUrl);
-	mediaContext.SetRecvAddress("100.18.141.86");
+	mediaContext.SetRecvAddress("192.168.0.107");
 	mediaContext.SetRecvPort(36000);
 	mediaContext.SetPBTime(startTime, endTime);
 	mediaContext.SetStreamType(StreamType_Playback);
@@ -85,7 +89,7 @@ void PlayBackDlg::Stop()
 
 void PlayBackDlg::OnWorkThread()
 {
-	std::string gburl = "gbudp://100.18.141.86:36000";
+	std::string gburl = "gbudp://192.168.0.107:36000";
 	m_receiver = GB_CreateStreamReceiver(gburl.c_str(), MyGBPBDataCB, this);
 	m_receiver->Start();
 }

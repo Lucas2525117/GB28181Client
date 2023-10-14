@@ -105,11 +105,12 @@ void GBRecordInfoResultDlg::slotStartPlayBack()
 	if (!m_playBackDlg)
 	{
 		m_playBackDlg = new(std::nothrow) PlayBackDlg();
-		if (m_playBackDlg)
-		{
-			m_playBackDlg->Start(deviceID, sTime, eTime);
-			m_playBackDlg->show();
-		}
+	}
+
+	if (m_playBackDlg)
+	{
+		m_playBackDlg->Start(deviceID, sTime, eTime);
+		m_playBackDlg->show();
 	}
 }
 

@@ -18,6 +18,7 @@ public:
 	PlayBackDlg(QWidget *parent = nullptr);
 	~PlayBackDlg();
 
+	void InitUI();
 	void InitAction();
 
 	void Start(const std::string& devID, time_t startTime, time_t endTime);
