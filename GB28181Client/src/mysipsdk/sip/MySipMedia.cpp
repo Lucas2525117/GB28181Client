@@ -111,13 +111,17 @@ std::string CMySipMedia::Invite(GB28181MediaContext mediaContext)
 	m_dialogs.emplace(token, cgSipDialog);
 
 	std::string sdp;
-	if (mediaContext.GetStreamType() == StreamRequiredType::StreamType_Play)
+	if (StreamRequiredType::StreamType_RealStream == mediaContext.GetStreamType())
 	{
-		sdp = CreateRealStreamSDP(mediaContext);
+		sdp = CreateSDPForRealStream(mediaContext);
 	}
-	else if (mediaContext.GetStreamType() == StreamRequiredType::StreamType_Playback)
+	else if (StreamRequiredType::StreamType_Playback == mediaContext.GetStreamType())
 	{
-		sdp = CreatePlayBackSDP(mediaContext);
+		sdp = CreateSDPForPlayback(mediaContext);
+	}
+	else if (StreamRequiredType::StreamType_Download == mediaContext.GetStreamType())
+	{
+		sdp = CreateSDPForDownload(mediaContext);
 	}
 
 	CMySipContext::GetInstance().Invite(dlg, mediaContext, sdp);

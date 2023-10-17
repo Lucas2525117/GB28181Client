@@ -64,14 +64,36 @@ void GBRecordInfoResultDlg::InitUI()
 
 	ui.tableWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 	m_tabMenu = new QMenu(ui.tableWidget);
-	QAction* action = new QAction(QString::fromLocal8Bit("录像回放"), this);
-	m_tabMenu->addAction(action);
+	QAction* actPlayback = new QAction(QString::fromLocal8Bit("录像回放"), this);
+	QAction* actDownload = new QAction(QString::fromLocal8Bit("录像下载"), this);
+	m_tabMenu->addAction(actPlayback);
+	m_tabMenu->addAction(actDownload);
 	connect(ui.tableWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slotMenuShow(QPoint)));
-	connect(action, SIGNAL(triggered(bool)), this, SLOT(slotStartPlayBack()));
+	connect(actPlayback, SIGNAL(triggered(bool)), this, SLOT(slotStartPlayBack()));
+	connect(actDownload, SIGNAL(triggered(bool)), this, SLOT(slotStartDownload()));
 }
 
 void GBRecordInfoResultDlg::Add_(CMyRecordInfo* recordInfo)
 {
+}
+
+QStringList GBRecordInfoResultDlg::GetTableData_()
+{
+	QStringList tableDataList;
+	QList<QTableWidgetItem*> items = ui.tableWidget->selectedItems();
+	// 获取列数
+	int count = items.count();  
+	for (int i = 0; i < count; i++)
+	{
+		// 获取选中的行
+		int row = ui.tableWidget->row(items.at(i));    
+		// 获取（row,i）处的单元格 
+		QTableWidgetItem* item = ui.tableWidget->item(row, i);   
+		// 将单元格的文本存入到列表中
+		tableDataList.append(item->text()); 
+	}
+
+	return tableDataList;
 }
 
 void GBRecordInfoResultDlg::slotMenuShow(QPoint point)
@@ -82,16 +104,7 @@ void GBRecordInfoResultDlg::slotMenuShow(QPoint point)
 
 void GBRecordInfoResultDlg::slotStartPlayBack()
 {
-	QStringList tableDataList;
-	QList<QTableWidgetItem*> items = ui.tableWidget->selectedItems(); 
-	int count = items.count();  // 列数
-	for (int i = 0; i < count; i++)
-	{
-		int row = ui.tableWidget->row(items.at(i));    //获取选中的行
-		QTableWidgetItem* item = ui.tableWidget->item(row, i);    //获取（row,i）处的单元格 
-		tableDataList.append(item->text()); //将单元格的文本存入到列表中
-	}
-
+	QStringList tableDataList = GetTableData_();
 	if (0 == tableDataList.size())
 	{
 		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("未选中数据"), QMessageBox::Ok);
@@ -111,6 +124,31 @@ void GBRecordInfoResultDlg::slotStartPlayBack()
 	{
 		m_playBackDlg->Start(deviceID, sTime, eTime);
 		m_playBackDlg->show();
+	}
+}
+
+void GBRecordInfoResultDlg::slotStartDownload()
+{
+	QStringList tableDataList = GetTableData_();
+	if (0 == tableDataList.size())
+	{
+		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("未选中数据"), QMessageBox::Ok);
+		return;
+	}
+
+	std::string deviceID = tableDataList[0].toStdString();
+	time_t sTime = StringToDatetime(tableDataList[4].toStdString().c_str());
+	time_t eTime = StringToDatetime(tableDataList[5].toStdString().c_str());
+
+	if (!m_downloadDlg)
+	{
+		m_downloadDlg = new(std::nothrow) DownloadDlg();
+	}
+
+	if (m_downloadDlg)
+	{
+		m_downloadDlg->Init(deviceID, sTime, eTime);
+		m_downloadDlg->show();
 	}
 }
 

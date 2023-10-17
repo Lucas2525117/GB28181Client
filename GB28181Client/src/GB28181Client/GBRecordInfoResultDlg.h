@@ -9,6 +9,7 @@
 #include <set>
 #include "ui_GBRecordInfoResultDlg.h"
 #include "PlayBackDlg.h"
+#include "DownloadDlg.h"
 #include "MySipInfo.h"
 #include "public.h"
 
@@ -30,10 +31,12 @@ private:
 
 private:
 	void Add_(CMyRecordInfo* recordInfo);
+	QStringList GetTableData_();
 
 private slots:
 	void slotMenuShow(QPoint point);
 	void slotStartPlayBack();
+	void slotStartDownload();
 
 signals:
 	void sigRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime);
@@ -42,6 +45,7 @@ private:
 	Ui::GBRecordInfoResultDlg ui;
 	QMenu* m_tabMenu = nullptr;
 	PlayBackDlg* m_playBackDlg = nullptr;
+	DownloadDlg* m_downloadDlg = nullptr;
 
 	int m_row = 0;
 

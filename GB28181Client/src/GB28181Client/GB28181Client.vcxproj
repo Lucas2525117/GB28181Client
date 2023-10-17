@@ -130,6 +130,10 @@
       <AdditionalLibraryDirectories>..\..\lib\mysipsdk\x64;..\..\lib\GBStreamReceiver\x64;..\..\lib\ffmpeg;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>mysipsdk.lib;GBStreamReceiver.lib;avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;postproc.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -191,6 +195,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DownloadDlg.cpp" />
     <ClCompile Include="GBRecordInfoDlg.cpp" />
     <ClCompile Include="GBRecordInfoResultDlg.cpp" />
     <ClCompile Include="PlayBackDlg.cpp" />
@@ -201,6 +206,7 @@
     <QtUic Include="AddChannelDlg.ui" />
     <QtUic Include="AddDeviceDlg.ui" />
     <QtUic Include="AddOrgDlg.ui" />
+    <QtUic Include="DownloadDlg.ui" />
     <QtUic Include="GB28181Client.ui" />
     <QtMoc Include="GB28181Client.h" />
     <ClCompile Include="AddChannelDlg.cpp" />
@@ -229,6 +235,7 @@
     <QtMoc Include="GBRecordInfoDlg.h" />
     <QtMoc Include="GBRecordInfoResultDlg.h" />
     <QtMoc Include="PlayBackDlg.h" />
+    <QtMoc Include="DownloadDlg.h" />
     <ClInclude Include="PlayBackWidget.h" />
     <ClInclude Include="PlayWidget.h" />
     <ClInclude Include="XFFmpeg.h" />

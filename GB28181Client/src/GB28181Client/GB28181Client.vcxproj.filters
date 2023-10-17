@@ -82,6 +82,9 @@
     <ClCompile Include="PlayBackDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DownloadDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h">
@@ -117,6 +120,9 @@
     <QtMoc Include="PlayBackDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="DownloadDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="GBRegisterDlg.ui">
@@ -150,6 +156,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="PlayBackDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="DownloadDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

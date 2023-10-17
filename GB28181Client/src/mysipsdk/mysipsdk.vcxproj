@@ -153,6 +153,9 @@
       <AdditionalLibraryDirectories>..\..\lib\tinyXml\x64;..\..\lib\pjsip\x64;..\..\lib\jsoncpp\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ws2_32.lib;pjlib-util-x86_64-x64-vc11-Release.lib;pjlib-x86_64-x64-vc11-Release.lib;pjmedia-x86_64-x64-vc11-Release.lib;pjsip-core-x86_64-x64-vc11-Release.lib;pjsip-ua-x86_64-x64-vc11-Release.lib;pjsua-lib-x86_64-x64-vc11-Release.lib;legacy_stdio_definitions.lib;tinyXml.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(OutDir)*.dll" ..\..\bin\ /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GB28181Server.cpp" />
