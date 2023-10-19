@@ -162,6 +162,7 @@
     <ClCompile Include="sip\MyCatalogRecvHandler.cpp" />
     <ClCompile Include="sip\MyDeviceInfoHandler.cpp" />
     <ClCompile Include="sip\MyDeviceStatusHandler.cpp" />
+    <ClCompile Include="sip\MyDownloadHandler.cpp" />
     <ClCompile Include="sip\MyEventHandler.cpp" />
     <ClCompile Include="sip\MyGBDeviceManager.cpp" />
     <ClCompile Include="sip\MyKeepAliveHandler.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="GB28181Server.h" />
     <ClInclude Include="SipSDKPublic.h" />
     <ClInclude Include="sip\MyDeviceStatusHandler.h" />
+    <ClInclude Include="sip\MyDownloadHandler.h" />
     <ClInclude Include="sip\MyRecordInfoHandler.h" />
     <ClInclude Include="sip\MySipInfo.h" />
     <ClInclude Include="sip\MyCatalogRecvHandler.h" />

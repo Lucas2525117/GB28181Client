@@ -85,6 +85,9 @@
     <ClCompile Include="DownloadDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PTZControlDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h">
@@ -123,6 +126,9 @@
     <QtMoc Include="DownloadDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="PTZControlDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="GBRegisterDlg.ui">
@@ -159,6 +165,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="DownloadDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="PTZControlDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

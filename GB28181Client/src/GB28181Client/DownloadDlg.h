@@ -17,17 +17,19 @@ public:
 	DownloadDlg(QWidget *parent = nullptr);
 	~DownloadDlg();
 
-	void InitUI();
-	void InitAction();
-	void Init(const std::string& devID, time_t startTime, time_t endTime);
-
+	bool UpdateParam(const std::string& devID, time_t startTime, time_t endTime);
 	void OnWorkThread();
 	void GBDownloadDataCB(int avtype, void* data, int dataLen);
+	void GBDownloadMsgCB(int type, void* data);
 
 protected:
 	virtual void closeEvent(QCloseEvent* event) override;
 
 private:
+	void Init();
+	void InitUI();
+	void InitAction();
+
 	void StartDownload();
 	void StopDownload();
 

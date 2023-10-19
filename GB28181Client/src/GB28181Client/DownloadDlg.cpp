@@ -1,5 +1,6 @@
 #include "DownloadDlg.h"
 #include <qdir.h>
+#include <qtextcodec.h>
 
 static int DownloadThread(void* param)
 {
@@ -18,11 +19,19 @@ static void MyGBDownloadDataCB(int avtype, void* data, int dataLen, void* user)
 	cli->GBDownloadDataCB(avtype, data, dataLen);
 }
 
+static void MyGBDownloadMsgCB(int type, void* user, void* data)
+{
+	assert(user);
+	DownloadDlg* cli = (DownloadDlg*)user;
+	cli->GBDownloadMsgCB(type, data);
+}
+
 DownloadDlg::DownloadDlg(QWidget *parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
 
+	Init();
 	InitUI();
 	InitAction();
 }
@@ -32,9 +41,13 @@ DownloadDlg::~DownloadDlg()
 	Stop_();
 }
 
+void DownloadDlg::Init()
+{
+	GB_RegisterHandler(Type_Download, MyGBDownloadMsgCB, this);
+}
+
 void DownloadDlg::InitUI()
 {
-
 }
 
 void DownloadDlg::InitAction()
@@ -48,7 +61,7 @@ void DownloadDlg::InitAction()
 		});
 }
 
-void DownloadDlg::Init(const std::string& devID, time_t startTime, time_t endTime)
+bool DownloadDlg::UpdateParam(const std::string& devID, time_t startTime, time_t endTime)
 {
 	m_deviceID = devID;
 	m_startTime = startTime;
@@ -58,18 +71,30 @@ void DownloadDlg::Init(const std::string& devID, time_t startTime, time_t endTim
 		fclose(m_file);
 	m_file = nullptr;
 
-	QString dirPath = QCoreApplication::applicationDirPath() + "/video/";
+	//QTextCodec* codec = QTextCodec::codecForName("GB2312");
+	//QTextCodec::setCodecForLocale(codec);
+	QString dirPath = "E:/video/";//QCoreApplication::applicationDirPath() + "/video/";
+	//std::string tempDirPath = codec->fromUnicode(dirPath).data();
 	QDir dir;
 	if (!dir.exists(dirPath))
 	{
 		dir.mkpath(dirPath);
 	}
 
-	QString fileName = dirPath + QString::number(startTime) + ".data";
+	QString fileName = dirPath.toStdString().c_str() + QString::number(startTime) + ".data";
 	if (!m_file)
 	{
 		m_file = fopen(fileName.toStdString().c_str(), "wb+");
+		if (!m_file)
+		{
+			QMessageBox::critical(this, QString::fromLocal8Bit("失败"), QString::fromLocal8Bit("打开文件失败"), QMessageBox::Ok);
+			return false;
+		}
+
+		return true;
 	}
+
+	return false;
 }
 
 void DownloadDlg::closeEvent(QCloseEvent* event)
@@ -134,4 +159,23 @@ void DownloadDlg::GBDownloadDataCB(int avtype, void* data, int dataLen)
 		return;
 
 	fwrite(data, 1, dataLen, m_file);
+}
+
+void DownloadDlg::GBDownloadMsgCB(int type, void* data)
+{
+	if (!data)
+		return;
+
+	if (Type_Download == type)
+	{
+		CMyDownloadInfo downloadInfo;
+		memcpy(&downloadInfo, data, sizeof(CMyDownloadInfo));
+
+		// NotifyType为121表示文件发送完成
+		if (0 == downloadInfo.notifyType.compare("121"))
+		{
+			Stop_();
+			QMessageBox::information(this, QString::fromLocal8Bit("提示"), QString::fromLocal8Bit("录像下载完成"), QMessageBox::Ok);
+		}
+	}
 }

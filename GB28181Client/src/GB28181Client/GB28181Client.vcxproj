@@ -201,6 +201,7 @@
     <ClCompile Include="PlayBackDlg.cpp" />
     <ClCompile Include="PlayBackWidget.cpp" />
     <ClCompile Include="PlayWidget.cpp" />
+    <ClCompile Include="PTZControlDlg.cpp" />
     <ClCompile Include="XFFmpeg.cpp" />
     <QtRcc Include="GB28181Client.qrc" />
     <QtUic Include="AddChannelDlg.ui" />
@@ -227,6 +228,7 @@
     <QtUic Include="GBRegisterDlg.ui" />
     <QtUic Include="GBVideoPlayDlg.ui" />
     <QtUic Include="PlayBackDlg.ui" />
+    <QtUic Include="PTZControlDlg.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h" />
@@ -238,6 +240,7 @@
     <QtMoc Include="DownloadDlg.h" />
     <ClInclude Include="PlayBackWidget.h" />
     <ClInclude Include="PlayWidget.h" />
+    <QtMoc Include="PTZControlDlg.h" />
     <ClInclude Include="XFFmpeg.h" />
     <QtMoc Include="AddChannelDlg.h" />
     <QtMoc Include="AddDeviceDlg.h" />

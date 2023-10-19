@@ -1,13 +1,12 @@
 #include "MySipMedia.h"
 #include <objbase.h>
 
-static int threadProc(void*)
+static int threadProc(void* param)
 {
-	pj_time_val delay = { 0, 10 };
-	while (true)
-	{
-		CMySipContext::GetInstance().HandleEvent(&delay);
-	}
+	assert(param);
+	CMySipMedia* media = (CMySipMedia*)param;
+	media->HandleEventProc();
+	return 0;
 }
 
 CMySipMedia::CMySipMedia()
@@ -65,10 +64,41 @@ bool CMySipMedia::Init(const std::string& concat, int loglevel)
 			return false;
 
 		CMySipModule::GetInstance().Init();
-		ret = CMySipContext::GetInstance().CreateWorkThread(&threadProc, m_workthread, nullptr, "proxy");
+		ret = CMySipContext::GetInstance().CreateWorkThread(&threadProc, m_workthread, this, "proxy");
 	}
 
 	return ret;
+}
+
+bool CMySipMedia::UnInit()
+{
+	m_running = false;
+	if (nullptr != m_workthread)
+	{
+		CMySipContext::GetInstance().DestroyThread(m_workthread);
+		m_workthread = nullptr;
+	}
+
+	if (!m_mainModule)
+		return false;
+
+	if (!CMySipContext::GetInstance().UnRegisterModule(m_mainModule))
+		return false;
+
+	CMySipContext::GetInstance().UnInit();
+	return true;
+}
+
+void CMySipMedia::HandleEventProc()
+{
+	pj_time_val delay = { 0, 10 };
+	while (m_running)
+	{
+		CMySipContext::GetInstance().HandleEvent(&delay);
+
+		// 1s
+		CMySipContext::GetInstance().PJThreadSleep(50);
+	}
 }
 
 std::string CMySipMedia::Invite(GB28181MediaContext mediaContext)
@@ -201,6 +231,15 @@ int CMySipMedia::QueryRecordInfo(const std::string& gbid, const GB28181MediaCont
 void CMySipMedia::RegisterHandler(int handleType, DataCallback dataCB, void* user)
 {
 	CMySipModule::GetInstance().RegisterHandler(handleType, dataCB, user);
+}
+
+int CMySipMedia::PTZControl(const std::string& gbid, PTZControlType controlType, int paramValue)
+{
+	MyGBDevicePtr device = CMyGBDeviceManager::GetInstance().GetDeviceById(gbid);
+	if (!device.get())
+		return -1;
+
+	return CMySipContext::GetInstance().PTZControl(device.get(), gbid, controlType, paramValue);
 }
 
 bool CMySipMedia::Bye(const std::string& token)

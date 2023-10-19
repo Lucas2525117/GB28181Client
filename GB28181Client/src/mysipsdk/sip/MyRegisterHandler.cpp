@@ -1,11 +1,22 @@
 #include "MyRegisterHandler.h"
 
+static int QueryStatusWorker(void* param)
+{
+	CMyRegisterHandler* handler = static_cast<CMyRegisterHandler*>(param);
+	handler->OnWorker();
+	return 0;
+}
+
 CMyRegisterHandler::CMyRegisterHandler()
 {
 }
 
 CMyRegisterHandler::~CMyRegisterHandler()
 {
+	m_running = false;
+	if (m_queryStatusThread)
+		CMySipContext::GetInstance().DestroyThread(m_queryStatusThread);
+	m_queryStatusThread = nullptr;
 }
 
 bool CMyRegisterHandler::OnReceive(pjsip_rx_data* rdata)
@@ -29,12 +40,27 @@ bool CMyRegisterHandler::OnReceive(pjsip_rx_data* rdata)
 				Response(rdata, PJSIP_SC_UNAUTHORIZED, AuthenHead);
 			}
 
-			//Response(rdata, PJSIP_SC_OK, DateHead);
-			//QureryDeviceInfo(rdata);
+			return true;
+		}
+		else if (expires && 0 == expires->ivalue)
+		{
+			// 增加设备注销处理(未处理认证流程,部分设备不支持)
+			if (m_dataCB)
+				m_dataCB(m_handleType, m_user, (void*)"unregister ok");
+
+			Response(rdata, PJSIP_SC_OK, AuthenHead);
 			return true;
 		}
 	}
 	return false;
+}
+
+void CMyRegisterHandler::OnWorker()
+{
+	while (m_running)
+	{
+		CMySipContext::GetInstance().PJThreadSleep(m_queryStatusInterval);
+	}
 }
 
 void CMyRegisterHandler::QureryDeviceInfo(pjsip_rx_data* rdata)

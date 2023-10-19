@@ -11,6 +11,7 @@
 #include "MyDeviceInfoHandler.h"
 #include "MyDeviceStatusHandler.h"
 #include "MyRecordInfoHandler.h"
+#include "MyDownloadHandler.h"
 #include <vector>
 #include <memory>
 

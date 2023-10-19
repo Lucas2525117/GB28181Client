@@ -42,4 +42,5 @@ void GBRegisterDlg::InitAction()
 	connect(ui.pb_serverDisConnect, &QPushButton::clicked, [=]() {
 		emit sigSipDisConnect();
 		});
+	ui.pb_serverDisConnect->setVisible(false);
 }

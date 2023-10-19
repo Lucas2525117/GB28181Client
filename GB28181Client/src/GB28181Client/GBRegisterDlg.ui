@@ -86,14 +86,14 @@
       <item>
        <widget class="QPushButton" name="pb_serverConnect">
         <property name="text">
-         <string>连接</string>
+         <string>启动</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pb_serverDisConnect">
         <property name="text">
-         <string>断开</string>
+         <string>停止</string>
         </property>
        </widget>
       </item>

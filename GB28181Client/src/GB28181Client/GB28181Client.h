@@ -21,6 +21,7 @@
 #include "AddOrgDlg.h"
 #include "AddDeviceDlg.h"
 #include "AddChannelDlg.h"
+#include "PTZControlDlg.h"
 #include "public.h"
 #include "GB28181Server.h"
 #include "MySipInfo.h"
@@ -69,6 +70,7 @@ private slots:
     void slotStartVideoPlay(const QString& gbid, const QString& deviceIP, const QString& gbPort, const QString& localIP, const QString& localRecvPort);
     void slotStopVideoPlay();
     void slotQueryRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime);
+    void slotPTZControl(const QString& gbid, int type, int paramValue);
 
 private:
     Ui::GB28181ClientClass ui;
@@ -88,6 +90,7 @@ private:
     AddOrgDlg*         m_addOrgDlg       = nullptr;
     AddDeviceDlg*      m_addDeviceDlg    = nullptr;
     AddChannelDlg*     m_addChannelDlg   = nullptr;
+    PTZControlDlg*     m_ptzControlDlg = nullptr;
     QTabWidget*        m_tabWidget       = nullptr;
     QWidget*           m_widget          = nullptr;
     IStreamReceiver*   m_receiver        = nullptr;
@@ -100,4 +103,6 @@ private:
     std::string        m_registerCBMsg;
     std::string        m_gbid;
     std::string        m_token;
+    
+    bool               m_serverStart = false;
 };

@@ -106,6 +106,13 @@ void GB28181Client::InitUi()
 		connect(m_GBRecordInfoDlg, &GBRecordInfoDlg::sigRecordInfo, this, &GB28181Client::slotQueryRecordInfo);
 	}
 
+	// PTZ控制界面
+	m_ptzControlDlg = new(std::nothrow) PTZControlDlg();
+	if (m_ptzControlDlg)
+	{
+		connect(m_ptzControlDlg, &PTZControlDlg::sigPTZCmd, this, &GB28181Client::slotPTZControl);
+	}
+
 	m_tabWidget = new(std::nothrow) QTabWidget();
 	if (m_tabWidget)
 	{
@@ -129,6 +136,7 @@ void GB28181Client::InitUi()
 		m_tabWidget->addTab(m_GBDeviceStatusDlg, QString::fromLocal8Bit("设备状态"));
 		m_tabWidget->addTab(m_GBVideoPlayDlg, QString::fromLocal8Bit("视频点播"));
 		m_tabWidget->addTab(m_GBRecordInfoDlg, QString::fromLocal8Bit("视音频文件检索"));
+		m_tabWidget->addTab(m_ptzControlDlg, QString::fromLocal8Bit("控制(PTZ控制)"));
 	}
 
 	// 添加组织界面
@@ -403,6 +411,7 @@ void GB28181Client::Start(const std::string& gbid, const std::string& ip, int si
 	}
 
 	m_gbid = gbid;
+	m_serverStart = true;
 	GB_RegisterHandler(Type_Register, MyGBMsgCB, this);
 	GB_RegisterHandler(Type_KeepAlive, MyGBMsgCB, this);
 	GB_RegisterHandler(Type_RecvCatalog, MyGBMsgCB, this);
@@ -413,7 +422,18 @@ void GB28181Client::Start(const std::string& gbid, const std::string& ip, int si
 
 void GB28181Client::Stop()
 {
+	if (!m_serverStart)
+		return;
 
+	m_serverStart = false;
+	if (!GB_UnInit())
+	{
+		QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("注销失败"), QMessageBox::Ok);
+		return;
+	}
+
+	if (m_GBRegisterDlg)
+		m_GBRegisterDlg->SetRegisterResult(QString::fromLocal8Bit("设备注销成功"));
 }
 
 void GB28181Client::closeEvent(QCloseEvent* event)
@@ -443,7 +463,19 @@ void GB28181Client::slotCatalogTimer()
 	if (0 == m_registerCBMsg.compare("register ok"))
 	{
 		if (m_GBRegisterDlg)
-			m_GBRegisterDlg->SetRegisterResult(QString::fromLocal8Bit("注册成功"));
+			m_GBRegisterDlg->SetRegisterResult(QString::fromLocal8Bit("设备注册成功"));
+	}
+	else if (0 == m_registerCBMsg.compare("unregister ok"))
+	{
+		if (m_GBRegisterDlg)
+			m_GBRegisterDlg->SetRegisterResult(QString::fromLocal8Bit("设备注销成功"));
+
+		if (m_serverStart)
+		{
+			if (!GB_UnInit())
+				return;
+			m_serverStart = false;
+		}
 	}
 }
 
@@ -492,6 +524,21 @@ void GB28181Client::slotQueryRecordInfo(const QString& gbid, const QString& star
 	GB28181MediaContext mediaContext("");
 	mediaContext.SetTime(startTime.toStdString(), endTime.toStdString());
 	GB_QueryRecordInfo(gbid.toStdString().c_str(), mediaContext);
+}
+
+void GB28181Client::slotPTZControl(const QString& gbid, int type, int paramValue)
+{
+	int ret = GB_PTZControl(gbid.toStdString().c_str(), (PTZControlType)type, paramValue);
+	if (0 != ret)
+	{
+		QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("PTZ执行失败"), QMessageBox::Ok);
+		return;
+	}
+	
+	// 停止
+	ret = GB_PTZControl(gbid.toStdString().c_str(), PTZ_CTRL_HALT, 0);
+	if(0 != ret)
+		QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("PTZ停止失败"), QMessageBox::Ok);
 }
 
 void GB28181Client::HandleGBMsgCB(int type, void* data)

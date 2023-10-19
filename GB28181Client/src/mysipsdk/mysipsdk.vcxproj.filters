@@ -63,6 +63,9 @@
     <ClCompile Include="sip\MyRecordInfoHandler.cpp">
       <Filter>sip</Filter>
     </ClCompile>
+    <ClCompile Include="sip\MyDownloadHandler.cpp">
+      <Filter>sip</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sip\MyEventHandler.h">
@@ -120,6 +123,9 @@
       <Filter>sip</Filter>
     </ClInclude>
     <ClInclude Include="sip\MyRecordInfoHandler.h">
+      <Filter>sip</Filter>
+    </ClInclude>
+    <ClInclude Include="sip\MyDownloadHandler.h">
       <Filter>sip</Filter>
     </ClInclude>
   </ItemGroup>

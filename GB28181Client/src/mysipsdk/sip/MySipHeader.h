@@ -10,6 +10,7 @@ enum HandlerType
 	Type_RecvRecordInfo,
 	Type_RecvDeviceInfo,
 	Type_RecvDeviceStatus,
+	Type_Download,
 };
 
 enum StreamRequiredType
@@ -17,6 +18,39 @@ enum StreamRequiredType
 	StreamType_RealStream = 0,
 	StreamType_Playback = 1,
 	StreamType_Download = 2
+};
+
+enum DeviceControlType
+{
+	ControlType_PTZCmd = 0,         // 云台控制
+	ControlType_TeleBoot,           // 远程控制
+	ControlType_RecordCmd,          // 录像控制
+	ControlType_GuardCmd,           // 报警布防/撤防
+	ControlType_AlarmCmd,           // 报警复位
+	ControlType_IFrameCmd,          // 强制关键帧
+	ControlType_DragZoomIn,         // 拉框放大
+	ControlType_DragZoomOut,        // 拉框缩小
+	ControlType_HomePosition,       // 看守位
+	ControlType_PTZPreciseCtrl,     // PTZ精准控制
+	ControlType_DeviceUpgrade,      // 设备软件升级
+	ControlType_FormatSDCard,       // 存储卡格式化
+	ControlType_TargetTrack,        // 目标跟踪
+};
+
+enum PTZControlType
+{
+	PTZ_CTRL_HALT = 0,			// 停止
+	PTZ_CTRL_RIGHT,		        // 右转 值越大速度越快 0~255
+	PTZ_CTRL_RIGHTUP,		    // 右上
+	PTZ_CTRL_UP,		        // 上转
+	PTZ_CTRL_LEFTUP,		    // 左上
+	PTZ_CTRL_LEFT,		        // 左转
+	PTZ_CTRL_LEFTDOWN,		    // 左下
+	PTZ_CTRL_DOWN,		        // 下转
+	PTZ_CTRL_RIGHTDOWN,		    // 右下
+	PTZ_CTRL_ZOOM,              // 镜头放大/缩小 速度值 >0:放大 <0:缩小 0:停止 -255~255
+	PTZ_CTRL_IRIS,              // 光圈放大/缩小 速度值 >0:放大 <0:缩小 0:停止 -255~255
+	PTZ_CTRL_FOCUS,             // 镜头聚焦/放焦 速度值 >0:聚焦近 <0:聚焦远 0:停止 -255~255
 };
 
 class GB28181MediaContext

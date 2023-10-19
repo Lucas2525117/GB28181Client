@@ -52,6 +52,10 @@ public:
 
 	bool Init(const std::string& concat, int loglevel);
 
+	bool UnInit();
+
+	void HandleEventProc();
+
 	void RegisterHandler(int handleType, DataCallback dataCB, void* user);
 
 	std::string Invite(GB28181MediaContext mediaContext);
@@ -67,6 +71,8 @@ public:
 	int QueryDeviceStatus(int type, const std::string& gbid);
 
 	int QueryRecordInfo(const std::string& gbid, const GB28181MediaContext& mediaContext);
+
+	int PTZControl(const std::string& gbid, PTZControlType controlType, int paramValue);
 
 private:
 	CMySipMedia();
@@ -205,6 +211,7 @@ private:
 	pjsip_module*     m_mainModule = nullptr;
 	pjsip_module*     m_subModule  = nullptr;
 	pj_thread_t*      m_workthread = nullptr;
+	bool              m_running = true;
 };
 
 #endif

@@ -27,14 +27,17 @@ public:
 	}
 
 	bool Init(const std::string& concat, int logLevel);
+	bool UnInit();
 
 	bool RegisterCallback(pjsip_inv_callback* callback);
 
 	bool InitModule();
-
 	bool RegisterModule(pjsip_module* module);
+	bool UnRegisterModule(pjsip_module* module);
 
 	bool CreateWorkThread(pj_thread_proc* proc, pj_thread_t* workthread, void* arg, const std::string& threadName);
+	bool DestroyThread(pj_thread_t* thread);
+	void PJThreadSleep(int msec);
 
 	void HandleEvent(pj_time_val* delay);
 
@@ -47,6 +50,8 @@ public:
 	void QueryDeviceInfo(CMyGBDevice* device, const std::string& dstIP, int dstPort, const std::string& scheme = "Catalog");
 
 	void QueryRecordInfo(CMyGBDevice* device, const std::string& gbid, const std::string& startTime, const std::string& endTime, const std::string& scheme);
+
+	int PTZControl(CMyGBDevice* device, const std::string& gbid, PTZControlType ptzType, int paramValue);
 
 	std::string GetMessageBody(pjsip_rx_data* rdata);
 
@@ -71,6 +76,9 @@ private:
 	int GetPort();
 	std::string GetLocalDomain();
 	std::string GetCode();
+	
+	int SendSipMessage(CMyGBDevice* device, const std::string& sipMsg);
+	std::string ParsePTZCmd(CMyGBDevice* device, const std::string& gbid, PTZControlType ptzType, int paramValue);
 
 private:
 	std::string        m_concat;

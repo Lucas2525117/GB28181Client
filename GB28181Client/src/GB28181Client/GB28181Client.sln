@@ -4,10 +4,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.33529.622
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GB28181Client", "GB28181Client.vcxproj", "{C181263A-F2ED-4E10-BFCA-EA69901B7429}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3D224576-94CD-47C0-8F98-386BFD6404CF} = {3D224576-94CD-47C0-8F98-386BFD6404CF}
+		{6480D39A-D786-4C7A-8255-AEAC86E3F60C} = {6480D39A-D786-4C7A-8255-AEAC86E3F60C}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyXml", "..\tinyXml\tinyXml.vcxproj", "{980BDDBC-D076-4D0D-A1BB-22A528C669E8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mysipsdk", "..\mysipsdk\mysipsdk.vcxproj", "{6480D39A-D786-4C7A-8255-AEAC86E3F60C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D4FD8942-4634-4598-B1C0-55D61815A9E8} = {D4FD8942-4634-4598-B1C0-55D61815A9E8}
+		{980BDDBC-D076-4D0D-A1BB-22A528C669E8} = {980BDDBC-D076-4D0D-A1BB-22A528C669E8}
+		{3A314DC3-17EC-464A-A38A-215BB7900595} = {3A314DC3-17EC-464A-A38A-215BB7900595}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jsoncpp", "..\jsoncpp\jsoncpp.vcxproj", "{3A314DC3-17EC-464A-A38A-215BB7900595}"
 EndProject
@@ -16,6 +25,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jthread", "..\jthread\jthread.vcxproj", "{54E8E158-C31B-4D62-B0B2-49F9207E9955}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GBStreamReceiver", "..\GBStreamReceiver\GBStreamReceiver.vcxproj", "{3D224576-94CD-47C0-8F98-386BFD6404CF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{54E8E158-C31B-4D62-B0B2-49F9207E9955} = {54E8E158-C31B-4D62-B0B2-49F9207E9955}
+		{C45E30D1-33C8-47A4-8B4B-A4285F9D6927} = {C45E30D1-33C8-47A4-8B4B-A4285F9D6927}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmpeg", "..\ireader\libmpeg\libmpeg.vcxproj", "{D4FD8942-4634-4598-B1C0-55D61815A9E8}"
 EndProject

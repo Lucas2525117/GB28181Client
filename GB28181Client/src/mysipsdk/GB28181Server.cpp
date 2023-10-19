@@ -5,9 +5,19 @@ bool GB_Init(const char* concat, int loglevel)
 	return CMySipMedia::GetInstance().Init(concat, loglevel);
 }
 
+bool GB_UnInit()
+{
+	return CMySipMedia::GetInstance().UnInit();
+}
+
 void GB_RegisterHandler(int handleType, DataCallback dataCB, void* user)
 {
 	CMySipMedia::GetInstance().RegisterHandler(handleType, dataCB, user);
+}
+
+int GB_PTZControl(const char* gbid, PTZControlType controlType, int paramValue)
+{
+	return CMySipMedia::GetInstance().PTZControl(gbid, controlType, paramValue);
 }
 
 const char* GB_Invite(GB28181MediaContext mediaContext)

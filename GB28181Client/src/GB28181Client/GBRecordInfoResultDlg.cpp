@@ -147,7 +147,7 @@ void GBRecordInfoResultDlg::slotStartDownload()
 
 	if (m_downloadDlg)
 	{
-		m_downloadDlg->Init(deviceID, sTime, eTime);
+		m_downloadDlg->UpdateParam(deviceID, sTime, eTime);
 		m_downloadDlg->show();
 	}
 }

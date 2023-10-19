@@ -167,4 +167,16 @@ typedef struct CMyRecordInfo
 	}
 }CMyRecordInfo;
 
+typedef struct CMyDownloadInfo
+{
+	std::string deviceID;
+	std::string notifyType;
+
+	CMyDownloadInfo()
+	{
+		deviceID = "";
+		notifyType = "";
+	}
+}CMyDownloadInfo;
+
 #endif

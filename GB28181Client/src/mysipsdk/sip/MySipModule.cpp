@@ -54,6 +54,9 @@ void CMySipModule::RegisterHandler(int type, DataCallback dataCB, void* user)
 	case Type_RecvRecordInfo:
 		handle = std::make_shared<CMyRecordInfoHandler>();
 		break;
+	case Type_Download:
+		handle = std::make_shared<CMyDownloadHandler>();
+		break;
 	default:
 		break;
 	}
