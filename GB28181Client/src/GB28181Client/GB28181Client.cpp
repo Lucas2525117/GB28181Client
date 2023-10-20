@@ -193,7 +193,7 @@ void GB28181Client::InitUi()
 				});
 			popMenu->exec(QCursor::pos());
 			});
-		m_listWidget->hide();
+		//m_listWidget->hide();
 	}
 
 	// 设备/通道树区
@@ -212,10 +212,10 @@ void GB28181Client::InitUi()
 	{
 		m_logView = new QDockWidget(this);
 		m_logView->setFeatures(QDockWidget::DockWidgetMovable);
-		m_logView->setWindowTitle(QString::fromLocal8Bit("日志输出"));
+		m_logView->setWindowTitle(QString::fromLocal8Bit("报警输出"));
 		addDockWidget(Qt::BottomDockWidgetArea, m_logView, Qt::Orientation::Vertical);
 		m_logView->setWidget(m_listWidget);
-		m_logView->hide();
+		//m_logView->hide();
 	}
 
 	// 操作区
@@ -281,8 +281,14 @@ QTreeWidgetItem* GB28181Client::SearchChild(QTreeWidgetItem* item, const QString
 
 void GB28181Client::AddLog(const QString& strText)
 {
+	//if (nullptr != m_listWidget)
+	//	m_listWidget->addItem(strText);
+}
+
+void GB28181Client::AddAlarm(const QString& strAlarmInfo)
+{
 	if (nullptr != m_listWidget)
-		m_listWidget->addItem(strText);
+		m_listWidget->addItem(strAlarmInfo);
 }
 
 void GB28181Client::slotItemDoubleClick(QTreeWidgetItem* item, int index)
@@ -418,6 +424,7 @@ void GB28181Client::Start(const std::string& gbid, const std::string& ip, int si
 	GB_RegisterHandler(Type_RecvRecordInfo, MyGBMsgCB, this);
 	GB_RegisterHandler(Type_RecvDeviceInfo, MyGBMsgCB, this);
 	GB_RegisterHandler(Type_RecvDeviceStatus, MyGBMsgCB, this);
+	GB_RegisterHandler(Type_Alarm, MyGBMsgCB, this);
 }
 
 void GB28181Client::Stop()
@@ -445,19 +452,19 @@ void GB28181Client::slotCatalogTimer()
 {
 	if (m_GBCataLogDlg)
 	{
-		m_GBCataLogDlg->AddCatalogData(m_catalog);
-		slotAddDevice(m_catalog.PlatformAddr.c_str());
+		//m_GBCataLogDlg->AddCatalogData(m_catalog);
+		//slotAddDevice(m_catalog.PlatformAddr.c_str());
 	}
 
 	if (m_GBDeviceInfoDlg)
 	{
-		m_GBDeviceInfoDlg->AddDeviceInfoData(m_deviceinfo);
-		slotAddChannel(m_deviceinfo.channel.c_str());
+		//m_GBDeviceInfoDlg->AddDeviceInfoData(m_deviceinfo);
+		//slotAddChannel(m_deviceinfo.channel.c_str());
 	}
 
 	if (m_GBDeviceStatusDlg)
 	{
-		m_GBDeviceStatusDlg->AddDeviceStatusData(m_deviceStatus);
+		//m_GBDeviceStatusDlg->AddDeviceStatusData(m_deviceStatus);
 	}
 
 	if (0 == m_registerCBMsg.compare("register ok"))
@@ -560,6 +567,9 @@ void GB28181Client::HandleGBMsgCB(int type, void* data)
 	case Type_RecvRecordInfo:
 		HandleRecordInfoData(data);
 		break;
+	case Type_Alarm:
+		HandleAlarmInfoData(data);
+		break;
 	default:
 		break;
 	}
@@ -584,6 +594,11 @@ void GB28181Client::HandleCataLogData(void* data)
 		return;
 
 	memcpy(&m_catalog, data, sizeof(CMyCatalogInfo));
+
+	if (m_GBCataLogDlg)
+	{
+		m_GBCataLogDlg->AddCatalogData(m_catalog);
+	}
 }
 
 void GB28181Client::HandleRegisterData(void* data)
@@ -600,6 +615,11 @@ void GB28181Client::HandleDeviceInfoData(void* data)
 		return;
 
 	memcpy(&m_deviceinfo, data, sizeof(CMyDeviceInfo));
+
+	if (m_GBDeviceInfoDlg)
+	{
+		m_GBDeviceInfoDlg->AddDeviceInfoData(m_deviceinfo);
+	}
 }
 
 void GB28181Client::HandleDeviceStatusData(void* data)
@@ -608,6 +628,11 @@ void GB28181Client::HandleDeviceStatusData(void* data)
 		return;
 
 	memcpy(&m_deviceStatus, data, sizeof(CMyDeviceStatus));
+
+	if (m_GBDeviceStatusDlg)
+	{
+		m_GBDeviceStatusDlg->AddDeviceStatusData(m_deviceStatus);
+	}
 }
 
 void GB28181Client::HandleRecordInfoData(void* data)
@@ -620,4 +645,50 @@ void GB28181Client::HandleRecordInfoData(void* data)
 
 	if (m_GBRecordInfoResultDlg)
 		m_GBRecordInfoResultDlg->AddRecordInfo(m_gbid.c_str(), recordInfo);
+}
+
+void GB28181Client::HandleAlarmInfoData(void* data)
+{
+	if (!data)
+		return;
+
+	memcpy(&m_alarmInfo, data, sizeof(CMyAlarmInfo));
+
+	QString strAlarmInfo = QString::fromLocal8Bit("接收到告警,报警编码:%1 ").arg(m_alarmInfo.deviceID.c_str());
+
+	QString strAlarmProrityText;
+	if (AlarmPriority_Undefined == m_alarmInfo.alarmPrority)
+		strAlarmProrityText = QString::fromLocal8Bit("未定义(0)");
+	else if(AlarmPriority_One == m_alarmInfo.alarmPrority)
+		strAlarmProrityText = QString::fromLocal8Bit("一级警情(1)");
+	else if (AlarmPriority_Two == m_alarmInfo.alarmPrority)
+		strAlarmProrityText = QString::fromLocal8Bit("二级警情(2)");
+	else if (AlarmPriority_Three == m_alarmInfo.alarmPrority)
+		strAlarmProrityText = QString::fromLocal8Bit("三级警情(3)");
+	else if (AlarmPriority_Three == m_alarmInfo.alarmPrority)
+		strAlarmProrityText = QString::fromLocal8Bit("四级警情(4)");
+	strAlarmInfo += QString::fromLocal8Bit("报警级别:%1 ").arg(strAlarmProrityText);
+
+	QString strAlarmMethodText;
+	if (Alarm_Undefined == m_alarmInfo.alarmMethod)
+		strAlarmMethodText = QString::fromLocal8Bit("未定义(0)");
+	else if (Alarm_Phone == m_alarmInfo.alarmMethod)
+		strAlarmMethodText = QString::fromLocal8Bit("电话告警(1)");
+	else if (Alarm_Device == m_alarmInfo.alarmMethod)
+		strAlarmMethodText = QString::fromLocal8Bit("设备告警(2)");
+	else if (Alarm_TextMessage == m_alarmInfo.alarmMethod)
+		strAlarmMethodText = QString::fromLocal8Bit("短信告警(3)");
+	else if (Alarm_GPS == m_alarmInfo.alarmMethod)
+		strAlarmMethodText = QString::fromLocal8Bit("GPS告警(4)");
+	else if (Alarm_Video == m_alarmInfo.alarmMethod)
+		strAlarmMethodText = QString::fromLocal8Bit("视频告警(4)");
+	else if (Alarm_DeviceBreak == m_alarmInfo.alarmMethod)
+		strAlarmMethodText = QString::fromLocal8Bit("设备故障告警(4)");
+	else if (Alarm_Other == m_alarmInfo.alarmMethod)
+		strAlarmMethodText = QString::fromLocal8Bit("其他告警(4)");
+	strAlarmInfo += QString::fromLocal8Bit("报警方式:%1 ").arg(strAlarmMethodText);
+
+	strAlarmInfo += QString::fromLocal8Bit("报警时间:%1 ").arg(m_alarmInfo.alarmTime.c_str());
+	strAlarmInfo += QString::fromLocal8Bit("报警描述:%1").arg(m_alarmInfo.alarmDescription.c_str());
+	AddAlarm(strAlarmInfo);
 }

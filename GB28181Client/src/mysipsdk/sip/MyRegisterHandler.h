@@ -19,11 +19,12 @@ public:
 
 private:
 	void QureryDeviceInfo(pjsip_rx_data* rdata);
-	void UpdateDeviceStatus();
+	void UpdateDeviceStatus_();
+	void StopUpdateDeviceStatus_();
 
 private:
 	MyGBDevicePtr                m_device;
-	pj_thread_t*                 m_queryStatusThread;
+	pj_thread_t*                 m_queryStatusThread = nullptr;
 	int                          m_queryStatusInterval = 30*1000;
 	bool                         m_hasDevice = false;
 	bool                         m_running = true;

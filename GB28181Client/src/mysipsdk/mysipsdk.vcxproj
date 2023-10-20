@@ -159,6 +159,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GB28181Server.cpp" />
+    <ClCompile Include="sip\MyAlarmHandler.cpp" />
     <ClCompile Include="sip\MyCatalogRecvHandler.cpp" />
     <ClCompile Include="sip\MyDeviceInfoHandler.cpp" />
     <ClCompile Include="sip\MyDeviceStatusHandler.cpp" />
@@ -177,6 +178,7 @@
   <ItemGroup>
     <ClInclude Include="GB28181Server.h" />
     <ClInclude Include="SipSDKPublic.h" />
+    <ClInclude Include="sip\MyAlarmHandler.h" />
     <ClInclude Include="sip\MyDeviceStatusHandler.h" />
     <ClInclude Include="sip\MyDownloadHandler.h" />
     <ClInclude Include="sip\MyRecordInfoHandler.h" />

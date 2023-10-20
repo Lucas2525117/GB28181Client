@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <qpushbutton.h>
+#include <qmessagebox.h>
 #include "ui_GBDeviceInfoDlg.h"
 #include "MySipInfo.h"
 

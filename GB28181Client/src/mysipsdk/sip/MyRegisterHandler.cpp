@@ -13,10 +13,7 @@ CMyRegisterHandler::CMyRegisterHandler()
 
 CMyRegisterHandler::~CMyRegisterHandler()
 {
-	m_running = false;
-	if (m_queryStatusThread)
-		CMySipContext::GetInstance().DestroyThread(m_queryStatusThread);
-	m_queryStatusThread = nullptr;
+	StopUpdateDeviceStatus_();
 }
 
 bool CMyRegisterHandler::OnReceive(pjsip_rx_data* rdata)
@@ -48,7 +45,8 @@ bool CMyRegisterHandler::OnReceive(pjsip_rx_data* rdata)
 			if (m_dataCB)
 				m_dataCB(m_handleType, m_user, (void*)"unregister ok");
 
-			Response(rdata, PJSIP_SC_OK, AuthenHead);
+			Response(rdata, PJSIP_SC_OK, DateHead);
+			StopUpdateDeviceStatus_();
 			return true;
 		}
 	}
@@ -77,15 +75,23 @@ void CMyRegisterHandler::QureryDeviceInfo(pjsip_rx_data* rdata)
 		m_device->SetNetAddr(m_dstIp, m_dstPort);
 		//CMySipContext::GetInstance().QueryDeviveInfo(m_device.get(), m_dstIp, m_dstPort);
 		//CMySipContext::GetInstance().QueryDeviveInfo(m_device.get(), m_dstIp, m_dstPort, "DeviceInfo");
-		CMySipContext::GetInstance().CreateWorkThread(QueryStatusWorker, m_queryStatusThread, this, "querydeviceInfo");
+		//CMySipContext::GetInstance().CreateWorkThread(QueryStatusWorker, m_queryStatusThread, this, "querydeviceInfo");
 	}
 }
 
-void CMyRegisterHandler::UpdateDeviceStatus()
+void CMyRegisterHandler::UpdateDeviceStatus_()
 {
 	auto devicemaps = CMyGBDeviceManager::GetInstance().GetAllDevice();
 	for (const auto& it : devicemaps)
 	{
-		CMySipContext::GetInstance().QueryDeviceInfo(it.second.get(), m_dstIp, m_dstPort);
+		CMySipContext::GetInstance().QueryDeviceInfo(it.second.get(), "");
 	}
+}
+
+void CMyRegisterHandler::StopUpdateDeviceStatus_()
+{
+	m_running = false;
+	if (m_queryStatusThread)
+		CMySipContext::GetInstance().DestroyThread(m_queryStatusThread);
+	m_queryStatusThread = nullptr;
 }

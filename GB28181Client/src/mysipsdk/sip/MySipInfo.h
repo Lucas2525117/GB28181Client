@@ -179,4 +179,45 @@ typedef struct CMyDownloadInfo
 	}
 }CMyDownloadInfo;
 
+enum AlarmPriority
+{
+	AlarmPriority_Undefined = 0, // 未定义
+	AlarmPriority_One,           // 一级警情
+	AlarmPriority_Two,           // 二级警情
+	AlarmPriority_Three,         // 三级警情
+	AlarmPriority_Four,          // 四级警情
+};
+
+enum AlarmMethod
+{
+	Alarm_Undefined = 0,         // 未定义
+	Alarm_Phone,                 // 电话告警
+	Alarm_Device,                // 设备告警
+	Alarm_TextMessage,           // 短信告警
+	Alarm_GPS,                   // GPS告警
+	Alarm_Video,                 // 视频告警
+	Alarm_DeviceBreak,           // 设备故障告警
+	Alarm_Other,                 // 其他告警
+};
+
+typedef struct CMyAlarmInfo
+{
+	std::string       sn;               // 序列号
+	std::string       deviceID;         // 报警设备编码或报警中心编码
+	AlarmPriority     alarmPrority;     // 报警级别
+	AlarmMethod       alarmMethod;      // 报警方式
+	std::string       alarmTime;        // 报警时间
+	std::string       alarmDescription; // 报警描述
+
+	CMyAlarmInfo()
+	{
+		sn = "";
+		deviceID = "";
+		alarmPrority = AlarmPriority_Undefined;
+		alarmMethod = Alarm_Undefined;
+		alarmTime = "";
+		alarmDescription = "";
+	}
+}CMyAlarmInfo;
+
 #endif

@@ -209,11 +209,11 @@ int CMySipMedia::QueryDeviceStatus(int type, const std::string& gbid)
 		return -1;
 
 	if(Type_RecvCatalog == type)
-		CMySipContext::GetInstance().QueryDeviceInfo(device.get(), device->GetNetIP(), device->GetNetPort(), "Catalog");
+		CMySipContext::GetInstance().QueryDeviceInfo(device.get(), gbid, "Catalog");
 	else if(Type_RecvDeviceInfo == type)
-		CMySipContext::GetInstance().QueryDeviceInfo(device.get(), device->GetNetIP(), device->GetNetPort(), "DeviceInfo");
+		CMySipContext::GetInstance().QueryDeviceInfo(device.get(), gbid, "DeviceInfo");
 	else if(Type_RecvDeviceStatus == type)
-		CMySipContext::GetInstance().QueryDeviceInfo(device.get(), device->GetNetIP(), device->GetNetPort(), "DeviceStatus");
+		CMySipContext::GetInstance().QueryDeviceInfo(device.get(), gbid, "DeviceStatus");
 	
 	return 0;
 }

@@ -91,7 +91,8 @@ bool CMySipContext::DestroyThread(pj_thread_t* thread)
 
 void CMySipContext::PJThreadSleep(int msec)
 {
-	pj_thread_sleep(msec);
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	//pj_thread_sleep(msec);
 }
 
 void CMySipContext::HandleEvent(pj_time_val* delay)
@@ -125,12 +126,21 @@ bool CMySipContext::Invite(pjsip_dialog* dlg, GB28181MediaContext mediaContext, 
 	return true;
 }
 
-void CMySipContext::Response(pjsip_rx_data* rdata, int st_code, int headType)
+void CMySipContext::Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text)
 {
 	pjsip_tx_data* tdata;
 	pj_status_t status = pjsip_endpt_create_response(m_endPoint, rdata, st_code, nullptr, &tdata);
 	if (PJ_SUCCESS != status)
 		return;
+
+	if (!text.empty())
+	{
+		pjsip_media_type type;
+		type.type = pj_str((char*)"application");
+		type.subtype = pj_str((char*)"MANSCDP+xml");
+		auto info = pj_str(const_cast<char*>(text.c_str()));
+		tdata->msg->body = pjsip_msg_body_create(m_pool, &type.type, &type.subtype, &info);
+	}
 	
 	std::string date;
 	pj_str_t c;
@@ -178,7 +188,7 @@ pjsip_response_addr CMySipContext::GetResponseAddr(pjsip_rx_data* rdata)
 	return addr;
 }
 
-void CMySipContext::QueryDeviceInfo(CMyGBDevice* device, const std::string& dstIP, int dstPort, const std::string& scheme)
+void CMySipContext::QueryDeviceInfo(CMyGBDevice* device, const std::string& gbid, const std::string& scheme)
 {
 	char szQuerInfo[200] = { 0 };
 	pj_ansi_snprintf(szQuerInfo, 200,
@@ -187,7 +197,7 @@ void CMySipContext::QueryDeviceInfo(CMyGBDevice* device, const std::string& dstI
 		"<CmdType>%s</CmdType>\n"
 		"<SN>17430</SN>\n"
 		"<DeviceID>%s</DeviceID>\n"
-		"</Query>\n", scheme.c_str(), device->GetUser()
+		"</Query>\n", scheme.c_str(), gbid.c_str()
 	);
 
 	pjsip_tx_data* tdata = nullptr;

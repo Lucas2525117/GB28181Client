@@ -8,6 +8,8 @@ GBDeviceInfoDlg::GBDeviceInfoDlg(QWidget *parent)
 	connect(ui.pb_search, &QPushButton::clicked, [=]() {
 		emit sigQueryDeviceInfo();
 		});
+
+
 }
 
 GBDeviceInfoDlg::~GBDeviceInfoDlg()

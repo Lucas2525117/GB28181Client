@@ -12,6 +12,7 @@
 #include "MyDeviceStatusHandler.h"
 #include "MyRecordInfoHandler.h"
 #include "MyDownloadHandler.h"
+#include "MyAlarmHandler.h"
 #include <vector>
 #include <memory>
 

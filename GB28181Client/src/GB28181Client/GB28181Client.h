@@ -46,11 +46,13 @@ private:
     void InitAction();
     QTreeWidgetItem* SearchChild(QTreeWidgetItem* item, const QString& strMsg);
     void AddLog(const QString& strText);
+    void AddAlarm(const QString& strAlarmInfo);
     void HandleCataLogData(void* data);
     void HandleRegisterData(void* data);
     void HandleDeviceInfoData(void* data);
     void HandleDeviceStatusData(void* data);
     void HandleRecordInfoData(void* data);
+    void HandleAlarmInfoData(void* data);
 
 public slots:
     void slotItemDoubleClick(QTreeWidgetItem* item, int index);
@@ -100,6 +102,7 @@ private:
     CMyCatalogInfo     m_catalog;
     CMyDeviceInfo      m_deviceinfo;
     CMyDeviceStatus    m_deviceStatus;
+    CMyAlarmInfo       m_alarmInfo;
     std::string        m_registerCBMsg;
     std::string        m_gbid;
     std::string        m_token;

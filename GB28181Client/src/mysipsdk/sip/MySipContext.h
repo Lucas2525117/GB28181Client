@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <iosfwd>
 #include <sstream>
+#include <thread>
 #include "MySip.h"
 #include "MySipHeader.h"
 #include "MyGBDevice.h"
@@ -43,11 +44,11 @@ public:
 
 	bool Invite(pjsip_dialog* dlg, GB28181MediaContext mediaContext, std::string sdp);
 
-	void Response(pjsip_rx_data* rdata, int st_code, int headType);
+	void Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text = "");
 
 	pjsip_response_addr GetResponseAddr(pjsip_rx_data* rdata);
 
-	void QueryDeviceInfo(CMyGBDevice* device, const std::string& dstIP, int dstPort, const std::string& scheme = "Catalog");
+	void QueryDeviceInfo(CMyGBDevice* device, const std::string& gbid, const std::string& scheme = "Catalog");
 
 	void QueryRecordInfo(CMyGBDevice* device, const std::string& gbid, const std::string& startTime, const std::string& endTime, const std::string& scheme);
 
