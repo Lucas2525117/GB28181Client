@@ -113,6 +113,13 @@ void GB28181Client::InitUi()
 		connect(m_ptzControlDlg, &PTZControlDlg::sigPTZCmd, this, &GB28181Client::slotPTZControl);
 	}
 
+	// 订阅界面
+	m_GBSubscribeDlg = new(std::nothrow) GBSubscribeDlg();
+	if (m_GBSubscribeDlg)
+	{
+		connect(m_GBSubscribeDlg, &GBSubscribeDlg::sigSubscribe, this, &GB28181Client::slotSubscribe);
+	}
+
 	m_tabWidget = new(std::nothrow) QTabWidget();
 	if (m_tabWidget)
 	{
@@ -137,6 +144,7 @@ void GB28181Client::InitUi()
 		m_tabWidget->addTab(m_GBVideoPlayDlg, QString::fromLocal8Bit("视频点播"));
 		m_tabWidget->addTab(m_GBRecordInfoDlg, QString::fromLocal8Bit("视音频文件检索"));
 		m_tabWidget->addTab(m_ptzControlDlg, QString::fromLocal8Bit("控制(PTZ控制)"));
+		m_tabWidget->addTab(m_GBSubscribeDlg, QString::fromLocal8Bit("订阅与通知"));
 	}
 
 	// 添加组织界面
@@ -305,7 +313,9 @@ void GB28181Client::slotItemDoubleClick(QTreeWidgetItem* item, int index)
 		GB28181MediaContext mediaContext(requestUrl);
 		mediaContext.SetRecvAddress("100.18.141.86");
 		mediaContext.SetRecvPort(5060);
-		m_token = GB_Invite(mediaContext);
+		char* token = nullptr;
+		GB_Invite(mediaContext, (GB_TOKEN*)&token);
+		m_token = token;
 	}
 }
 
@@ -498,10 +508,11 @@ void GB28181Client::slotStartVideoPlay(const QString& gbid, const QString& devic
 	GB28181MediaContext mediaContext(requestUrl);
 	mediaContext.SetRecvAddress(localIP.toStdString());
 	mediaContext.SetRecvPort(localRecvPort.toInt());
-	m_token = GB_Invite(mediaContext);
-	if(m_token.empty())
+	char* token = nullptr;
+	if (!GB_Invite(mediaContext, (GB_TOKEN*)&token))
 		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("开始视频点播失败"), QMessageBox::Ok);
 
+	m_token = token;
 	std::thread th(GBClientDataWorkerThread, this, localIP.toStdString(), localRecvPort.toStdString());
 	th.detach();
 }
@@ -546,6 +557,39 @@ void GB28181Client::slotPTZControl(const QString& gbid, int type, int paramValue
 	ret = GB_PTZControl(gbid.toStdString().c_str(), PTZ_CTRL_HALT, 0);
 	if(0 != ret)
 		QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("PTZ停止失败"), QMessageBox::Ok);
+}
+
+void GB28181Client::slotSubscribe(const QString& gbid, const QString& ipp, int subType, int expires)
+{
+	auto it = m_mapSubscribeObjs.find(subType);
+	if (it != m_mapSubscribeObjs.end() && expires > 0)
+	{
+		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("当前订阅已开启"), QMessageBox::Ok);
+		return;
+	}
+
+	GBSubscribeContext subContext;
+	std::string requestUrl = "sip:" + gbid.toStdString() + "@" + ipp.toStdString();
+	subContext.SetRequestUrl(requestUrl);
+	subContext.SetDeviceId(gbid.toStdString().c_str());
+	subContext.SetSubscirbeType((SubscribeType)subType);
+	subContext.SetExpires(expires);
+
+	char* token = nullptr;
+	if (!GB_Subscribe(subContext, (GB_TOKEN*)&token))
+	{
+		QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("订阅失败"), QMessageBox::Ok);
+		return;
+	}
+		
+	if (expires > 0)
+	{
+		m_mapSubscribeObjs.insert(std::make_pair(subType, token));
+	}
+	else if (0 == expires)
+	{
+		m_mapSubscribeObjs.erase(it);
+	}
 }
 
 void GB28181Client::HandleGBMsgCB(int type, void* data)

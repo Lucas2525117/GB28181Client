@@ -18,7 +18,9 @@
 #include "GBVideoPlayDlg.h"
 #include "GBRecordInfoDlg.h"
 #include "GBRecordInfoResultDlg.h"
+#include "GBSubscribeDlg.h"
 #include "AddOrgDlg.h"
+
 #include "AddDeviceDlg.h"
 #include "AddChannelDlg.h"
 #include "PTZControlDlg.h"
@@ -73,6 +75,7 @@ private slots:
     void slotStopVideoPlay();
     void slotQueryRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime);
     void slotPTZControl(const QString& gbid, int type, int paramValue);
+    void slotSubscribe(const QString& gbid, const QString& ipp, int subType, int expires);
 
 private:
     Ui::GB28181ClientClass ui;
@@ -89,6 +92,7 @@ private:
     GBVideoPlayDlg*    m_GBVideoPlayDlg  = nullptr;
     GBRecordInfoDlg*   m_GBRecordInfoDlg = nullptr;
     GBRecordInfoResultDlg* m_GBRecordInfoResultDlg = nullptr;
+    GBSubscribeDlg*    m_GBSubscribeDlg = nullptr;
     AddOrgDlg*         m_addOrgDlg       = nullptr;
     AddDeviceDlg*      m_addDeviceDlg    = nullptr;
     AddChannelDlg*     m_addChannelDlg   = nullptr;
@@ -106,6 +110,9 @@ private:
     std::string        m_registerCBMsg;
     std::string        m_gbid;
     std::string        m_token;
+
+    typedef std::map<int, std::string> SubscribeObjsMap;
+    SubscribeObjsMap   m_mapSubscribeObjs;
     
     bool               m_serverStart = false;
 };
