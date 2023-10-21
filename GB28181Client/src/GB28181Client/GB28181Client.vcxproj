@@ -59,7 +59,7 @@
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>Qt_5.15.2_x64</QtInstall>
+    <QtInstall>msvc2017_x64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
@@ -198,6 +198,7 @@
     <ClCompile Include="DownloadDlg.cpp" />
     <ClCompile Include="GBRecordInfoDlg.cpp" />
     <ClCompile Include="GBRecordInfoResultDlg.cpp" />
+    <ClCompile Include="GBSubscribeDlg.cpp" />
     <ClCompile Include="PlayBackDlg.cpp" />
     <ClCompile Include="PlayBackWidget.cpp" />
     <ClCompile Include="PlayWidget.cpp" />
@@ -227,6 +228,7 @@
     <QtUic Include="GBRecordInfoResultDlg.ui" />
     <QtUic Include="GBRegisterDlg.ui" />
     <QtUic Include="GBVideoPlayDlg.ui" />
+    <QtUic Include="GBSubscribeDlg.ui" />
     <QtUic Include="PlayBackDlg.ui" />
     <QtUic Include="PTZControlDlg.ui" />
   </ItemGroup>
@@ -238,6 +240,7 @@
     <QtMoc Include="GBRecordInfoResultDlg.h" />
     <QtMoc Include="PlayBackDlg.h" />
     <QtMoc Include="DownloadDlg.h" />
+    <QtMoc Include="GBSubscribeDlg.h" />
     <ClInclude Include="PlayBackWidget.h" />
     <ClInclude Include="PlayWidget.h" />
     <QtMoc Include="PTZControlDlg.h" />

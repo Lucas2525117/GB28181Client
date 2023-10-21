@@ -44,6 +44,8 @@ public:
 
 	bool Invite(pjsip_dialog* dlg, GB28181MediaContext mediaContext, std::string sdp);
 
+	bool Subscribe(pjsip_dialog* dlg, const std::string& eventName, const std::string& xmlText, const GBSubscribeContext& subContext);
+
 	void Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text = "");
 
 	pjsip_response_addr GetResponseAddr(pjsip_rx_data* rdata);

@@ -15,14 +15,19 @@ void GB_RegisterHandler(int handleType, DataCallback dataCB, void* user)
 	CMySipMedia::GetInstance().RegisterHandler(handleType, dataCB, user);
 }
 
-int GB_PTZControl(const char* gbid, PTZControlType controlType, int paramValue)
+int GB_PTZControl(const char* gbid, int controlType, int paramValue)
 {
-	return CMySipMedia::GetInstance().PTZControl(gbid, controlType, paramValue);
+	return CMySipMedia::GetInstance().PTZControl(gbid, (PTZControlType)controlType, paramValue);
 }
 
-const char* GB_Invite(GB28181MediaContext mediaContext)
+bool GB_Invite(const GB28181MediaContext& mediaContext, GB_TOKEN* token)
 {
-	return CMySipMedia::GetInstance().Invite(mediaContext).c_str();
+	return CMySipMedia::GetInstance().Invite(mediaContext, token);
+}
+
+bool GB_Subscribe(const GBSubscribeContext& subContext, GB_TOKEN* token)
+{
+	return CMySipMedia::GetInstance().Subscribe(subContext, token);
 }
 
 int GB_QueryNetDeviceInfo(int type, const char* gbid)

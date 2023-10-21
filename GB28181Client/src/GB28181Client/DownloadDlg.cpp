@@ -111,13 +111,14 @@ void DownloadDlg::StartDownload()
 	mediaContext.SetDownloadTime(m_startTime, m_endTime);
 	mediaContext.SetStreamType(StreamType_Download);
 	mediaContext.SetDownloadSpeed(ui.cbx_speed->currentText().toInt());  // 倍速下载
-	m_token = GB_Invite(mediaContext);
-	if (m_token.empty())
+	char* token = nullptr;
+	if (!GB_Invite(mediaContext, (GB_TOKEN*)&token))
 	{
 		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("开始录像下载失败"), QMessageBox::Ok);
 		return;
 	}
 
+	m_token = token;
 	m_thread = std::thread(DownloadThread, this);
 }
 

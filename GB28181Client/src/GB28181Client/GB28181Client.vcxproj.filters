@@ -88,6 +88,9 @@
     <ClCompile Include="PTZControlDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GBSubscribeDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h">
@@ -129,6 +132,9 @@
     <QtMoc Include="PTZControlDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="GBSubscribeDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="GBRegisterDlg.ui">
@@ -168,6 +174,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="PTZControlDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="GBSubscribeDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

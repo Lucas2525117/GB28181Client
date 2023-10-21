@@ -31,15 +31,19 @@
 #define GB28181_API GB28181_DECL
 #endif
 
+typedef void* GB_TOKEN;
+
 GB28181_API bool GB_Init(const char* concat, int loglevel);
 
 GB28181_API bool GB_UnInit();
 
 GB28181_API void GB_RegisterHandler(int handleType, DataCallback dataCB, void* user = nullptr);
 
-GB28181_API int GB_PTZControl(const char* gbid, PTZControlType controlType, int paramValue);
+GB28181_API int GB_PTZControl(const char* gbid, int controlType, int paramValue);
 
-GB28181_API const char* GB_Invite(GB28181MediaContext mediaContext);
+GB28181_API bool GB_Invite(const GB28181MediaContext& mediaContext, GB_TOKEN* token);
+
+GB28181_API bool GB_Subscribe(const GBSubscribeContext& subContext, GB_TOKEN* token);
 
 GB28181_API int GB_QueryNetDeviceInfo(int type, const char* gbid);
 

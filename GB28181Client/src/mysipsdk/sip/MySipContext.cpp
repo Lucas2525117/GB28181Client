@@ -27,6 +27,10 @@ bool CMySipContext::Init(const std::string& concat, int logLevel)
 	status = pjsip_tsx_layer_init_module(m_endPoint);
 
 	status = pjsip_ua_init_module(m_endPoint, nullptr);
+	
+	//init subscribe
+	status = pjsip_evsub_init_module(m_endPoint);
+	status = pjsip_pres_init_module(m_endPoint, pjsip_evsub_instance());
 
 	m_pool = pj_pool_create(&m_cachingPool.factory, "proxyapp", 4000, 4000, nullptr);
 	auto pjStr = StrToPjstr(GetAddr());
@@ -123,6 +127,38 @@ bool CMySipContext::Invite(pjsip_dialog* dlg, GB28181MediaContext mediaContext, 
 	pjsip_msg_add_hdr(tdata->msg, reinterpret_cast<pjsip_hdr*>(hdr));
 
 	pjsip_inv_send_msg(inv, tdata);
+	return true;
+}
+
+bool CMySipContext::Subscribe(pjsip_dialog* dlg, const std::string& eventName, const std::string& xmlText, const GBSubscribeContext& subContext)
+{
+	pjsip_evsub* sub = nullptr;
+	static const pj_str_t STR_PRESENCE = { (char*)"presence", 8 };
+	pj_status_t status = pjsip_evsub_create_uac(dlg, nullptr, &STR_PRESENCE, 0, &sub);
+	if (PJ_SUCCESS != status)
+		return false;
+
+	pjsip_tx_data* tdata = nullptr;
+	status = pjsip_evsub_initiate(sub, nullptr, subContext.GetExpires(), &tdata);
+	if (PJ_SUCCESS != status)
+		return false;
+
+	pjsip_media_type type;
+	type.type = pj_str((char*)"application");
+	type.subtype = pj_str((char*)"MANSCDP+xml");
+	auto text = pj_str(const_cast<char*>(xmlText.c_str()));
+	tdata->msg->body = pjsip_msg_body_create(m_pool, &type.type, &type.subtype, &text);
+
+	auto hName = pj_str((char*)"Subject");
+	auto subjectUrl = subContext.GetDeviceId() + ":" + SiralNum + "," + GetCode() + ":" + SiralNum;
+	auto hValue = pj_str(const_cast<char*>(subjectUrl.c_str()));
+	auto hdr = pjsip_generic_string_hdr_create(m_pool, &hName, &hValue);
+	pjsip_msg_add_hdr(tdata->msg, reinterpret_cast<pjsip_hdr*>(hdr));
+
+	status = pjsip_evsub_send_request(sub, tdata);
+	if (PJ_SUCCESS != status)
+		return false;
+
 	return true;
 }
 

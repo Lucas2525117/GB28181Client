@@ -142,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;GB28181_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\sip;..\..\include;..\..\include\pjsip;.\xml;.;..\..\include\tinyXml\inlcude;..\jsoncpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\sip;..\..\include;..\..\include\pjsip-v14;.\xml;.;..\..\include\tinyXml\inlcude;..\jsoncpp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
@@ -150,8 +150,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\tinyXml\x64;..\..\lib\pjsip\x64;..\..\lib\jsoncpp\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;pjlib-util-x86_64-x64-vc11-Release.lib;pjlib-x86_64-x64-vc11-Release.lib;pjmedia-x86_64-x64-vc11-Release.lib;pjsip-core-x86_64-x64-vc11-Release.lib;pjsip-ua-x86_64-x64-vc11-Release.lib;pjsua-lib-x86_64-x64-vc11-Release.lib;legacy_stdio_definitions.lib;tinyXml.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\tinyXml\x64;..\..\lib\pjsip\x64\v14;..\..\lib\jsoncpp\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;pjlib-util-x86_64-x64-vc14-Release.lib;pjlib-x86_64-x64-vc14-Release.lib;pjmedia-x86_64-x64-vc14-Release.lib;pjsip-core-x86_64-x64-vc14-Release.lib;pjsip-ua-x86_64-x64-vc14-Release.lib;pjsua-lib-x86_64-x64-vc14-Release.lib;pjsip-simple-x86_64-x64-vc14-Release.lib;legacy_stdio_definitions.lib;tinyXml.lib;jsoncpp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(OutDir)*.dll" ..\..\bin\ /Y</Command>

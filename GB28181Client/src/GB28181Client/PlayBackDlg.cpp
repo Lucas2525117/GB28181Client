@@ -61,13 +61,14 @@ void PlayBackDlg::Start(const std::string& devID, time_t startTime, time_t endTi
 	mediaContext.SetRecvPort(36000);
 	mediaContext.SetPBTime(startTime, endTime);
 	mediaContext.SetStreamType(StreamType_Playback);
-	m_token = GB_Invite(mediaContext);
-	if (m_token.empty())
+	char* token = nullptr;
+	if (!GB_Invite(mediaContext, (GB_TOKEN*)&token))
 	{
 		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("开始视频点播失败"), QMessageBox::Ok);
 		return;
 	}	
 
+	m_token = token;
 	m_thread = std::thread(PlayBackThread, this);
 }
 

@@ -5,6 +5,7 @@
 #include <functional>
 #include <unordered_map>
 #include <memory>
+#include <mutex>
 #include "MySipContext.h"
 #include "MySipModule.h"
 
@@ -58,7 +59,9 @@ public:
 
 	void RegisterHandler(int handleType, DataCallback dataCB, void* user);
 
-	std::string Invite(GB28181MediaContext mediaContext);
+	bool Invite(const GB28181MediaContext& mediaContext, void** token);
+
+	bool Subscribe(const GBSubscribeContext& subContext, void** token);
 
 	bool Bye(const std::string& token);
 
@@ -77,6 +80,11 @@ public:
 private:
 	CMySipMedia();
 	~CMySipMedia();
+
+	std::string CreateAlarmXmlText_(const std::string& eventName, const GBSubscribeContext& subContext);
+	std::string CreateMobilePositionXmlText_(const std::string& eventName, const GBSubscribeContext& subContext);
+	std::string CreatePTZPositionXmlText_(const std::string& eventName, const GBSubscribeContext& subContext);
+	std::string CreateCatalogXmlText_(const std::string& eventName, const GBSubscribeContext& subContext);
 
 	static pj_bool_t OnReceive(pjsip_rx_data* rdata)
 	{
@@ -131,7 +139,7 @@ private:
 	{
 	}
 
-	static std::string CreateSDPForRealStream(GB28181MediaContext& mediaContext)
+	static std::string CreateSDPForRealStream(const GB28181MediaContext& mediaContext)
 	{
 		char str[500] = { 0 };
 		pj_ansi_snprintf(str, 500,
@@ -154,7 +162,7 @@ private:
 		return str;
 	}
 
-	static std::string CreateSDPForPlayback(GB28181MediaContext& mediaContext)
+	static std::string CreateSDPForPlayback(const GB28181MediaContext& mediaContext)
 	{
 		char str[500] = { 0 };
 		pj_ansi_snprintf(str, 500,
@@ -179,7 +187,7 @@ private:
 		return str;
 	}
 
-	static std::string CreateSDPForDownload(GB28181MediaContext& mediaContext)
+	static std::string CreateSDPForDownload(const GB28181MediaContext& mediaContext)
 	{
 		char str[500] = { 0 };
 		pj_ansi_snprintf(str, 500,
@@ -207,6 +215,9 @@ private:
 	}
 
 private:
+	typedef std::lock_guard<std::recursive_mutex> RecursiveGuard;
+	std::recursive_mutex m_recursive_mutex;   //µÝ¹éËø
+
 	std::unordered_map<std::string, std::shared_ptr<MySipDialog>> m_dialogs;
 	pjsip_module*     m_mainModule = nullptr;
 	pjsip_module*     m_subModule  = nullptr;

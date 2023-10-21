@@ -21,6 +21,14 @@ enum StreamRequiredType
 	StreamType_Download = 2
 };
 
+enum SubscribeType
+{
+	Alarm_Subscribe = 0,          // 报警订阅
+	MobilePosition_Subscribe,     // 移动设备订阅
+	PTZPosition_Subscribe,        // PTZ精准位置变化订阅
+	Catalog_Subscribe,            // 目录订阅
+};
+
 enum DeviceControlType
 {
 	ControlType_PTZCmd = 0,         // 云台控制
@@ -125,8 +133,32 @@ private:
 	int64_t        m_downloadStartTime;
 	int64_t        m_downloadEndTime;
 	unsigned short m_recvPort;
-	StreamRequiredType  m_streamRequiredType = StreamType_RealStream;
+	StreamRequiredType  m_streamRequiredType;
 	int            m_downloadSpeed = 1;  // 默认1倍速
+};
+
+class GBSubscribeContext
+{
+public:
+	explicit GBSubscribeContext() {}
+
+	void SetDeviceId(const std::string& deviceId) { m_deviceId = deviceId; }
+	std::string GetDeviceId() const { return m_deviceId; }
+
+	void SetRequestUrl(const std::string& requestUrl) { m_requestUrl = requestUrl; }
+	std::string GetRequestUrl() const { return m_requestUrl; }
+
+	void SetSubscirbeType(SubscribeType type) { m_subscribeType = type; }
+	SubscribeType GetSubscribeType() const { return m_subscribeType; }
+
+	void SetExpires(int expires) { m_expires = expires; }
+	int GetExpires() const { return m_expires; }
+
+private:
+	SubscribeType  m_subscribeType;
+	std::string    m_requestUrl = "";
+	std::string    m_deviceId = "";
+	int            m_expires = 0;
 };
 
 #endif
