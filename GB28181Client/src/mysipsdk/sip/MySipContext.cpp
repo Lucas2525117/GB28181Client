@@ -130,11 +130,11 @@ bool CMySipContext::Invite(pjsip_dialog* dlg, GB28181MediaContext mediaContext, 
 	return true;
 }
 
-bool CMySipContext::Subscribe(pjsip_dialog* dlg, const std::string& eventName, const std::string& xmlText, const GBSubscribeContext& subContext)
+bool CMySipContext::Subscribe(pjsip_dialog* dlg, pjsip_evsub_user* pres_user, const std::string& eventName, const std::string& xmlText, const GBSubscribeContext& subContext)
 {
 	pjsip_evsub* sub = nullptr;
 	static const pj_str_t STR_PRESENCE = { (char*)"presence", 8 };
-	pj_status_t status = pjsip_evsub_create_uac(dlg, nullptr, &STR_PRESENCE, 0, &sub);
+	pj_status_t status = pjsip_evsub_create_uac(dlg, pres_user, &STR_PRESENCE, 0, &sub);
 	if (PJ_SUCCESS != status)
 		return false;
 

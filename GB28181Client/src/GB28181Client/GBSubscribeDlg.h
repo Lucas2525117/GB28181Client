@@ -15,7 +15,7 @@ public:
 	~GBSubscribeDlg();
 
 signals:
-	void sigSubscribe(const QString& gbid, const QString& ipp, int subType, int expires);
+	void sigSubscribe(const QString& gbid, const QString& ipp, const QString& startTime, const QString& endTime, int subType, int expires);
 
 private:
 	Ui::GBSubscribeDlg ui;

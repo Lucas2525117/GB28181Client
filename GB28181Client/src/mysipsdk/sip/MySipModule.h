@@ -29,6 +29,8 @@ public:
 
 	void RegisterHandler(int type, DataCallback dataCB, void* user);
 
+	void OnSubNotify(pjsip_rx_data* rdata);
+
 private:
 	CMySipModule();
 	~CMySipModule();

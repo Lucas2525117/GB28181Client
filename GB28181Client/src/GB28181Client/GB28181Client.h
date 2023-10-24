@@ -75,7 +75,7 @@ private slots:
     void slotStopVideoPlay();
     void slotQueryRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime);
     void slotPTZControl(const QString& gbid, int type, int paramValue);
-    void slotSubscribe(const QString& gbid, const QString& ipp, int subType, int expires);
+    void slotSubscribe(const QString& gbid, const QString& ipp, const QString& startTime, const QString& endTime, int subType, int expires);
 
 private:
     Ui::GB28181ClientClass ui;

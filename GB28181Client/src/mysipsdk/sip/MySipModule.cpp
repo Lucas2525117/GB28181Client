@@ -70,3 +70,8 @@ void CMySipModule::RegisterHandler(int type, DataCallback dataCB, void* user)
 		m_handlers.push_back(handle);
 	}
 }
+
+void CMySipModule::OnSubNotify(pjsip_rx_data* rdata)
+{
+	OnReceive(rdata);
+}

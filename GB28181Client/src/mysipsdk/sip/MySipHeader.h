@@ -154,10 +154,17 @@ public:
 	void SetExpires(int expires) { m_expires = expires; }
 	int GetExpires() const { return m_expires; }
 
+	void SetSubStartTime(const std::string& startTime) { m_subStartTime = startTime; }
+	std::string GetSubStartTime() const { return m_subStartTime; }
+	void SetSubEndTime(const std::string& endTime) { m_subEndTime = endTime; }
+	std::string GetSubEndTime() const { return m_subEndTime; }
+
 private:
 	SubscribeType  m_subscribeType;
 	std::string    m_requestUrl = "";
 	std::string    m_deviceId = "";
+	std::string    m_subStartTime = "";
+	std::string    m_subEndTime = "";
 	int            m_expires = 0;
 };
 

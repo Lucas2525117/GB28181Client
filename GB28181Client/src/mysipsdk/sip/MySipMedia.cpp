@@ -9,6 +9,42 @@ static int threadProc(void* param)
 	return 0;
 }
 
+static void pres_on_evsub_state(pjsip_evsub* sub, pjsip_event* event)
+{
+}
+
+static void pres_on_evsub_tsx_state(pjsip_evsub* sub, pjsip_transaction* tsx,
+	pjsip_event* event)
+{
+}
+
+static void pres_on_evsub_rx_refresh(pjsip_evsub* sub,
+	pjsip_rx_data* rdata,
+	int* p_st_code,
+	pj_str_t** p_st_text,
+	pjsip_hdr* res_hdr,
+	pjsip_msg_body** p_body)
+{
+}
+
+static void pres_on_evsub_rx_notify(pjsip_evsub* sub,
+	pjsip_rx_data* rdata,
+	int* p_st_code,
+	pj_str_t** p_st_text,
+	pjsip_hdr* res_hdr,
+	pjsip_msg_body** p_body)
+{
+	CMySipMedia::GetInstance().OnSubscribeNotify(sub, rdata);
+}
+
+static void pres_on_evsub_client_refresh(pjsip_evsub* sub)
+{
+}
+
+static void pres_on_evsub_server_timeout(pjsip_evsub* sub)
+{
+}
+
 CMySipMedia::CMySipMedia()
 {
 }
@@ -230,7 +266,17 @@ bool CMySipMedia::Subscribe(const GBSubscribeContext& subContext, void** token)
 		xmlText = CreateCatalogXmlText_(eventName, subContext);
 	}
 
-	if (!CMySipContext::GetInstance().Subscribe(dlg, eventName, xmlText, subContext))
+	static pjsip_evsub_user pres_user =
+	{
+		&pres_on_evsub_state,
+		&pres_on_evsub_tsx_state,
+		&pres_on_evsub_rx_refresh,
+		&pres_on_evsub_rx_notify,
+		&pres_on_evsub_client_refresh,
+		&pres_on_evsub_server_timeout,
+	};
+
+	if (!CMySipContext::GetInstance().Subscribe(dlg, &pres_user, eventName, xmlText, subContext))
 		return false;
 
 	*token = mytoken;
@@ -321,6 +367,11 @@ int CMySipMedia::PTZControl(const std::string& gbid, PTZControlType controlType,
 	return CMySipContext::GetInstance().PTZControl(device.get(), gbid, controlType, paramValue);
 }
 
+void CMySipMedia::OnSubscribeNotify(pjsip_evsub* sub, pjsip_rx_data* rdata)
+{
+	CMySipModule::GetInstance().OnSubNotify(rdata);
+}
+
 bool CMySipMedia::Bye(const std::string& token)
 {
 	pj_thread_desc rtpdesc;
@@ -352,14 +403,22 @@ bool CMySipMedia::Bye(const std::string& token)
 
 std::string CMySipMedia::CreateAlarmXmlText_(const std::string& eventName, const GBSubscribeContext& subContext)
 {
-	char szAlarmInfo[200] = { 0 };
-	pj_ansi_snprintf(szAlarmInfo, 200,
+	char szAlarmInfo[500] = { 0 };
+	pj_ansi_snprintf(szAlarmInfo, 500,
 		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 		"<Query>\n"
 		"<CmdType>%s</CmdType>\n"
 		"<SN>17430</SN>\n"
 		"<DeviceID>%s</DeviceID>\n"
-		"</Query>\n", eventName.c_str(), subContext.GetDeviceId().c_str()
+		"<StartAlarmPrority>0</StartAlarmPrority>\n"
+		"<EndAlarmPrority>0</EndAlarmPrority>\n"
+		"<AlarmMethod>0</AlarmMethod>\n"
+		"<StartTime>%s</StartTime>\n"
+		"<EndTime>%s</EndTime>\n"
+		"</Query>\n", eventName.c_str()
+		, subContext.GetDeviceId().c_str()
+		, subContext.GetSubStartTime().c_str()
+		, subContext.GetSubEndTime().c_str()
 	);
 
 	return szAlarmInfo;
@@ -367,14 +426,22 @@ std::string CMySipMedia::CreateAlarmXmlText_(const std::string& eventName, const
 
 std::string CMySipMedia::CreateMobilePositionXmlText_(const std::string& eventName, const GBSubscribeContext& subContext)
 {
-	char szAlarmInfo[200] = { 0 };
-	pj_ansi_snprintf(szAlarmInfo, 200,
+	char szAlarmInfo[500] = { 0 };
+	pj_ansi_snprintf(szAlarmInfo, 500,
 		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 		"<Query>\n"
 		"<CmdType>%s</CmdType>\n"
 		"<SN>17430</SN>\n"
 		"<DeviceID>%s</DeviceID>\n"
-		"</Query>\n", eventName.c_str(), subContext.GetDeviceId().c_str()
+		"<StartAlarmPrority>0</StartAlarmPrority>\n"
+		"<EndAlarmPrority>0</EndAlarmPrority>\n"
+		"<AlarmMethod>0</AlarmMethod>\n"
+		"<StartTime>%s</StartTime>\n"
+		"<EndTime>%s</EndTime>\n"
+		"</Query>\n", eventName.c_str()
+		, subContext.GetDeviceId().c_str()
+		, subContext.GetSubStartTime().c_str()
+		, subContext.GetSubEndTime().c_str()
 	);
 
 	return szAlarmInfo;
@@ -382,14 +449,22 @@ std::string CMySipMedia::CreateMobilePositionXmlText_(const std::string& eventNa
 
 std::string CMySipMedia::CreatePTZPositionXmlText_(const std::string& eventName, const GBSubscribeContext& subContext)
 {
-	char szAlarmInfo[200] = { 0 };
-	pj_ansi_snprintf(szAlarmInfo, 200,
+	char szAlarmInfo[500] = { 0 };
+	pj_ansi_snprintf(szAlarmInfo, 500,
 		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 		"<Query>\n"
 		"<CmdType>%s</CmdType>\n"
 		"<SN>17430</SN>\n"
 		"<DeviceID>%s</DeviceID>\n"
-		"</Query>\n", eventName.c_str(), subContext.GetDeviceId().c_str()
+		"<StartAlarmPrority>0</StartAlarmPrority>\n"
+		"<EndAlarmPrority>0</EndAlarmPrority>\n"
+		"<AlarmMethod>0</AlarmMethod>\n"
+		"<StartTime>%s</StartTime>\n"
+		"<EndTime>%s</EndTime>\n"
+		"</Query>\n", eventName.c_str()
+		, subContext.GetDeviceId().c_str()
+		, subContext.GetSubStartTime().c_str()
+		, subContext.GetSubEndTime().c_str()
 	);
 
 	return szAlarmInfo;
@@ -397,14 +472,22 @@ std::string CMySipMedia::CreatePTZPositionXmlText_(const std::string& eventName,
 
 std::string CMySipMedia::CreateCatalogXmlText_(const std::string& eventName, const GBSubscribeContext& subContext)
 {
-	char szAlarmInfo[200] = { 0 };
-	pj_ansi_snprintf(szAlarmInfo, 200,
+	char szAlarmInfo[500] = { 0 };
+	pj_ansi_snprintf(szAlarmInfo, 500,
 		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 		"<Query>\n"
 		"<CmdType>%s</CmdType>\n"
 		"<SN>17430</SN>\n"
 		"<DeviceID>%s</DeviceID>\n"
-		"</Query>\n", eventName.c_str(), subContext.GetDeviceId().c_str()
+		"<StartAlarmPrority>0</StartAlarmPrority>\n"
+		"<EndAlarmPrority>0</EndAlarmPrority>\n"
+		"<AlarmMethod>0</AlarmMethod>\n"
+		"<StartTime>%s</StartTime>\n"
+		"<EndTime>%s</EndTime>\n"
+		"</Query>\n", eventName.c_str()
+		, subContext.GetDeviceId().c_str()
+		, subContext.GetSubStartTime().c_str()
+		, subContext.GetSubEndTime().c_str()
 	);
 
 	return szAlarmInfo;

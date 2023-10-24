@@ -77,6 +77,8 @@ public:
 
 	int PTZControl(const std::string& gbid, PTZControlType controlType, int paramValue);
 
+	void OnSubscribeNotify(pjsip_evsub* sub, pjsip_rx_data* rdata);
+
 private:
 	CMySipMedia();
 	~CMySipMedia();

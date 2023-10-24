@@ -559,7 +559,7 @@ void GB28181Client::slotPTZControl(const QString& gbid, int type, int paramValue
 		QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("PTZ停止失败"), QMessageBox::Ok);
 }
 
-void GB28181Client::slotSubscribe(const QString& gbid, const QString& ipp, int subType, int expires)
+void GB28181Client::slotSubscribe(const QString& gbid, const QString& ipp, const QString& startTime, const QString& endTime, int subType, int expires)
 {
 	auto it = m_mapSubscribeObjs.find(subType);
 	if (it != m_mapSubscribeObjs.end() && expires > 0)
@@ -574,7 +574,8 @@ void GB28181Client::slotSubscribe(const QString& gbid, const QString& ipp, int s
 	subContext.SetDeviceId(gbid.toStdString().c_str());
 	subContext.SetSubscirbeType((SubscribeType)subType);
 	subContext.SetExpires(expires);
-
+	subContext.SetSubStartTime(startTime.toStdString());
+	subContext.SetSubEndTime(endTime.toStdString());
 	char* token = nullptr;
 	if (!GB_Subscribe(subContext, (GB_TOKEN*)&token))
 	{
