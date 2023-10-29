@@ -87,6 +87,18 @@ typedef struct YuvFrame
 	}
 }YuvFrame;
 
+typedef struct AudioFrame
+{
+	unsigned char* data;
+	int datalen;
+
+	AudioFrame()
+	{
+		data = nullptr;
+		datalen = 0;
+	}
+}AudioFrame;
+
 static bool ipAddrIsOK(const QString& ip)
 {
 	if (ip.isEmpty())

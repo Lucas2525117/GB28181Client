@@ -52,7 +52,7 @@ PlayWidget::~PlayWidget()
 
 void PlayWidget::Init()
 {
-	m_ffmpeg = new(std::nothrow) XFFmpeg(VideoYuvCB, this);
+	m_ffmpeg = new(std::nothrow) XFFmpeg(VideoYuvCB, nullptr, this);
 }
 
 void PlayWidget::Play(const YuvFrame* yuv)

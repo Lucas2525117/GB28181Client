@@ -71,6 +71,12 @@ int CGBUdpStreamReceiver::Stop()
 	return 0;
 }
 
+int CGBUdpStreamReceiver::SetCodec(int codec)
+{
+	m_codec = codec;
+	return 0;
+}
+
 // gbudp://192.168.1.2:36000
 int CGBUdpStreamReceiver::ParseUrl_(const std::string& gburl)
 {
@@ -155,7 +161,7 @@ int CGBUdpStreamReceiver::ProcessData_(uint32_t pts)
 {
 	if (!m_parse && 0 != m_payload)
 	{
-		m_parse = new(std::nothrow) CPSParse(m_func, m_user); // 默认采用ps封装
+		m_parse = new(std::nothrow) CPSParse(m_codec, m_func, m_user); // 默认采用ps封装
 		if (0 != m_baseTime)
 			m_parse->SetBaseTime(m_baseTime);
 	}

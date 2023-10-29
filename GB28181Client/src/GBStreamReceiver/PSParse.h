@@ -9,7 +9,7 @@
 class CPSParse
 {
 public:
-	CPSParse(GBDataCallBack dataCB, void* user);
+	CPSParse(int codec, GBDataCallBack dataCB, void* user);
 	~CPSParse();
 
 	int InputData(void* data, int len);
@@ -26,6 +26,7 @@ private:
 	int m_ps_stream;
 	int64_t m_ps_clock;
 
+	int m_codec;
 	GBDataCallBack m_func;
 	void* m_user;
 };

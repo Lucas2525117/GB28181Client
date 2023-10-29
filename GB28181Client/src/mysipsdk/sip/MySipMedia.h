@@ -216,6 +216,28 @@ private:
 		return str;
 	}
 
+	static std::string CreateSDPForAudio(const GB28181MediaContext& mediaContext)
+	{
+		char str[500] = { 0 };
+		pj_ansi_snprintf(str, 500,
+			"v=0\n"
+			"o=%s 0 0 IN IP4 %s\n"
+			"s=Talk\n"
+			"c=IN IP4 %s\n"
+			"t=0 0\n"
+			"m=audio %d RTP/AVP 8\n"
+			"a=sendrecv\n"
+			"a=rtpmap:8 PCMA/8000\n"
+			"f=v/a/1/8/1\n"
+			"y=0100000001\n",
+			mediaContext.GetDeviceId().c_str(),
+			mediaContext.GetRecvAddress().c_str(),
+			mediaContext.GetRecvAddress().c_str(),
+			mediaContext.GetRecvPort()
+		);
+		return str;
+	}
+
 private:
 	typedef std::lock_guard<std::recursive_mutex> RecursiveGuard;
 	std::recursive_mutex m_recursive_mutex;   //µÝ¹éËø

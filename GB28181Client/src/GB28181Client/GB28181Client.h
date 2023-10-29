@@ -19,8 +19,8 @@
 #include "GBRecordInfoDlg.h"
 #include "GBRecordInfoResultDlg.h"
 #include "GBSubscribeDlg.h"
+#include "GBTalkDlg.h"
 #include "AddOrgDlg.h"
-
 #include "AddDeviceDlg.h"
 #include "AddChannelDlg.h"
 #include "PTZControlDlg.h"
@@ -29,6 +29,7 @@
 #include "MySipInfo.h"
 #include "StreamReceiverInterface.h"
 #include "PlayWidget.h"
+#include "AudioPlayWidget.h"
 
 class GB28181Client : public QMainWindow
 {
@@ -39,9 +40,11 @@ public:
     ~GB28181Client();
 
     void HandleGBMsgCB(int type, void* data);
-    void HandleGBDataCB(int avtype, void* data, int dataLen);
+    void HandleVideoDataCB(int avtype, void* data, int dataLen);
+    void HandleAudioDataCB(int avtype, void* data, int dataLen);
 
-    void GBClientDataWorker(const std::string& localip, const std::string& localport);
+    void VidioDataWorker(const std::string& localip, const std::string& localport);
+    void AudioDataWorker(const std::string& localip, const std::string& localport);
 
 private:
     void InitUi();
@@ -73,6 +76,8 @@ private slots:
     void slotCatalogTimer();
     void slotStartVideoPlay(const QString& gbid, const QString& deviceIP, const QString& gbPort, const QString& localIP, const QString& localRecvPort);
     void slotStopVideoPlay();
+    void slotStartTalk(const QString& gbid, const QString& deviceIP, const QString& gbPort, const QString& localIP, const QString& localRecvPort);
+    void slotStopTalk();
     void slotQueryRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime);
     void slotPTZControl(const QString& gbid, int type, int paramValue);
     void slotSubscribe(const QString& gbid, const QString& ipp, const QString& startTime, const QString& endTime, int subType, int expires);
@@ -92,15 +97,18 @@ private:
     GBVideoPlayDlg*    m_GBVideoPlayDlg  = nullptr;
     GBRecordInfoDlg*   m_GBRecordInfoDlg = nullptr;
     GBRecordInfoResultDlg* m_GBRecordInfoResultDlg = nullptr;
-    GBSubscribeDlg*    m_GBSubscribeDlg = nullptr;
+    GBSubscribeDlg*    m_GBSubscribeDlg  = nullptr;
+    GBTalkDlg*         m_GBTalkDlg       = nullptr;
     AddOrgDlg*         m_addOrgDlg       = nullptr;
     AddDeviceDlg*      m_addDeviceDlg    = nullptr;
     AddChannelDlg*     m_addChannelDlg   = nullptr;
-    PTZControlDlg*     m_ptzControlDlg = nullptr;
+    PTZControlDlg*     m_ptzControlDlg   = nullptr;
     QTabWidget*        m_tabWidget       = nullptr;
     QWidget*           m_widget          = nullptr;
     IStreamReceiver*   m_receiver        = nullptr;
+    IStreamReceiver*   m_audioReceiver   = nullptr;
     PlayWidget*        m_playWidget      = nullptr;
+    AudioPlayWidget*   m_audioPlayWidget = nullptr;
     QStackedWidget*    m_stackedWidget   = nullptr;
 
     CMyCatalogInfo     m_catalog;
@@ -109,7 +117,8 @@ private:
     CMyAlarmInfo       m_alarmInfo;
     std::string        m_registerCBMsg;
     std::string        m_gbid;
-    std::string        m_token;
+    std::string        m_token = "";
+    std::string        m_audioToken = "";
 
     typedef std::map<int, std::string> SubscribeObjsMap;
     SubscribeObjsMap   m_mapSubscribeObjs;

@@ -1,4 +1,5 @@
 ﻿#include "GB28181Client.h"
+#include "mpeg-ps.h"
 #include <thread>
 
 static void MyGBMsgCB(int type, void* user, void* data)
@@ -8,18 +9,33 @@ static void MyGBMsgCB(int type, void* user, void* data)
 	cli->HandleGBMsgCB(type, data);
 }
 
-static void MyGBDataCB(int avtype, void* data, int dataLen, void* user)
+static void VideoDataCB(int avtype, void* data, int dataLen, void* user)
 {
 	assert(user);
 	GB28181Client* cli = (GB28181Client*)user;
-	cli->HandleGBDataCB(avtype, data, dataLen);
+	cli->HandleVideoDataCB(avtype, data, dataLen);
 }
 
-int GBClientDataWorkerThread(void* param, const std::string& localip, const std::string& localport)
+static void AudioDataCB(int avtype, void* data, int dataLen, void* user)
+{
+	assert(user);
+	GB28181Client* cli = (GB28181Client*)user;
+	cli->HandleAudioDataCB(avtype, data, dataLen);
+}
+
+int VideoDataThread(void* param, const std::string& localip, const std::string& localport)
 {
 	assert(param);
 	GB28181Client* client = (GB28181Client*)param;
-	client->GBClientDataWorker(localip, localport);
+	client->VidioDataWorker(localip, localport);
+	return 0;
+}
+
+int AudioDataThread(void* param, const std::string& localip, const std::string& localport)
+{
+	assert(param);
+	GB28181Client* client = (GB28181Client*)param;
+	client->AudioDataWorker(localip, localport);
 	return 0;
 }
 
@@ -120,6 +136,14 @@ void GB28181Client::InitUi()
 		connect(m_GBSubscribeDlg, &GBSubscribeDlg::sigSubscribe, this, &GB28181Client::slotSubscribe);
 	}
 
+	// 语音对讲界面
+	m_GBTalkDlg = new(std::nothrow) GBTalkDlg();
+	if (m_GBTalkDlg)
+	{
+		connect(m_GBTalkDlg, &GBTalkDlg::sigSTalk, this, &GB28181Client::slotStartTalk);
+		connect(m_GBTalkDlg, &GBTalkDlg::sigStopTalk, this, &GB28181Client::slotStopTalk);
+	}
+
 	m_tabWidget = new(std::nothrow) QTabWidget();
 	if (m_tabWidget)
 	{
@@ -128,6 +152,10 @@ void GB28181Client::InitUi()
 			if (5 == index)
 			{
 				m_stackedWidget->setCurrentIndex(1);
+			}
+			else if (8 == index)
+			{
+				m_stackedWidget->setCurrentIndex(2);
 			}
 			else
 			{
@@ -145,6 +173,7 @@ void GB28181Client::InitUi()
 		m_tabWidget->addTab(m_GBRecordInfoDlg, QString::fromLocal8Bit("视音频文件检索"));
 		m_tabWidget->addTab(m_ptzControlDlg, QString::fromLocal8Bit("控制(PTZ控制)"));
 		m_tabWidget->addTab(m_GBSubscribeDlg, QString::fromLocal8Bit("订阅与通知"));
+		m_tabWidget->addTab(m_GBTalkDlg, QString::fromLocal8Bit("语音对讲"));
 	}
 
 	// 添加组织界面
@@ -165,15 +194,23 @@ void GB28181Client::InitUi()
 		connect(m_addChannelDlg, SIGNAL(sigAddChannel(const QString&)), this, SLOT(slotAddChannel(const QString&)));
 	}
 
-	// 视频展示区
 	m_stackedWidget = new(std::nothrow) QStackedWidget();
 	setCentralWidget(m_stackedWidget);
+
+	// 视频展示区
 	m_playWidget = new(std::nothrow) PlayWidget();
 	if(m_playWidget)
 		m_playWidget->Init();
+
+	// 音频播放区
+	m_audioPlayWidget = new(std::nothrow) AudioPlayWidget();
+	if (m_audioPlayWidget)
+		m_audioPlayWidget->Init();
+
 	m_GBRecordInfoResultDlg = new(std::nothrow) GBRecordInfoResultDlg();
 	m_stackedWidget->insertWidget(0, m_playWidget);
 	m_stackedWidget->insertWidget(1, m_GBRecordInfoResultDlg);
+	m_stackedWidget->insertWidget(2, m_audioPlayWidget);
 
 	// 设备/通道树展示栏
 	m_treeWidget = new(std::nothrow) QTreeWidget();
@@ -513,7 +550,7 @@ void GB28181Client::slotStartVideoPlay(const QString& gbid, const QString& devic
 		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("开始视频点播失败"), QMessageBox::Ok);
 
 	m_token = token;
-	std::thread th(GBClientDataWorkerThread, this, localIP.toStdString(), localRecvPort.toStdString());
+	std::thread th(VideoDataThread, this, localIP.toStdString(), localRecvPort.toStdString());
 	th.detach();
 }
 
@@ -529,6 +566,42 @@ void GB28181Client::slotStopVideoPlay()
 	m_receiver->DeleteThis();
 	m_receiver = nullptr;
 	GB_Bye(m_token.c_str());
+}
+
+void GB28181Client::slotStartTalk(const QString& gbid, const QString& deviceIP, const QString& gbPort, const QString& localIP, const QString& localRecvPort)
+{
+	if (m_audioReceiver)
+	{
+		QMessageBox::information(this, QString::fromLocal8Bit("通知"), QString::fromLocal8Bit("当前正在对讲"), QMessageBox::Ok);
+		return;
+	}
+
+	std::string requestUrl = "sip:" + gbid.toStdString() + "@" + deviceIP.toStdString() + ":" + gbPort.toStdString();
+	GB28181MediaContext mediaContext(requestUrl);
+	mediaContext.SetRecvAddress(localIP.toStdString());
+	mediaContext.SetRecvPort(localRecvPort.toInt());
+	mediaContext.SetStreamType(StreamType_Audio);
+	char* token = nullptr;
+	if (!GB_Invite(mediaContext, (GB_TOKEN*)&token))
+		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("开始视频点播失败"), QMessageBox::Ok);
+
+	m_audioToken = token;
+	std::thread th(AudioDataThread, this, localIP.toStdString(), localRecvPort.toStdString());
+	th.detach();
+}
+
+void GB28181Client::slotStopTalk()
+{
+	if (m_audioToken.empty() || !m_audioReceiver)
+	{
+		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("请先开始视频点播"), QMessageBox::Ok);
+		return;
+	}
+
+	m_audioReceiver->Stop();
+	m_audioReceiver->DeleteThis();
+	m_audioReceiver = nullptr;
+	GB_Bye(m_audioToken.c_str());
 }
 
 void GB28181Client::slotQueryRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime)
@@ -620,17 +693,31 @@ void GB28181Client::HandleGBMsgCB(int type, void* data)
 	}
 }
 
-void GB28181Client::HandleGBDataCB(int avtype, void* data, int dataLen)
+void GB28181Client::HandleVideoDataCB(int avtype, void* data, int dataLen)
 {
 	if (m_playWidget)
 		m_playWidget->AddData(CODEC_VIDEO_H264, data, dataLen);
 }
 
-void GB28181Client::GBClientDataWorker(const std::string& localip, const std::string& localport)
+void GB28181Client::HandleAudioDataCB(int avtype, void* data, int dataLen)
+{
+	if (m_audioPlayWidget)
+		m_audioPlayWidget->AddData(CODEC_AUDIO_G711, data, dataLen);
+}
+
+void GB28181Client::VidioDataWorker(const std::string& localip, const std::string& localport)
 {
 	std::string gburl = "gbudp://" + localip + ":" + localport;
-	m_receiver = GB_CreateStreamReceiver(gburl.c_str(), MyGBDataCB, this);
+	m_receiver = GB_CreateStreamReceiver(gburl.c_str(), VideoDataCB, this);
 	m_receiver->Start();
+}
+
+void GB28181Client::AudioDataWorker(const std::string& localip, const std::string& localport)
+{
+	std::string gburl = "gbudp://" + localip + ":" + localport;
+	m_audioReceiver = GB_CreateStreamReceiver(gburl.c_str(), AudioDataCB, this);
+	m_audioReceiver->SetCodec(STREAM_AUDIO_G711A);
+	m_audioReceiver->Start();
 }
 
 void GB28181Client::HandleCataLogData(void* data)

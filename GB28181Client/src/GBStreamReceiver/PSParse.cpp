@@ -55,8 +55,9 @@ static BOOL IsVideo(int avtype)
 	return FALSE;
 }
 
-CPSParse::CPSParse(GBDataCallBack dataCB, void* user)
-	: m_func(dataCB)
+CPSParse::CPSParse(int codec, GBDataCallBack dataCB, void* user)
+	: m_codec(codec)
+	, m_func(dataCB)
 	, m_user(user)
 {
 	struct ps_muxer_func_t func;
@@ -64,7 +65,7 @@ CPSParse::CPSParse(GBDataCallBack dataCB, void* user)
 	func.free = Free;
 	func.write = Write;
 	m_ps = ps_muxer_create(&func, this);
-	m_ps_stream = ps_muxer_add_stream(m_ps, STREAM_VIDEO_H264, nullptr, 0);
+	m_ps_stream = ps_muxer_add_stream(m_ps, codec, nullptr, 0);
 }
 
 CPSParse::~CPSParse()

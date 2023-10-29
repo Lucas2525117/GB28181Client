@@ -194,6 +194,10 @@ bool CMySipMedia::Invite(const GB28181MediaContext& mediaContext, void** token)
 	{
 		sdp = CreateSDPForDownload(mediaContext);
 	}
+	else if (StreamRequiredType::StreamType_Audio == mediaContext.GetStreamType())
+	{
+		sdp = CreateSDPForAudio(mediaContext);
+	}
 
 	CMySipContext::GetInstance().Invite(dlg, mediaContext, sdp);
 	*token = mytoken;

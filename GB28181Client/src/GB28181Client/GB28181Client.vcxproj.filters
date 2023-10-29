@@ -91,6 +91,12 @@
     <ClCompile Include="GBSubscribeDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AudioPlayWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GBTalkDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h">
@@ -135,6 +141,12 @@
     <QtMoc Include="GBSubscribeDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="AudioPlayWidget.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="GBTalkDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="GBRegisterDlg.ui">
@@ -177,6 +189,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="GBSubscribeDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="AudioPlayWidget.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="GBTalkDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

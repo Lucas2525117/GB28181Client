@@ -18,7 +18,8 @@ enum StreamRequiredType
 {
 	StreamType_RealStream = 0,
 	StreamType_Playback = 1,
-	StreamType_Download = 2
+	StreamType_Download = 2,
+	StreamType_Audio = 3,
 };
 
 enum SubscribeType
