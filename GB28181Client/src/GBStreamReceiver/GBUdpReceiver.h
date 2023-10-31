@@ -5,6 +5,7 @@
 #include "rtpsession.h"
 #include "GBPublic.h"
 #include "PSParse.h"
+#include "G711AParse.h"
 #include <winsock2.h>
 #include <WS2tcpip.h>
 #include <thread>
@@ -33,7 +34,7 @@ public:
 	virtual void DeleteThis() override;
 
 	// 开始收流
-	virtual int Start() override;
+	virtual int Start(int streamType) override;
 
 	// 停止收流
 	virtual int Stop() override;
@@ -42,7 +43,8 @@ public:
 	virtual int SetCodec(int codec) override;
 
 public:
-	void GBDataWorker();
+	void VideoDataWorker();
+	void AudioDataWorker();
 
 private:
 	int ParseUrl_(const std::string& gburl);
@@ -51,6 +53,8 @@ private:
 	int PackData_(struct rtp_packet* packet);
 	int ProcessData_(uint32_t pts);
 	int ProcessCachePackets_(struct rtp_packet* packet);
+
+	int PackAudioData_(void* data, int len);
 
 	SOCKET UDPCreate_();
 	bool UDPBind_(SOCKET sock, int port);
@@ -76,11 +80,13 @@ private:
 
 	uint64_t          m_baseTime = 0;
 	CPSParse*         m_parse = nullptr;
+	CG711AParse*      m_G711AParse = nullptr;
 	bool              m_lost = false;
 	bool              m_needIframe = false;
 
 	std::thread       m_thread;
-	int               m_codec = STREAM_VIDEO_H264;
+	int               m_codec = PSI_STREAM_H264;
+	int               m_streamType = 0;
 };
 
 #endif

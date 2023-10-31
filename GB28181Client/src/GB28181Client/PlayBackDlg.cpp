@@ -92,7 +92,7 @@ void PlayBackDlg::OnWorkThread()
 {
 	std::string gburl = "gbudp://192.168.0.107:36000";
 	m_receiver = GB_CreateStreamReceiver(gburl.c_str(), MyGBPBDataCB, this);
-	m_receiver->Start();
+	m_receiver->Start(0);
 }
 
 void PlayBackDlg::GBPBDataCB(int avtype, void* data, int dataLen)

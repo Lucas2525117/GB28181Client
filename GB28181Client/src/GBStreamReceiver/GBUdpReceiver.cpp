@@ -10,11 +10,19 @@
 
 #define GB_UDP_RECV_BUF_SIZE (1024)
 
-int GBDataWorkerThread(void* param)
+int VideoWorkerThread(void* param)
 {
 	assert(param);
 	CGBUdpStreamReceiver* receiver = (CGBUdpStreamReceiver*)param;
-	receiver->GBDataWorker();
+	receiver->VideoDataWorker();
+	return 0;
+}
+
+int AudioWorkerThread(void* param)
+{
+	assert(param);
+	CGBUdpStreamReceiver* receiver = (CGBUdpStreamReceiver*)param;
+	receiver->AudioDataWorker();
 	return 0;
 }
 
@@ -37,6 +45,12 @@ CGBUdpStreamReceiver::~CGBUdpStreamReceiver()
 		m_parse = nullptr;
 	}
 
+	if (m_G711AParse)
+	{
+		delete m_G711AParse;
+		m_G711AParse = nullptr;
+	}
+
 	if (m_recvBuf)
 		free(m_recvBuf);
 	m_recvBuf = nullptr;
@@ -54,12 +68,16 @@ void CGBUdpStreamReceiver::DeleteThis()
 	delete this;
 }
 
-int CGBUdpStreamReceiver::Start()
+int CGBUdpStreamReceiver::Start(int streamType)
 {
 	if (!m_running)
 		return -1;
 
-	m_thread = std::thread(GBDataWorkerThread, this);
+	if(0 == streamType)
+		m_thread = std::thread(VideoWorkerThread, this);
+	else if(1 == streamType)
+		m_thread = std::thread(AudioWorkerThread, this);
+	m_streamType = streamType;
 	return 0;
 }
 
@@ -98,7 +116,7 @@ int CGBUdpStreamReceiver::InitRtpSession_()
 {
 	RTPSessionParams sessionParams;
 	sessionParams.SetMinimumRTCPTransmissionInterval(10);
-	sessionParams.SetOwnTimestampUnit(1.0 / 90000.0);
+	sessionParams.SetOwnTimestampUnit(1.0 / 8000.0/*90000.0*/);
 	sessionParams.SetAcceptOwnPackets(true);
 
 	RTPUDPv4TransmissionParams udpV4Params;
@@ -256,6 +274,21 @@ int CGBUdpStreamReceiver::ProcessCachePackets_(struct rtp_packet* packet)
 	return 0;
 }
 
+int CGBUdpStreamReceiver::PackAudioData_(void* data, int len)
+{
+	if (!m_G711AParse && 0 != m_payload)
+	{
+		m_G711AParse = new(std::nothrow) CG711AParse(m_codec, m_func, m_user);
+	}
+
+	if (m_G711AParse)
+	{
+		m_G711AParse->InputData(data, len);
+	}
+
+	return 0;
+}
+
 SOCKET CGBUdpStreamReceiver::UDPCreate_()
 {
 	WSADATA  wsaData;
@@ -290,7 +323,7 @@ void CGBUdpStreamReceiver::UDPClose_(SOCKET sock)
 	}
 }
 
-void CGBUdpStreamReceiver::GBDataWorker()
+void CGBUdpStreamReceiver::VideoDataWorker()
 {
 	uint8_t payload;
 	while (m_running)
@@ -334,6 +367,61 @@ void CGBUdpStreamReceiver::GBDataWorker()
 					else
 					{
 						ProcessCachePackets_(&data);
+					}
+
+					DeletePacket(packet);
+				}
+
+			} while (GotoNextSourceWithData());
+		}
+
+		EndDataAccess();
+		Sleep(30);
+	}
+
+	Destroy();
+}
+
+void CGBUdpStreamReceiver::AudioDataWorker()
+{
+	uint8_t payload;
+	while (m_running)
+	{
+		Poll();
+		BeginDataAccess();
+
+		if (GotoFirstSourceWithData())
+		{
+			do
+			{
+				RTPPacket* packet = nullptr;
+				while (nullptr != (packet = GetNextPacket()))
+				{
+					// 8:PCMA
+					payload = packet->GetPayloadType();
+					if (0 == payload)
+					{
+						DeletePacket(packet);
+						continue;
+					}
+
+					struct rtp_packet data;
+					memset(&data, 0, sizeof(rtp_packet));
+					data.mark = packet->HasMarker();
+					data.pts = packet->GetTimestamp();
+					data.seq = packet->GetSequenceNumber();
+					data.data = packet->GetPayloadData();
+					data.len = packet->GetPayloadLength();
+
+					m_payload = payload;
+					if (m_lastSeq < 0)
+					{
+						m_lastSeq = data.seq - 1;
+					}
+
+					if (m_lastSeq = data.seq - 1)
+					{
+						PackAudioData_(data.data, data.len);
 					}
 
 					DeletePacket(packet);

@@ -31,7 +31,11 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="le_gbid"/>
+       <widget class="QLineEdit" name="le_gbid">
+        <property name="text">
+         <string>11010100002000000001</string>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label">
@@ -55,7 +59,11 @@
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="QLineEdit" name="le_localIp"/>
+       <widget class="QLineEdit" name="le_localIp">
+        <property name="text">
+         <string>100.18.141.86</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="2">
        <widget class="QLabel" name="label_3">

@@ -1,6 +1,5 @@
 #include "PlayWidget.h"
 #include <QPainter>
-#include "XFFmpeg.h"
 
 static void VideoYuvCB(const YuvFrame* yuv, void* userData)
 {
@@ -52,7 +51,7 @@ PlayWidget::~PlayWidget()
 
 void PlayWidget::Init()
 {
-	m_ffmpeg = new(std::nothrow) XFFmpeg(VideoYuvCB, nullptr, this);
+    m_videoDecoder = new(std::nothrow) CVideoDecoder(VideoYuvCB, this);
 }
 
 void PlayWidget::Play(const YuvFrame* yuv)
@@ -82,8 +81,8 @@ void PlayWidget::Play(const YuvFrame* yuv)
 
 void PlayWidget::AddData(int avtype, void* data, int len)
 {
-	if (m_ffmpeg && data && len >= 0)
-		m_ffmpeg->Input(avtype, data, len);
+	if (m_videoDecoder && data && len >= 0)
+        m_videoDecoder->InputVideoData(avtype, data, len);
 }
 
 void PlayWidget::initializeGL()

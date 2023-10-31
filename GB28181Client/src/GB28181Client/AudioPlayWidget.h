@@ -9,8 +9,10 @@
 #include <mutex>
 #include <deque>
 #include <memory>
-#include "XFFmpeg.h"
+#include "AudioDecoder.h"
 #include "ui_AudioPlayWidget.h"
+
+#define AUDIO_STREAM_DATA_SZIE   (512*1024)
 
 class AudioPlayWidget : public QWidget
 {
@@ -21,7 +23,9 @@ public:
 	~AudioPlayWidget();
 
 	void Init();
+	void Stop();
 	void AddData(int avtype, void* data, int len);
+	void Play(const void* data, int datalen);
 
 	void OnAudioWorker();
 
@@ -31,7 +35,7 @@ private slots:
 private:
 	Ui::AudioPlayWidgetClass ui;
 
-	XFFmpeg* m_ffmpeg = nullptr;
+	CAudioDecoder* m_audioDecoder = nullptr;
 	bool m_running = true;
 	std::shared_ptr<QBuffer>       m_audioBuffer = nullptr;
 	std::shared_ptr<QByteArray>    m_audioBytes = nullptr;

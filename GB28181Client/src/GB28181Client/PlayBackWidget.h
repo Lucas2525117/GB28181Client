@@ -6,7 +6,7 @@
 #include <qtimer.h>
 #include <mutex>
 #include "public.h"
-#include "XFFmpeg.h"
+#include "VideoDecoder.h"
 
 #define ATTRIB_VERTEX 3
 #define ATTRIB_TEXTURE 4
@@ -27,7 +27,7 @@ protected:
 	void paintGL() Q_DECL_OVERRIDE;
 
 private:
-	XFFmpeg* m_ffmpeg = nullptr;
+    CVideoDecoder* m_videoDecoder = nullptr;
 
     /**
      * 纹理是一个2D图片，它可以用来添加物体的细节（贴图），纹理可以各种变形后

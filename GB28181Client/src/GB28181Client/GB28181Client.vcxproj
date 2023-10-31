@@ -122,7 +122,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;..\mysipsdk\xml;..\tinyXml;..\..\include\pjsip;..\jsoncpp\include;..\GBStreamReceiver;..\..\include\ffmpeg\include;.\;..\ireader\libmpeg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;..\mysipsdk\xml;..\tinyXml;..\..\include\pjsip;..\jsoncpp\include;..\GBStreamReceiver;..\..\include\ffmpeg\include;.\;..\ireader\libmpeg\include;..\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PreprocessorDefinitions>__x86_64;GB28181_EXPORTS;GB_STREAM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -195,6 +195,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\public\AudioDecoder.cpp" />
+    <ClCompile Include="..\public\VideoDecoder.cpp" />
     <ClCompile Include="AudioPlayWidget.cpp" />
     <ClCompile Include="DownloadDlg.cpp" />
     <ClCompile Include="GBRecordInfoDlg.cpp" />
@@ -205,7 +207,6 @@
     <ClCompile Include="PlayBackWidget.cpp" />
     <ClCompile Include="PlayWidget.cpp" />
     <ClCompile Include="PTZControlDlg.cpp" />
-    <ClCompile Include="XFFmpeg.cpp" />
     <QtRcc Include="GB28181Client.qrc" />
     <QtUic Include="AddChannelDlg.ui" />
     <QtUic Include="AddDeviceDlg.ui" />
@@ -250,7 +251,6 @@
     <ClInclude Include="PlayBackWidget.h" />
     <ClInclude Include="PlayWidget.h" />
     <QtMoc Include="PTZControlDlg.h" />
-    <ClInclude Include="XFFmpeg.h" />
     <QtMoc Include="AddChannelDlg.h" />
     <QtMoc Include="AddDeviceDlg.h" />
     <QtMoc Include="AddOrgDlg.h" />

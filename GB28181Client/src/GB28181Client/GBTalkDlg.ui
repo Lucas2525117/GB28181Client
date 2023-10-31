@@ -36,7 +36,11 @@
        <number>3</number>
       </property>
       <item row="0" column="1">
-       <widget class="QLineEdit" name="le_deviceID"/>
+       <widget class="QLineEdit" name="le_deviceID">
+        <property name="text">
+         <string>34020000001310000002</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_3">
@@ -46,7 +50,11 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="le_deviceIP"/>
+       <widget class="QLineEdit" name="le_deviceIP">
+        <property name="text">
+         <string>100.18.141.85</string>
+        </property>
+       </widget>
       </item>
       <item row="0" column="2">
        <widget class="QLabel" name="label_2">
@@ -58,12 +66,16 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>设备ID:</string>
+         <string>通道编号:</string>
         </property>
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="QLineEdit" name="le_localIP"/>
+       <widget class="QLineEdit" name="le_localIP">
+        <property name="text">
+         <string>100.18.141.86</string>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_4">
@@ -73,7 +85,11 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="le_gbPort"/>
+       <widget class="QLineEdit" name="le_gbPort">
+        <property name="text">
+         <string>5060</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="2">
        <widget class="QLabel" name="label_5">
@@ -83,7 +99,11 @@
        </widget>
       </item>
       <item row="1" column="3">
-       <widget class="QLineEdit" name="le_localPort"/>
+       <widget class="QLineEdit" name="le_localPort">
+        <property name="text">
+         <string>38000</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

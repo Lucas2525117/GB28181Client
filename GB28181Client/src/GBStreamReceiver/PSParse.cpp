@@ -20,69 +20,43 @@ static int Write(void* param, int avtype, void* pes, size_t bytes)
 	return parse->Package(avtype, pes, bytes);
 }
 
-static BOOL IsAudio(int avtype)
+static int OnDemuxerPacket(void* param, int stream, int codecid, int flags, int64_t pts, int64_t dts, const void* data, size_t bytes)
 {
-	switch (avtype)
-	{
-	case STREAM_AUDIO_AAC:
-	case STREAM_AUDIO_G711A:
-	case STREAM_AUDIO_G711U:
-	case STREAM_AUDIO_G722:
-	case STREAM_AUDIO_G723:
-	case STREAM_AUDIO_G729:
-	case STREAM_AUDIO_SVAC:
-		return TRUE;
-	default:
-		return FALSE;
-	}
-
-	return FALSE;
+	assert(param);
+	CPSParse* parse = (CPSParse*)param;
+	return parse->Package(stream, (void*)data, bytes);
 }
 
-static BOOL IsVideo(int avtype)
+static void mpeg_ps_dec_testonstream_10000(void* param, int stream, int codecid, const void* extra, int bytes, int finish)
 {
-	switch (avtype)
-	{
-	case STREAM_VIDEO_MPEG4:
-	case STREAM_VIDEO_H264:
-	case STREAM_VIDEO_H265:
-	case STREAM_VIDEO_SVAC:
-		return TRUE;
-	default:
-		return FALSE;
-	}
-
-	return FALSE;
+	//printf("stream %d, codecid: %d, finish: %s\n", stream, codecid, finish ? "true" : "false");
 }
+
+//rtp 解包
+struct ps_demuxer_notify_t notify_10000 = { mpeg_ps_dec_testonstream_10000, };
 
 CPSParse::CPSParse(int codec, GBDataCallBack dataCB, void* user)
 	: m_codec(codec)
 	, m_func(dataCB)
 	, m_user(user)
 {
-	struct ps_muxer_func_t func;
-	func.alloc = Alloc;
-	func.free = Free;
-	func.write = Write;
-	m_ps = ps_muxer_create(&func, this);
-	m_ps_stream = ps_muxer_add_stream(m_ps, codec, nullptr, 0);
+	m_ps = ps_demuxer_create(OnDemuxerPacket, this);
+	if (m_ps)
+		ps_demuxer_set_notify(m_ps, &notify_10000, this);
 }
 
 CPSParse::~CPSParse()
 {
 	if (m_ps)
-		ps_muxer_destroy(m_ps);
+		ps_demuxer_destroy(m_ps);
 }
 
 int CPSParse::InputData(void* data, int len)
 {
 	if (nullptr == m_ps || nullptr == data || len <= 0)
 		return -1;
-
-	uint64_t clock = time64_now();
-	if (0 == m_ps_clock)
-		m_ps_clock = clock;
-	ps_muxer_input(m_ps, m_ps_stream, 0, (clock - m_ps_clock) * 90, (clock - m_ps_clock) * 90, data, len);
+	
+	ps_demuxer_input(m_ps, (const uint8_t*)data, len);
 	return 0;
 }
 
@@ -91,9 +65,9 @@ void CPSParse::SetBaseTime(int64_t time)
 
 }
 
-int CPSParse::Package(int avtype, void* payload, size_t bytes)
+int CPSParse::Package(int streamid, void* data, size_t bytes)
 {
-	if (!payload || 0 == bytes)
+	if (!data || 0 == bytes)
 		return -1;
 
 	// 暂不处理音频
@@ -101,7 +75,7 @@ int CPSParse::Package(int avtype, void* payload, size_t bytes)
 		return -1;*/
 
 	if (m_func)
-		m_func(avtype, payload, bytes, m_user);
+		m_func(streamid, data, bytes, m_user);
 	return 0;
 }
 

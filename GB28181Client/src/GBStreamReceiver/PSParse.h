@@ -5,6 +5,7 @@
 #include "GBPublic.h"
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 
 class CPSParse
 {
@@ -16,15 +17,17 @@ public:
 
 	void SetBaseTime(int64_t time);
 
-	int Package(int avtype, void* payload, size_t bytes);
+	int Package(int streamid, void* data, size_t bytes);
 
 private:
 	int64_t time64_now();
 
 private:
-	ps_muxer_t* m_ps = nullptr;
-	int m_ps_stream;
-	int64_t m_ps_clock;
+	//ps_muxer_t* m_ps = nullptr;
+	//int m_ps_stream;
+	//int64_t m_ps_clock;
+
+	ps_demuxer_t* m_ps = nullptr;
 
 	int m_codec;
 	GBDataCallBack m_func;

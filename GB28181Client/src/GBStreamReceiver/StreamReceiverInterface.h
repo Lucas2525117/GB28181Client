@@ -37,8 +37,9 @@ public:
 	// 对象删除
 	virtual void DeleteThis() = 0;
 
-	// 开始收流
-	virtual int Start() = 0;
+	// 开始收流 
+	// streamType 0:视频流 1:音频流
+	virtual int Start(int streamType) = 0;
 
 	// 停止收流
 	virtual int Stop() = 0;
