@@ -1,8 +1,8 @@
 #include "GB28181Server.h"
 
-bool GB_Init(const char* concat, int loglevel)
+bool GB_Init(const char* concat, int loglevel, int transType)
 {
-	return CMySipMedia::GetInstance().Init(concat, loglevel);
+	return CMySipMedia::GetInstance().Init(concat, loglevel, transType);
 }
 
 bool GB_UnInit()
@@ -38,6 +38,11 @@ int GB_QueryNetDeviceInfo(int type, const char* gbid)
 void GB_QueryRecordInfo(const char* gbid, const GB28181MediaContext& mediaContext)
 {
 	CMySipMedia::GetInstance().QueryRecordInfo(gbid, mediaContext);
+}
+
+int GB_VoiceBroadcast(const char* gbid, const char* sourceID, const char* targetID)
+{
+	return CMySipMedia::GetInstance().VoiceBroadcast(gbid, sourceID, targetID);
 }
 
 bool GB_Bye(const char* token)

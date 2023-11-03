@@ -220,4 +220,16 @@ typedef struct CMyAlarmInfo
 	}
 }CMyAlarmInfo;
 
+typedef struct CMyBroadcastInfo
+{
+	std::string deviceID;    // 语音输出设备的设备编码
+	std::string result;
+
+	CMyBroadcastInfo()
+	{
+		deviceID = "";
+		result = "";
+	}
+}CMyBroadcastInfo;
+
 #endif

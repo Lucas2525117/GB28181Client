@@ -17,7 +17,7 @@ public:
 	void AddDeviceInfoData(const CMyDeviceInfo& deviceinfo);
 
 signals:
-	void sigQueryDeviceInfo();
+	void sigQueryDeviceInfo(const QString& deviceID);
 
 private:
 	Ui::GBDeviceInfoDlg ui;

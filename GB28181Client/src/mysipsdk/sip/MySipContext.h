@@ -8,6 +8,7 @@
 #include <iosfwd>
 #include <sstream>
 #include <thread>
+#include <mutex>
 #include "MySip.h"
 #include "MySipHeader.h"
 #include "MyGBDevice.h"
@@ -15,6 +16,9 @@
 #define NoHead     0
 #define DateHead   1
 #define AuthenHead 2
+
+#define SUBTYPE_XML   0
+#define SUBTYPE_SDP   1
 
 #define SiralNum  "015359105"
 
@@ -27,7 +31,8 @@ public:
 		return sipContext;
 	}
 
-	bool Init(const std::string& concat, int logLevel);
+	bool Init(const std::string& concat, int logLevel, int transType);
+
 	bool UnInit();
 
 	bool RegisterCallback(pjsip_inv_callback* callback);
@@ -46,13 +51,15 @@ public:
 
 	bool Subscribe(pjsip_dialog* dlg, pjsip_evsub_user* pres_user, const std::string& eventName, const std::string& xmlText, const GBSubscribeContext& subContext);
 
-	void Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text = "");
+	void Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text = "", int subType = SUBTYPE_XML);
 
 	pjsip_response_addr GetResponseAddr(pjsip_rx_data* rdata);
 
 	void QueryDeviceInfo(CMyGBDevice* device, const std::string& gbid, const std::string& scheme = "Catalog");
 
 	void QueryRecordInfo(CMyGBDevice* device, const std::string& gbid, const std::string& startTime, const std::string& endTime, const std::string& scheme);
+
+	int VoiceBroadcast(CMyGBDevice* device, const std::string& sourceID, const std::string& targetID);
 
 	int PTZControl(CMyGBDevice* device, const std::string& gbid, PTZControlType ptzType, int paramValue);
 
@@ -61,6 +68,9 @@ public:
 	std::string GetConcat() { return m_concat; }
 
 	pj_str_t StrToPjstr(const std::string& input);
+
+	std::string GetSipIP() const;
+	std::string GetSipCode() const;
 
 private:
 	CMySipContext();
@@ -75,10 +85,8 @@ private:
 	}
 
 private:
-	std::string GetAddr();
 	int GetPort();
 	std::string GetLocalDomain();
-	std::string GetCode();
 	
 	int SendSipMessage(CMyGBDevice* device, const std::string& sipMsg);
 	std::string ParsePTZCmd(CMyGBDevice* device, const std::string& gbid, PTZControlType ptzType, int paramValue);
@@ -89,6 +97,9 @@ private:
 	pj_caching_pool    m_cachingPool;
 	pjsip_endpoint*    m_endPoint = nullptr;
 	pjsip_auth_srv     m_authentication;
+
+	typedef std::lock_guard<std::recursive_mutex> RecursiveGuard;
+	mutable std::recursive_mutex rmutex_;
 };
 
 #endif

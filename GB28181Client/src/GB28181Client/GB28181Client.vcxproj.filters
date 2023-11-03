@@ -100,6 +100,12 @@
     <ClCompile Include="..\public\VideoDecoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GBVoiceBroadcastDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\VideoEncoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h">
@@ -150,6 +156,9 @@
     <QtMoc Include="GBTalkDlg.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="GBVoiceBroadcastDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="GBRegisterDlg.ui">
@@ -198,6 +207,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="GBTalkDlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="GBVoiceBroadcastDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

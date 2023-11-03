@@ -33,6 +33,12 @@
     <ClInclude Include="G711AParse.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GBTcpClientReceiver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpClient.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GBMain.cpp">
@@ -45,6 +51,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="G711AParse.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GBTcpClientReceiver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\Rtp2PS.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

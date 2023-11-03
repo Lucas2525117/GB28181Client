@@ -51,7 +51,7 @@ public:
 		return sipMedia;
 	}
 
-	bool Init(const std::string& concat, int loglevel);
+	bool Init(const std::string& concat, int loglevel, int transType);
 
 	bool UnInit();
 
@@ -74,6 +74,8 @@ public:
 	int QueryDeviceStatus(int type, const std::string& gbid);
 
 	int QueryRecordInfo(const std::string& gbid, const GB28181MediaContext& mediaContext);
+
+	int VoiceBroadcast(const std::string& gbid, const std::string& sourceID, const std::string& targetID);
 
 	int PTZControl(const std::string& gbid, PTZControlType controlType, int paramValue);
 
@@ -228,7 +230,7 @@ private:
 			"m=audio %d RTP/AVP 8\n"
 			"a=sendrecv\n"
 			"a=rtpmap:8 PCMA/8000\n"
-			"f=v/a/1/8/1\n"
+			"f=v/////a/1/8/1\n"
 			"y=0100000001\n",
 			mediaContext.GetDeviceId().c_str(),
 			mediaContext.GetRecvAddress().c_str(),

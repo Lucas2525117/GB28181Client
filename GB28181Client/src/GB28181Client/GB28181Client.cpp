@@ -68,10 +68,10 @@ void GB28181Client::InitUi()
 	m_GBCataLogDlg = new(std::nothrow) GBCataLogDlg();
 	if (m_GBCataLogDlg)
 	{
-		connect(m_GBCataLogDlg, &GBCataLogDlg::sigQueryCatalog, [=]() {
-			if (!m_gbid.empty())
+		connect(m_GBCataLogDlg, &GBCataLogDlg::sigQueryCatalog, [=](const QString& deviceID) {
+			if (!deviceID.isEmpty())
 			{
-				if (0 != GB_QueryNetDeviceInfo(Type_RecvCatalog, m_gbid.c_str()))
+				if (0 != GB_QueryNetDeviceInfo(Type_RecvCatalog, deviceID.toStdString().c_str()))
 				{
 					QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("查询设备目录失败"), QMessageBox::Ok);
 				}
@@ -82,10 +82,10 @@ void GB28181Client::InitUi()
 	m_GBDeviceInfoDlg = new(std::nothrow) GBDeviceInfoDlg();
 	if (m_GBDeviceInfoDlg)
 	{
-		connect(m_GBDeviceInfoDlg, &GBDeviceInfoDlg::sigQueryDeviceInfo, [=]() {
-			if (!m_gbid.empty())
+		connect(m_GBDeviceInfoDlg, &GBDeviceInfoDlg::sigQueryDeviceInfo, [=](const QString& deviceID) {
+			if (!deviceID.isEmpty())
 			{
-				if (0 != GB_QueryNetDeviceInfo(Type_RecvDeviceInfo, m_gbid.c_str()))
+				if (0 != GB_QueryNetDeviceInfo(Type_RecvDeviceInfo, deviceID.toStdString().c_str()))
 				{
 					QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("查询设备信息失败"), QMessageBox::Ok);
 				}
@@ -96,10 +96,10 @@ void GB28181Client::InitUi()
 	m_GBDeviceStatusDlg = new(std::nothrow) GBDeviceStatusDlg();
 	if (m_GBDeviceStatusDlg)
 	{
-		connect(m_GBDeviceStatusDlg, &GBDeviceStatusDlg::sigQueryDeviceStatus, [=]() {
-			if (!m_gbid.empty())
+		connect(m_GBDeviceStatusDlg, &GBDeviceStatusDlg::sigQueryDeviceStatus, [=](const QString& deviceID) {
+			if (!deviceID.isEmpty())
 			{
-				if (0 != GB_QueryNetDeviceInfo(Type_RecvDeviceStatus, m_gbid.c_str()))
+				if (0 != GB_QueryNetDeviceInfo(Type_RecvDeviceStatus, deviceID.toStdString().c_str()))
 				{
 					QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("查询设备状态失败"), QMessageBox::Ok);
 				}
@@ -144,6 +144,22 @@ void GB28181Client::InitUi()
 		connect(m_GBTalkDlg, &GBTalkDlg::sigStopTalk, this, &GB28181Client::slotStopTalk);
 	}
 
+	// 语音广播
+	m_GBVoiceBroadcastDlg = new(std::nothrow) GBVoiceBroadcastDlg();
+	if (m_GBVoiceBroadcastDlg)
+	{
+		connect(m_GBVoiceBroadcastDlg, &GBVoiceBroadcastDlg::sigVoiceBroadcast, [=](const QString& sourceID, const QString& targetID) {
+			if (!m_gbid.empty() && !sourceID.isEmpty() || !targetID.isEmpty())
+			{
+				if (0 != GB_VoiceBroadcast(sourceID.toStdString().c_str(), m_gbid.c_str(), targetID.toStdString().c_str()))
+				{
+					QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("开启语音广播失败"), QMessageBox::Ok);
+					return;
+				}
+			}
+			});
+	}
+
 	m_tabWidget = new(std::nothrow) QTabWidget();
 	if (m_tabWidget)
 	{
@@ -174,6 +190,7 @@ void GB28181Client::InitUi()
 		m_tabWidget->addTab(m_ptzControlDlg, QString::fromLocal8Bit("控制(PTZ控制)"));
 		m_tabWidget->addTab(m_GBSubscribeDlg, QString::fromLocal8Bit("订阅与通知"));
 		m_tabWidget->addTab(m_GBTalkDlg, QString::fromLocal8Bit("语音对讲"));
+		m_tabWidget->addTab(m_GBVoiceBroadcastDlg, QString::fromLocal8Bit("语音广播"));
 	}
 
 	// 添加组织界面
@@ -272,10 +289,6 @@ void GB28181Client::InitUi()
 		this->addDockWidget(Qt::TopDockWidgetArea, m_operView, Qt::Orientation::Vertical);
 		m_operView->setWidget(m_tabWidget);
 	}
-
-	QTimer* timer = new QTimer();
-	timer->start(5000);
-	connect(timer, &QTimer::timeout, this, &GB28181Client::slotCatalogTimer);
 }
 
 void GB28181Client::InitAction()
@@ -284,8 +297,10 @@ void GB28181Client::InitAction()
 	setMenuBar(menuBar);
 
 	QMenu* menuConnect = new QMenu(QString::fromLocal8Bit("开始"), this);
+	QMenu* menuOper = new QMenu(QString::fromLocal8Bit("操作"), this);
 	QMenu* menuHelp = new QMenu(QString::fromLocal8Bit("帮助"), this);
 	menuBar->addMenu(menuConnect);
+	menuBar->addMenu(menuOper);
 	menuBar->addMenu(menuHelp);
 
 	QAction* actAddOrg = new QAction(QString::fromLocal8Bit("添加组织"), this);
@@ -293,12 +308,41 @@ void GB28181Client::InitAction()
 	menuConnect->addAction(actAddOrg);
 	menuConnect->addAction(actClose);
 
+	QAction* actShowOper = new QAction(QString::fromLocal8Bit("显示操作区"), this);
+	QAction* actHideOper = new QAction(QString::fromLocal8Bit("隐藏操作区"), this);
+	QAction* actShowAlarm = new QAction(QString::fromLocal8Bit("显示报警展示区"), this);
+	QAction* actHideAlarm = new QAction(QString::fromLocal8Bit("隐藏报警展示区"), this);
+	menuOper->addAction(actShowOper);
+	menuOper->addAction(actHideOper);
+	menuOper->addAction(actShowAlarm);
+	menuOper->addAction(actHideAlarm);
+
 	QAction* actVersion = new QAction(QString::fromLocal8Bit("版本信息"), this);
 	menuHelp->addAction(actVersion);
 
 	connect(actAddOrg, &QAction::triggered, [=]() {
 		if (nullptr != m_addOrgDlg)
 			m_addOrgDlg->show();
+		});
+
+	connect(actShowOper, &QAction::triggered, [=]() {
+		if (nullptr != m_operView)
+			m_operView->show();
+		});
+
+	connect(actHideOper, &QAction::triggered, [=]() {
+		if (nullptr != m_operView)
+			m_operView->hide();
+		});
+
+	connect(actShowAlarm, &QAction::triggered, [=]() {
+		if (nullptr != m_logView)
+			m_logView->show();
+		});
+
+	connect(actHideAlarm, &QAction::triggered, [=]() {
+		if (nullptr != m_logView)
+			m_logView->hide();
 		});
 
 	connect(actClose, &QAction::triggered, [=]() {
@@ -453,11 +497,11 @@ void GB28181Client::slotAddChannel(const QString& channelNum)
 	}
 }
 
-void GB28181Client::Start(const std::string& gbid, const std::string& ip, int sipport)
+void GB28181Client::Start(const std::string& gbid, const std::string& ip, int sipport, int transType)
 {
 	// 初始化协议栈并启动
 	std::string localcontact = "SIP:" + gbid +"@" + ip + ":" + std::to_string(sipport);
-	if (!GB_Init(localcontact.c_str(), 3))
+	if (!GB_Init(localcontact.c_str(), 3, transType))
 	{
 		QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("SIP初始化失败"), QMessageBox::Ok);
 		return;
@@ -472,6 +516,9 @@ void GB28181Client::Start(const std::string& gbid, const std::string& ip, int si
 	GB_RegisterHandler(Type_RecvDeviceInfo, MyGBMsgCB, this);
 	GB_RegisterHandler(Type_RecvDeviceStatus, MyGBMsgCB, this);
 	GB_RegisterHandler(Type_Alarm, MyGBMsgCB, this);
+	GB_RegisterHandler(Type_VoiceBroadcast, MyGBMsgCB, this);
+	GB_RegisterHandler(Type_Invite, MyGBMsgCB, this);
+	GB_RegisterHandler(Type_Bye, MyGBMsgCB, this);
 }
 
 void GB28181Client::Stop()
@@ -493,44 +540,6 @@ void GB28181Client::Stop()
 void GB28181Client::closeEvent(QCloseEvent* event)
 {
 	exit(0);
-}
-
-void GB28181Client::slotCatalogTimer()
-{
-	if (m_GBCataLogDlg)
-	{
-		//m_GBCataLogDlg->AddCatalogData(m_catalog);
-		//slotAddDevice(m_catalog.PlatformAddr.c_str());
-	}
-
-	if (m_GBDeviceInfoDlg)
-	{
-		//m_GBDeviceInfoDlg->AddDeviceInfoData(m_deviceinfo);
-		//slotAddChannel(m_deviceinfo.channel.c_str());
-	}
-
-	if (m_GBDeviceStatusDlg)
-	{
-		//m_GBDeviceStatusDlg->AddDeviceStatusData(m_deviceStatus);
-	}
-
-	if (0 == m_registerCBMsg.compare("register ok"))
-	{
-		if (m_GBRegisterDlg)
-			m_GBRegisterDlg->SetRegisterResult(QString::fromLocal8Bit("设备注册成功"));
-	}
-	else if (0 == m_registerCBMsg.compare("unregister ok"))
-	{
-		if (m_GBRegisterDlg)
-			m_GBRegisterDlg->SetRegisterResult(QString::fromLocal8Bit("设备注销成功"));
-
-		if (m_serverStart)
-		{
-			if (!GB_UnInit())
-				return;
-			m_serverStart = false;
-		}
-	}
 }
 
 void GB28181Client::slotStartVideoPlay(const QString& gbid, const QString& deviceIP, const QString& gbPort, const QString& localIP, const QString& localRecvPort)
@@ -694,6 +703,9 @@ void GB28181Client::HandleGBMsgCB(int type, void* data)
 	case Type_Alarm:
 		HandleAlarmInfoData(data);
 		break;
+	case Type_VoiceBroadcast:
+		HandleVoiceBroadcastData(data);
+		break;
 	default:
 		break;
 	}
@@ -746,6 +758,24 @@ void GB28181Client::HandleRegisterData(void* data)
 		return;
 
 	m_registerCBMsg = (char*)data;
+
+	if (0 == m_registerCBMsg.compare("register ok"))
+	{
+		if (m_GBRegisterDlg)
+			m_GBRegisterDlg->SetRegisterResult(QString::fromLocal8Bit("设备注册成功"));
+	}
+	else if (0 == m_registerCBMsg.compare("unregister ok"))
+	{
+		if (m_GBRegisterDlg)
+			m_GBRegisterDlg->SetRegisterResult(QString::fromLocal8Bit("设备注销成功"));
+
+		if (m_serverStart)
+		{
+			if (!GB_UnInit())
+				return;
+			m_serverStart = false;
+		}
+	}
 }
 
 void GB28181Client::HandleDeviceInfoData(void* data)
@@ -783,7 +813,9 @@ void GB28181Client::HandleRecordInfoData(void* data)
 	memcpy(recordInfo, data, sizeof(CMyRecordInfo));
 
 	if (m_GBRecordInfoResultDlg)
+	{
 		m_GBRecordInfoResultDlg->AddRecordInfo(m_gbid.c_str(), recordInfo);
+	}
 }
 
 void GB28181Client::HandleAlarmInfoData(void* data)
@@ -830,4 +862,15 @@ void GB28181Client::HandleAlarmInfoData(void* data)
 	strAlarmInfo += QString::fromLocal8Bit("报警时间:%1 ").arg(m_alarmInfo.alarmTime.c_str());
 	strAlarmInfo += QString::fromLocal8Bit("报警描述:%1").arg(m_alarmInfo.alarmDescription.c_str());
 	AddAlarm(strAlarmInfo);
+}
+
+void GB28181Client::HandleVoiceBroadcastData(void* data)
+{
+	if (!data)
+		return;
+
+	memcpy(&m_broadcastInfo, data, sizeof(CMyBroadcastInfo));
+
+	if (m_GBVoiceBroadcastDlg)
+		m_GBVoiceBroadcastDlg->SetBroadcastResult(m_broadcastInfo.result.c_str());
 }

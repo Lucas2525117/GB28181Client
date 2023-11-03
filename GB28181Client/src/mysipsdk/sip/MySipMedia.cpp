@@ -53,7 +53,7 @@ CMySipMedia::~CMySipMedia()
 {
 }
 
-bool CMySipMedia::Init(const std::string& concat, int loglevel)
+bool CMySipMedia::Init(const std::string& concat, int loglevel, int transType)
 {
 	if (concat.empty() || loglevel < 0)
 		return false;
@@ -61,7 +61,7 @@ bool CMySipMedia::Init(const std::string& concat, int loglevel)
 	bool ret = false;
 	if (nullptr == m_mainModule)
 	{
-		if (!CMySipContext::GetInstance().Init(concat, loglevel))
+		if (!CMySipContext::GetInstance().Init(concat, loglevel, transType))
 			return false;
 
 		static struct pjsip_module module =
@@ -162,7 +162,6 @@ bool CMySipMedia::Invite(const GB28181MediaContext& mediaContext, void** token)
 	HRESULT result = CoCreateGuid(&guid);
 	if(S_OK != result)
 		return false;
-
 
 	char buf[64] = { 0, };
 	_snprintf(buf, sizeof(buf),
@@ -357,6 +356,15 @@ int CMySipMedia::QueryRecordInfo(const std::string& gbid, const GB28181MediaCont
 	return 0;
 }
 
+int CMySipMedia::VoiceBroadcast(const std::string& gbid, const std::string& sourceID, const std::string& targetID)
+{
+	MyGBDevicePtr device = CMyGBDeviceManager::GetInstance().GetDeviceById(gbid);
+	if (!device.get())
+		return -1;
+
+	return CMySipContext::GetInstance().VoiceBroadcast(device.get(), sourceID, targetID);
+}
+
 void CMySipMedia::RegisterHandler(int handleType, DataCallback dataCB, void* user)
 {
 	CMySipModule::GetInstance().RegisterHandler(handleType, dataCB, user);
@@ -483,9 +491,6 @@ std::string CMySipMedia::CreateCatalogXmlText_(const std::string& eventName, con
 		"<CmdType>%s</CmdType>\n"
 		"<SN>17430</SN>\n"
 		"<DeviceID>%s</DeviceID>\n"
-		"<StartAlarmPrority>0</StartAlarmPrority>\n"
-		"<EndAlarmPrority>0</EndAlarmPrority>\n"
-		"<AlarmMethod>0</AlarmMethod>\n"
 		"<StartTime>%s</StartTime>\n"
 		"<EndTime>%s</EndTime>\n"
 		"</Query>\n", eventName.c_str()

@@ -12,6 +12,9 @@ enum HandlerType
 	Type_RecvDeviceStatus,
 	Type_Download,
 	Type_Alarm,
+	Type_VoiceBroadcast,
+	Type_Invite,
+	Type_Bye,
 };
 
 enum StreamRequiredType

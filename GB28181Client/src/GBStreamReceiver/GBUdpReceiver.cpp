@@ -116,7 +116,7 @@ int CGBUdpStreamReceiver::InitRtpSession_()
 {
 	RTPSessionParams sessionParams;
 	sessionParams.SetMinimumRTCPTransmissionInterval(10);
-	sessionParams.SetOwnTimestampUnit(1.0 / 8000.0/*90000.0*/);
+	sessionParams.SetOwnTimestampUnit(1.0 / 90000.0);
 	sessionParams.SetAcceptOwnPackets(true);
 
 	RTPUDPv4TransmissionParams udpV4Params;
@@ -179,7 +179,7 @@ int CGBUdpStreamReceiver::ProcessData_(uint32_t pts)
 {
 	if (!m_parse && 0 != m_payload)
 	{
-		m_parse = new(std::nothrow) CPSParse(m_codec, m_func, m_user); // 默认采用ps封装
+		m_parse = new(std::nothrow) CPSParse(m_func, m_user); // 默认采用ps封装
 		if (0 != m_baseTime)
 			m_parse->SetBaseTime(m_baseTime);
 	}

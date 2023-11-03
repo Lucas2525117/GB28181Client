@@ -197,12 +197,14 @@
   <ItemGroup>
     <ClCompile Include="..\public\AudioDecoder.cpp" />
     <ClCompile Include="..\public\VideoDecoder.cpp" />
+    <ClCompile Include="..\public\VideoEncoder.cpp" />
     <ClCompile Include="AudioPlayWidget.cpp" />
     <ClCompile Include="DownloadDlg.cpp" />
     <ClCompile Include="GBRecordInfoDlg.cpp" />
     <ClCompile Include="GBRecordInfoResultDlg.cpp" />
     <ClCompile Include="GBSubscribeDlg.cpp" />
     <ClCompile Include="GBTalkDlg.cpp" />
+    <ClCompile Include="GBVoiceBroadcastDlg.cpp" />
     <ClCompile Include="PlayBackDlg.cpp" />
     <ClCompile Include="PlayBackWidget.cpp" />
     <ClCompile Include="PlayWidget.cpp" />
@@ -234,6 +236,7 @@
     <QtUic Include="GBTalkDlg.ui" />
     <QtUic Include="GBVideoPlayDlg.ui" />
     <QtUic Include="GBSubscribeDlg.ui" />
+    <QtUic Include="GBVoiceBroadcastDlg.ui" />
     <QtUic Include="PlayBackDlg.ui" />
     <QtUic Include="PTZControlDlg.ui" />
   </ItemGroup>
@@ -248,6 +251,7 @@
     <QtMoc Include="GBSubscribeDlg.h" />
     <QtMoc Include="AudioPlayWidget.h" />
     <QtMoc Include="GBTalkDlg.h" />
+    <QtMoc Include="GBVoiceBroadcastDlg.h" />
     <ClInclude Include="PlayBackWidget.h" />
     <ClInclude Include="PlayWidget.h" />
     <QtMoc Include="PTZControlDlg.h" />

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <qmessagebox.h>
 #include "ui_GBDeviceStatusDlg.h"
 #include "MySipInfo.h"
 
@@ -15,7 +16,7 @@ public:
 	void AddDeviceStatusData(const CMyDeviceStatus& devicestatus);
 
 signals:
-	void sigQueryDeviceStatus();
+	void sigQueryDeviceStatus(const QString& deviceID);
 
 private:
 	Ui::GBDeviceStatusDlg ui;

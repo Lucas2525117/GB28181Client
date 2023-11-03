@@ -15,7 +15,7 @@ public:
 	void RegisterCallback(int type, DataCallback dataCB, void* user);
 
 protected:
-	void Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text = "");
+	void Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text = "", int subType = SUBTYPE_XML);
 
 	int             m_handleType   = 0;
 	DataCallback    m_dataCB = nullptr;

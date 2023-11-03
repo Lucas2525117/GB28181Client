@@ -69,6 +69,15 @@
     <ClCompile Include="sip\MyAlarmHandler.cpp">
       <Filter>sip</Filter>
     </ClCompile>
+    <ClCompile Include="sip\MyVoiceBroadcastHandler.cpp">
+      <Filter>sip</Filter>
+    </ClCompile>
+    <ClCompile Include="sip\MyInviteHandler.cpp">
+      <Filter>sip</Filter>
+    </ClCompile>
+    <ClCompile Include="sip\MyByeHandler.cpp">
+      <Filter>sip</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sip\MyEventHandler.h">
@@ -132,6 +141,15 @@
       <Filter>sip</Filter>
     </ClInclude>
     <ClInclude Include="sip\MyAlarmHandler.h">
+      <Filter>sip</Filter>
+    </ClInclude>
+    <ClInclude Include="sip\MyVoiceBroadcastHandler.h">
+      <Filter>sip</Filter>
+    </ClInclude>
+    <ClInclude Include="sip\MyInviteHandler.h">
+      <Filter>sip</Filter>
+    </ClInclude>
+    <ClInclude Include="sip\MyByeHandler.h">
       <Filter>sip</Filter>
     </ClInclude>
   </ItemGroup>

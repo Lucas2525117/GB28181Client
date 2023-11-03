@@ -15,7 +15,7 @@ void CMyEventHandler::RegisterCallback(int type, DataCallback dataCB, void* user
 	m_user = user;
 }
 
-void CMyEventHandler::Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text)
+void CMyEventHandler::Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text, int subType)
 {
-	CMySipContext::GetInstance().Response(rdata, st_code, headType, text);
+	CMySipContext::GetInstance().Response(rdata, st_code, headType, text, subType);
 }

@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <qpushbutton.h>
+#include <qmessagebox.h>
 #include "ui_GBCataLogDlg.h"
 #include "MySipInfo.h"
 
@@ -16,7 +17,7 @@ public:
 	void AddCatalogData(const CMyCatalogInfo& catalog);
 
 signals:
-	void sigQueryCatalog();
+	void sigQueryCatalog(const QString& deviceID);
 
 private:
 	Ui::GBCataLogDlg ui;

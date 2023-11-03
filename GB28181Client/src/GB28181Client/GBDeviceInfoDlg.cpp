@@ -6,7 +6,14 @@ GBDeviceInfoDlg::GBDeviceInfoDlg(QWidget *parent)
 	ui.setupUi(this);
 
 	connect(ui.pb_search, &QPushButton::clicked, [=]() {
-		emit sigQueryDeviceInfo();
+		QString deviceID = ui.le_deviceID->text();
+		if (deviceID.isEmpty())
+		{
+			QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("请输入正确的设备ID"), QMessageBox::Ok);
+			return;
+		}
+
+		emit sigQueryDeviceInfo(deviceID);
 		});
 
 

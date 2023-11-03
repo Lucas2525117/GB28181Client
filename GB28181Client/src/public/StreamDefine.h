@@ -1,6 +1,8 @@
 #ifndef _STREAM_DEFINE_H_
 #define _STREAM_DEFINE_H_
 
+#include <memory>
+
 // 编码格式
 enum CodecType
 {
@@ -41,6 +43,30 @@ enum CodecType
 	CODEC_MSG_XML = 0xC3,
 };
 
+// 数据包负载类型
+enum LenDataType
+{
+	LDT_streamData = 0,
+	LDT_streamDataMask = (1 << LDT_streamData),
+
+	LDT_videoInfo = 1,
+	LDT_videoInfoMask = (1 << LDT_videoInfo),
+
+	LDT_audioInfo = 2,
+	LDT_audioInfoMask = (1 << LDT_audioInfo),
+
+	LDT_osdInfo = 3,
+	LDT_osdInfoMask = (1 << LDT_osdInfo),
+
+	LDT_iFrame = 15,
+	LDT_iFrameMask = (1 << LDT_iFrame),
+
+	LDT_numLenData = 15 // 最多可以拥有的LenData数
+};
+#ifndef __cplusplus
+typedef enum LenDataType LenDataType;
+#endif
+
 // 视频YUV帧数据
 typedef struct YuvFrame
 {
@@ -66,17 +92,66 @@ typedef struct YuvFrame
 	}
 }YuvFrame;
 
-typedef struct AudioFrame
-{
-	unsigned char* data;
-	int datalen;
+#pragma pack(push, 1)
 
-	AudioFrame()
+typedef unsigned char BYTE;
+
+// 数据包
+struct InPack
+{
+	int            totalLen;        // 数据包总长度，不包含本长度字段
+	unsigned short mask;            // 标记位，描述帧类型及，后面包含那些数据段，
+	unsigned char  codec;           // 编码格式
+	unsigned int   seqNum;			// 包序号
+	int64_t        pts;             // 时间戳，绝对时间
+	
+	int            dataLen;         // 数据长度，
+	BYTE           data[4];         // 指向流数据的第一个字节
+};
+#ifndef __cplusplus
+typedef enum InPack InPack;
+#endif
+
+#pragma pack(pop) // #pragma pack(push, 1)
+
+// 封装InPack，主要设置是否I帧标记，计算总长度，如果存在其他附加信息，使用者自己设置，
+inline InPack* EncodeStreamInPack(InPack* pack, bool isKeyFrame)
+{
+	int i;
+	BYTE* p;
+	if (nullptr == pack)
+		return nullptr;
+
+	// 设置I帧位
+	if (isKeyFrame)
+		pack->mask |= LDT_iFrameMask;
+	pack->mask |= LDT_streamDataMask;
+
+	pack->totalLen = sizeof(struct InPack) - 8; // totalLen+data=8
+	p = (BYTE*)(&pack->dataLen);
+	for (i = 0; i < LDT_numLenData; ++i)
 	{
-		data = nullptr;
-		datalen = 0;
+		if (pack->mask & (1 << i))
+		{
+			int diff;
+			int len = *((int*)p);
+			if (0 == len)
+				break;
+
+			len = (len + 3) / 4 * 4 + sizeof(int); // 4字节对齐+len字段长度
+			pack->totalLen += len;
+			p = p + len;
+			// 防止越界
+			diff = (int)(p - (BYTE*)pack);
+			if (diff <= 0 || diff > (pack->totalLen + (int)sizeof(int)))
+				return nullptr;
+		}
 	}
-}AudioFrame;
+
+	memset(p, 0, sizeof(int));
+
+	return pack;
+}
 
 static bool IsVideo(int avtype)
 {
@@ -108,5 +183,8 @@ static bool IsAudio(int avtype)
 
 	return false;
 }
+
+typedef void(*EncoderDataCallBack)(InPack* data, void* userData);
+typedef void(*PsDataCallBack)(void* data, int len, void* userData);
 
 #endif

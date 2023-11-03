@@ -10,7 +10,7 @@
 class CPSParse
 {
 public:
-	CPSParse(int codec, GBDataCallBack dataCB, void* user);
+	CPSParse(GBDataCallBack dataCB, void* user);
 	~CPSParse();
 
 	int InputData(void* data, int len);
@@ -29,7 +29,6 @@ private:
 
 	ps_demuxer_t* m_ps = nullptr;
 
-	int m_codec;
 	GBDataCallBack m_func;
 	void* m_user;
 };

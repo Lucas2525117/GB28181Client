@@ -46,7 +46,7 @@ bool CMyAlarmHandler::OnReceive(pjsip_rx_data* rdata)
 			"<Result>OK</Result>\n"
 			"</Response>\n", cmdType.c_str(), alarmInfo.sn.c_str(), alarmInfo.deviceID.c_str()
 		);
-		Response(rdata, PJSIP_SC_OK, NoHead, szAlarmInfo);
+		Response(rdata, PJSIP_SC_OK, NoHead, szAlarmInfo, SUBTYPE_XML);
 		return true;
 	}
 

@@ -24,6 +24,7 @@
 #include "AddDeviceDlg.h"
 #include "AddChannelDlg.h"
 #include "PTZControlDlg.h"
+#include "GBVoiceBroadcastDlg.h"
 #include "public.h"
 #include "GB28181Server.h"
 #include "MySipInfo.h"
@@ -58,6 +59,7 @@ private:
     void HandleDeviceStatusData(void* data);
     void HandleRecordInfoData(void* data);
     void HandleAlarmInfoData(void* data);
+    void HandleVoiceBroadcastData(void* data);
 
 public slots:
     void slotItemDoubleClick(QTreeWidgetItem* item, int index);
@@ -66,14 +68,13 @@ public slots:
     void slotAddDevice(const QString& deviceIp);
     void slotAddChannel(const QString& channelNum);
 
-    void Start(const std::string& gbid, const std::string& ip, int sipport);
+    void Start(const std::string& gbid, const std::string& ip, int sipport, int transType);
     void Stop();
 
 protected:
     virtual void closeEvent(QCloseEvent* event) override;
 
 private slots:
-    void slotCatalogTimer();
     void slotStartVideoPlay(const QString& gbid, const QString& deviceIP, const QString& gbPort, const QString& localIP, const QString& localRecvPort);
     void slotStopVideoPlay();
     void slotStartTalk(const QString& gbid, const QString& deviceIP, const QString& gbPort, const QString& localIP, const QString& localRecvPort);
@@ -90,6 +91,7 @@ private:
     QListWidget*       m_listWidget      = nullptr;
     QDockWidget*       m_logView         = nullptr;
     QDockWidget*       m_operView        = nullptr;
+
     GBRegisterDlg*     m_GBRegisterDlg   = nullptr;
     GBCataLogDlg*      m_GBCataLogDlg    = nullptr;
     GBDeviceStatusDlg* m_GBDeviceStatusDlg = nullptr;
@@ -103,6 +105,8 @@ private:
     AddDeviceDlg*      m_addDeviceDlg    = nullptr;
     AddChannelDlg*     m_addChannelDlg   = nullptr;
     PTZControlDlg*     m_ptzControlDlg   = nullptr;
+    GBVoiceBroadcastDlg* m_GBVoiceBroadcastDlg = nullptr;
+
     QTabWidget*        m_tabWidget       = nullptr;
     QWidget*           m_widget          = nullptr;
     IStreamReceiver*   m_receiver        = nullptr;
@@ -115,6 +119,7 @@ private:
     CMyDeviceInfo      m_deviceinfo;
     CMyDeviceStatus    m_deviceStatus;
     CMyAlarmInfo       m_alarmInfo;
+    CMyBroadcastInfo   m_broadcastInfo;
     std::string        m_registerCBMsg;
     std::string        m_gbid;
     std::string        m_token = "";

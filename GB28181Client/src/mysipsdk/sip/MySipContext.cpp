@@ -9,42 +9,58 @@ CMySipContext::~CMySipContext()
 	//UnInit();
 }
 
-bool CMySipContext::Init(const std::string& concat, int logLevel)
+bool CMySipContext::Init(const std::string& concat, int logLevel, int transType)
 {
 	if (concat.empty() || logLevel < 0)
 		return false;
 
 	m_concat = concat;
-	pj_log_set_level(logLevel);
-	auto status = pj_init();
 
-	status = pjlib_util_init();
+	pj_status_t status = pj_init();
+	{
+		// pjsip ---> init
+		pj_log_set_level(logLevel);
+		status = pjlib_util_init();
+		pj_caching_pool_init(&m_cachingPool, &pj_pool_factory_default_policy, 0);
+		status = pjsip_endpt_create(&m_cachingPool.factory, nullptr, &m_endPoint);
+		status = pjsip_tsx_layer_init_module(m_endPoint);
+		status = pjsip_ua_init_module(m_endPoint, nullptr);
+	}
 
-	pj_caching_pool_init(&m_cachingPool, &pj_pool_factory_default_policy, 0);
+	{
+		// pjsip ---> subscribe
+		status = pjsip_evsub_init_module(m_endPoint);
+		status = pjsip_pres_init_module(m_endPoint, pjsip_evsub_instance());
+	}
 
-	status = pjsip_endpt_create(&m_cachingPool.factory, nullptr, &m_endPoint);
+	{
+		// pjsip ---> create pool
+		m_pool = pj_pool_create(&m_cachingPool.factory, "proxyapp", 4000, 4000, nullptr);
+	}
 
-	status = pjsip_tsx_layer_init_module(m_endPoint);
+	{
+		// pjsip ---> create transport 
+		pj_str_t sipIP = StrToPjstr(GetSipIP());
+		pj_sockaddr_in pjAddr;
+		pjAddr.sin_family = pj_AF_INET();
+		pjAddr.sin_port = pj_htons(static_cast<pj_uint16_t>(GetPort()));
+		pj_inet_aton(&sipIP, &pjAddr.sin_addr);
 
-	status = pjsip_ua_init_module(m_endPoint, nullptr);
-	
-	//init subscribe
-	status = pjsip_evsub_init_module(m_endPoint);
-	status = pjsip_pres_init_module(m_endPoint, pjsip_evsub_instance());
+		if (0 == transType)        // udp
+		{
+			status = pjsip_udp_transport_start(m_endPoint, &pjAddr, nullptr, 1, nullptr);
+			if (PJ_SUCCESS != status)
+				return status == PJ_SUCCESS;
+		}
+		else if (1 == transType)   // tcp
+		{
+			status = pjsip_tcp_transport_start(m_endPoint, &pjAddr, 1, nullptr);
+			if (PJ_SUCCESS != status)
+				return status == PJ_SUCCESS;
+		}
+	}
 
-	m_pool = pj_pool_create(&m_cachingPool.factory, "proxyapp", 4000, 4000, nullptr);
-	auto pjStr = StrToPjstr(GetAddr());
-
-	pj_sockaddr_in pjAddr;
-	pjAddr.sin_family = pj_AF_INET();
-	pj_inet_aton(&pjStr, &pjAddr.sin_addr);
-
-	auto port = GetPort();
-	pjAddr.sin_port = pj_htons(static_cast<pj_uint16_t>(GetPort()));
-	status = pjsip_udp_transport_start(m_endPoint, &pjAddr, nullptr, 1, nullptr);
-	if (status != PJ_SUCCESS) return status == PJ_SUCCESS;
-
-	auto realm = StrToPjstr(GetLocalDomain());
+	pj_str_t realm = StrToPjstr(GetLocalDomain());
 	return pjsip_auth_srv_init(m_pool, &m_authentication, &realm, lookup, 0) == PJ_SUCCESS ? true : false;
 }
 
@@ -121,7 +137,7 @@ bool CMySipContext::Invite(pjsip_dialog* dlg, GB28181MediaContext mediaContext, 
 	tdata->msg->body = pjsip_msg_body_create(m_pool, &type.type, &type.subtype, &text);
 
 	auto hName = pj_str((char*)"Subject");
-	auto subjectUrl = mediaContext.GetDeviceId() + ":" + SiralNum + "," + GetCode() + ":" + SiralNum;
+	auto subjectUrl = mediaContext.GetDeviceId() + ":" + SiralNum + "," + GetSipCode() + ":" + SiralNum;
 	auto hValue = pj_str(const_cast<char*>(subjectUrl.c_str()));
 	auto hdr = pjsip_generic_string_hdr_create(m_pool, &hName, &hValue);
 	pjsip_msg_add_hdr(tdata->msg, reinterpret_cast<pjsip_hdr*>(hdr));
@@ -150,7 +166,7 @@ bool CMySipContext::Subscribe(pjsip_dialog* dlg, pjsip_evsub_user* pres_user, co
 	tdata->msg->body = pjsip_msg_body_create(m_pool, &type.type, &type.subtype, &text);
 
 	auto hName = pj_str((char*)"Subject");
-	auto subjectUrl = subContext.GetDeviceId() + ":" + SiralNum + "," + GetCode() + ":" + SiralNum;
+	auto subjectUrl = subContext.GetDeviceId() + ":" + SiralNum + "," + GetSipCode() + ":" + SiralNum;
 	auto hValue = pj_str(const_cast<char*>(subjectUrl.c_str()));
 	auto hdr = pjsip_generic_string_hdr_create(m_pool, &hName, &hValue);
 	pjsip_msg_add_hdr(tdata->msg, reinterpret_cast<pjsip_hdr*>(hdr));
@@ -162,7 +178,7 @@ bool CMySipContext::Subscribe(pjsip_dialog* dlg, pjsip_evsub_user* pres_user, co
 	return true;
 }
 
-void CMySipContext::Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text)
+void CMySipContext::Response(pjsip_rx_data* rdata, int st_code, int headType, const std::string& text, int subType)
 {
 	pjsip_tx_data* tdata;
 	pj_status_t status = pjsip_endpt_create_response(m_endPoint, rdata, st_code, nullptr, &tdata);
@@ -173,7 +189,10 @@ void CMySipContext::Response(pjsip_rx_data* rdata, int st_code, int headType, co
 	{
 		pjsip_media_type type;
 		type.type = pj_str((char*)"application");
-		type.subtype = pj_str((char*)"MANSCDP+xml");
+		if(SUBTYPE_XML == subType)
+			type.subtype = pj_str((char*)"MANSCDP+xml");
+		else if(SUBTYPE_SDP == subType)
+			type.subtype = pj_str((char*)"sdp");
 		auto info = pj_str(const_cast<char*>(text.c_str()));
 		tdata->msg->body = pjsip_msg_body_create(m_pool, &type.type, &type.subtype, &info);
 	}
@@ -283,6 +302,25 @@ void CMySipContext::QueryRecordInfo(CMyGBDevice* device, const std::string& gbid
 	pjsip_endpt_send_request(m_endPoint, tdata, -1, nullptr, nullptr);
 }
 
+int CMySipContext::VoiceBroadcast(CMyGBDevice* device, const std::string& sourceID, const std::string& targetID)
+{
+	if (!device || sourceID.empty() || targetID.empty())
+		return -1;
+
+	char szBroadcastInfo[400] = { 0 };
+	pj_ansi_snprintf(szBroadcastInfo, 400,
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+		"<Notify>\n"
+		"<CmdType>Broadcast</CmdType>\n"
+		"<SN>17430</SN>\n"
+		"<SourceID>%s</SourceID>\n"
+		"<TargetID>%s</TargetID>\n"
+		"</Notify>\n", sourceID.c_str(), targetID.c_str()
+	);
+
+	return SendSipMessage(device, szBroadcastInfo);
+}
+
 int CMySipContext::SendSipMessage(CMyGBDevice* device, const std::string& sipMsg)
 {
 	pjsip_tx_data* tdata = nullptr;
@@ -322,10 +360,19 @@ pj_str_t CMySipContext::StrToPjstr(const std::string& input)
 	return pjStr;
 }
 
-std::string CMySipContext::GetAddr()
+std::string CMySipContext::GetSipIP() const
 {
+	RecursiveGuard mtx(rmutex_);
 	size_t start = m_concat.find_first_of("@");
 	size_t end = m_concat.find_last_of(":");
+	return m_concat.substr(start + 1, end - start - 1);
+}
+
+std::string CMySipContext::GetSipCode() const
+{
+	RecursiveGuard mtx(rmutex_);
+	size_t start = m_concat.find_first_of(":");
+	size_t end = m_concat.find_first_of("@");
 	return m_concat.substr(start + 1, end - start - 1);
 }
 
@@ -341,13 +388,6 @@ std::string CMySipContext::GetLocalDomain()
 	size_t start = m_concat.find_first_of(":");
 	int length = 10;
 	return m_concat.substr(start + 1, length);
-}
-
-std::string CMySipContext::GetCode()
-{
-	size_t start = m_concat.find_first_of(":");
-	size_t end = m_concat.find_first_of("@");
-	return m_concat.substr(start + 1, end - start - 1);
 }
 
 std::string CMySipContext::ParsePTZCmd(CMyGBDevice* device, const std::string& gbid, PTZControlType ptzType, int paramValue)

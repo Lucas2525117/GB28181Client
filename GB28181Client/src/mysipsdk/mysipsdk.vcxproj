@@ -160,18 +160,21 @@
   <ItemGroup>
     <ClCompile Include="GB28181Server.cpp" />
     <ClCompile Include="sip\MyAlarmHandler.cpp" />
+    <ClCompile Include="sip\MyByeHandler.cpp" />
     <ClCompile Include="sip\MyCatalogRecvHandler.cpp" />
     <ClCompile Include="sip\MyDeviceInfoHandler.cpp" />
     <ClCompile Include="sip\MyDeviceStatusHandler.cpp" />
     <ClCompile Include="sip\MyDownloadHandler.cpp" />
     <ClCompile Include="sip\MyEventHandler.cpp" />
     <ClCompile Include="sip\MyGBDeviceManager.cpp" />
+    <ClCompile Include="sip\MyInviteHandler.cpp" />
     <ClCompile Include="sip\MyKeepAliveHandler.cpp" />
     <ClCompile Include="sip\MyRecordInfoHandler.cpp" />
     <ClCompile Include="sip\MyRegisterHandler.cpp" />
     <ClCompile Include="sip\MySipContext.cpp" />
     <ClCompile Include="sip\MySipMedia.cpp" />
     <ClCompile Include="sip\MySipModule.cpp" />
+    <ClCompile Include="sip\MyVoiceBroadcastHandler.cpp" />
     <ClCompile Include="xml\MyDynamicStruct.cpp" />
     <ClCompile Include="xml\MyXmlParser.cpp" />
   </ItemGroup>
@@ -179,8 +182,10 @@
     <ClInclude Include="GB28181Server.h" />
     <ClInclude Include="SipSDKPublic.h" />
     <ClInclude Include="sip\MyAlarmHandler.h" />
+    <ClInclude Include="sip\MyByeHandler.h" />
     <ClInclude Include="sip\MyDeviceStatusHandler.h" />
     <ClInclude Include="sip\MyDownloadHandler.h" />
+    <ClInclude Include="sip\MyInviteHandler.h" />
     <ClInclude Include="sip\MyRecordInfoHandler.h" />
     <ClInclude Include="sip\MySipInfo.h" />
     <ClInclude Include="sip\MyCatalogRecvHandler.h" />
@@ -195,6 +200,7 @@
     <ClInclude Include="sip\MySipHeader.h" />
     <ClInclude Include="sip\MySipMedia.h" />
     <ClInclude Include="sip\MySipModule.h" />
+    <ClInclude Include="sip\MyVoiceBroadcastHandler.h" />
     <ClInclude Include="xml\MyDynamicStruct.h" />
     <ClInclude Include="xml\MyXmlParser.h" />
   </ItemGroup>

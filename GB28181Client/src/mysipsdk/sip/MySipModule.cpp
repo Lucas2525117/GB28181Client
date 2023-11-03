@@ -60,6 +60,15 @@ void CMySipModule::RegisterHandler(int type, DataCallback dataCB, void* user)
 	case Type_Alarm:
 		handle = std::make_shared<CMyAlarmHandler>();
 		break;
+	case Type_VoiceBroadcast:
+		handle = std::make_shared<CMyVoiceBroadcastHandler>();
+		break;
+	case Type_Invite:
+		handle = std::make_shared<CMyInviteHandler>();
+		break;
+	case Type_Bye:
+		handle = std::make_shared<CMyByeHandler>();
+		break;
 	default:
 		break;
 	}
@@ -67,7 +76,10 @@ void CMySipModule::RegisterHandler(int type, DataCallback dataCB, void* user)
 	if (handle)
 	{
 		handle->RegisterCallback(type, dataCB, user);
-		m_handlers.push_back(handle);
+		{
+			RecursiveGuard mtx(rmutex_);
+			m_handlers.push_back(handle);
+		}
 	}
 }
 

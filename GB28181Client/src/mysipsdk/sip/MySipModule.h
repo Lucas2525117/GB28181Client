@@ -13,6 +13,9 @@
 #include "MyRecordInfoHandler.h"
 #include "MyDownloadHandler.h"
 #include "MyAlarmHandler.h"
+#include "MyVoiceBroadcastHandler.h"
+#include "MyInviteHandler.h"
+#include "MyByeHandler.h"
 #include <vector>
 #include <memory>
 
@@ -37,7 +40,7 @@ private:
 
 	static pj_bool_t OnReceive(pjsip_rx_data* rdata)
 	{
-		RecursiveGuard mtx(GetInstance().m_recursive_mutex);
+		RecursiveGuard mtx(GetInstance().rmutex_);
 		for (auto& handle : GetInstance().m_handlers)
 		{
 			if(handle)
@@ -51,7 +54,7 @@ private:
 	pjsip_module* m_module;
 
 	typedef std::lock_guard<std::recursive_mutex> RecursiveGuard;
-	std::recursive_mutex m_recursive_mutex;
+	std::recursive_mutex rmutex_;
 };
 
 #endif

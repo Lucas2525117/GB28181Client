@@ -33,7 +33,8 @@
 
 typedef void* GB_TOKEN;
 
-GB28181_API bool GB_Init(const char* concat, int loglevel);
+// transType 0:UDP 1:TCP被动 2:TCP主动
+GB28181_API bool GB_Init(const char* concat, int loglevel, int transType);
 
 GB28181_API bool GB_UnInit();
 
@@ -48,6 +49,8 @@ GB28181_API bool GB_Subscribe(const GBSubscribeContext& subContext, GB_TOKEN* to
 GB28181_API int GB_QueryNetDeviceInfo(int type, const char* gbid);
 
 GB28181_API void GB_QueryRecordInfo(const char* gbid, const GB28181MediaContext& mediaContext);
+
+GB28181_API int GB_VoiceBroadcast(const char* gbid, const char* sourceID, const char* targetID);
 
 GB28181_API bool GB_Bye(const char* token);
 

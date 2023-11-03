@@ -134,9 +134,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WIN32;GB_STREAM_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;WIN32;GB_STREAM_EXPORTS;OS_WINDOWS;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\include\jrtplib;..\..\include;..\base;..\ireader\libmpeg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include\jrtplib;..\..\include;..\public;..\ireader\libmpeg\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
@@ -154,16 +154,21 @@
   <ItemGroup>
     <ClInclude Include="..\base\Transform.h" />
     <ClInclude Include="G711AParse.h" />
+    <ClInclude Include="GBTcpClientReceiver.h" />
     <ClInclude Include="GBUdpReceiver.h" />
     <ClInclude Include="PSParse.h" />
     <ClInclude Include="GBPublic.h" />
     <ClInclude Include="StreamReceiverInterface.h" />
+    <ClInclude Include="TcpClient.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\public\Rtp2PS.cpp" />
     <ClCompile Include="G711AParse.cpp" />
     <ClCompile Include="GBMain.cpp" />
+    <ClCompile Include="GBTcpClientReceiver.cpp" />
     <ClCompile Include="GBUdpReceiver.cpp" />
     <ClCompile Include="PSParse.cpp" />
+    <ClCompile Include="TcpClient.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
