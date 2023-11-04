@@ -33,8 +33,8 @@
 
 typedef void* GB_TOKEN;
 
-// transType 0:UDP 1:TCP被动 2:TCP主动
-GB28181_API bool GB_Init(const char* concat, int loglevel, int transType);
+// transType 0:UDP 1:TCP主动 2:TCP被动
+GB28181_API bool GB_Init(const char* concat, int loglevel);
 
 GB28181_API bool GB_UnInit();
 

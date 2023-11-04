@@ -31,7 +31,7 @@ public:
 		return sipContext;
 	}
 
-	bool Init(const std::string& concat, int logLevel, int transType);
+	bool Init(const std::string& concat, int logLevel);
 
 	bool UnInit();
 

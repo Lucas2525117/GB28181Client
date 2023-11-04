@@ -89,12 +89,6 @@ int CGBUdpStreamReceiver::Stop()
 	return 0;
 }
 
-int CGBUdpStreamReceiver::SetCodec(int codec)
-{
-	m_codec = codec;
-	return 0;
-}
-
 // gbudp://192.168.1.2:36000
 int CGBUdpStreamReceiver::ParseUrl_(const std::string& gburl)
 {
@@ -278,7 +272,7 @@ int CGBUdpStreamReceiver::PackAudioData_(void* data, int len)
 {
 	if (!m_G711AParse && 0 != m_payload)
 	{
-		m_G711AParse = new(std::nothrow) CG711AParse(m_codec, m_func, m_user);
+		m_G711AParse = new(std::nothrow) CG711AParse(m_func, m_user);
 	}
 
 	if (m_G711AParse)

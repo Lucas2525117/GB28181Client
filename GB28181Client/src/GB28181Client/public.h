@@ -10,17 +10,15 @@ enum NodeType
 	TypeChannel,            // 通道
 };
 
-typedef struct GBData
+typedef struct GlobalConfigParam
 {
-	int len;
-	void* data;
+	int streamTransMode;   // 0:UDP 1:TCP被动 2:TCP主动
 
-	GBData()
+	GlobalConfigParam()
 	{
-		len = 0;
-		data = nullptr;
+		streamTransMode = 0;
 	}
-}GBData;
+}GlobalConfigParam;
 
 static bool ipAddrIsOK(const QString& ip)
 {

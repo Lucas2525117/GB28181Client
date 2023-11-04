@@ -23,6 +23,8 @@ public:
 	// 返回值: 0-成功；非0-失败。
 	int TcpConnectByTime(const char* ip, const int port, int seconds);
 
+	void TcpDestroy();
+
 public:
 	void TcpDataWorker();
 

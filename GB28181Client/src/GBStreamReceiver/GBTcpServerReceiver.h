@@ -1,18 +1,18 @@
-#ifndef _GB_TCP_CLIENT_RECEIVER_H_
-#define _GB_TCP_CLIENT_RECEIVER_H_
+#ifndef _GB_TCP_SERVER_RECEIVER_H_
+#define _GB_TCP_SERVER_RECEIVER_H_
 
 #include "StreamReceiverInterface.h"
-#include "TcpClient.h"
+#include "TcpServer.h"
 #include "Rtp2PS.h"
 #include "PSParse.h"
 #include <string>
 #include <thread>
 
-class CGBTcpClientStreamReceiver : public IStreamReceiver
+class CGBTcpServerStreamReceiver : public IStreamReceiver
 {
 public:
-	CGBTcpClientStreamReceiver(const char* gbUrl, GBDataCallBack func, void* userParam);
-	virtual ~CGBTcpClientStreamReceiver();
+	CGBTcpServerStreamReceiver(const char* gbUrl, GBDataCallBack func, void* userParam);
+	virtual ~CGBTcpServerStreamReceiver();
 
 	void InputTcpData(void* data, int len);
 	void InputPSData(void* data, int len);
@@ -37,10 +37,10 @@ private:
 	std::string       m_localIP;
 	int               m_localPort = 0;
 
-	TcpClientPtr      m_tcpClient;
+	TcpServerPtr      m_tcpServer;
 	CRtp2Ps           m_rtp2PS;
 	std::shared_ptr<CPSParse> m_parse;
 };
 
-#endif  // _GB_TCP_CLIENT_RECEIVER_H_
+#endif  // _GB_TCP_SERVER_RECEIVER_H_
 

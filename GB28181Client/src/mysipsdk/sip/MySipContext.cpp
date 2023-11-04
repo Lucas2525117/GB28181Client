@@ -9,7 +9,7 @@ CMySipContext::~CMySipContext()
 	//UnInit();
 }
 
-bool CMySipContext::Init(const std::string& concat, int logLevel, int transType)
+bool CMySipContext::Init(const std::string& concat, int logLevel)
 {
 	if (concat.empty() || logLevel < 0)
 		return false;
@@ -46,18 +46,18 @@ bool CMySipContext::Init(const std::string& concat, int logLevel, int transType)
 		pjAddr.sin_port = pj_htons(static_cast<pj_uint16_t>(GetPort()));
 		pj_inet_aton(&sipIP, &pjAddr.sin_addr);
 
-		if (0 == transType)        // udp
+		//if (0 == transType)        // udp
 		{
 			status = pjsip_udp_transport_start(m_endPoint, &pjAddr, nullptr, 1, nullptr);
 			if (PJ_SUCCESS != status)
 				return status == PJ_SUCCESS;
 		}
-		else if (1 == transType)   // tcp
-		{
-			status = pjsip_tcp_transport_start(m_endPoint, &pjAddr, 1, nullptr);
-			if (PJ_SUCCESS != status)
-				return status == PJ_SUCCESS;
-		}
+		//else if (1 == transType)   // tcp
+		//{
+		//	status = pjsip_tcp_transport_start(m_endPoint, &pjAddr, 1, nullptr);
+		//	if (PJ_SUCCESS != status)
+		//		return status == PJ_SUCCESS;
+		//}
 	}
 
 	pj_str_t realm = StrToPjstr(GetLocalDomain());

@@ -53,7 +53,7 @@ CMySipMedia::~CMySipMedia()
 {
 }
 
-bool CMySipMedia::Init(const std::string& concat, int loglevel, int transType)
+bool CMySipMedia::Init(const std::string& concat, int loglevel)
 {
 	if (concat.empty() || loglevel < 0)
 		return false;
@@ -61,7 +61,7 @@ bool CMySipMedia::Init(const std::string& concat, int loglevel, int transType)
 	bool ret = false;
 	if (nullptr == m_mainModule)
 	{
-		if (!CMySipContext::GetInstance().Init(concat, loglevel, transType))
+		if (!CMySipContext::GetInstance().Init(concat, loglevel))
 			return false;
 
 		static struct pjsip_module module =
@@ -290,6 +290,9 @@ void CMySipMedia::ReceiveOk(pjsip_rx_data* rdata)
 {
 	if (PJSIP_BYE_METHOD == rdata->msg_info.cseq->method.id)
 		return;
+
+	if (PJSIP_INVITE_METHOD == rdata->msg_info.cseq->method.id)
+		CMySipMedia::GetInstance().OnSubscribeNotify(nullptr, rdata);
 
 	const auto tsx = pjsip_rdata_get_tsx(rdata);
 	if (tsx == nullptr 

@@ -43,9 +43,6 @@ public:
 
 	// 停止收流
 	virtual int Stop() = 0;
-
-	// 设置码流类型
-	virtual int SetCodec(int codec) = 0;
 };
 
 // 收流url gbudp://192.168.1.2:36000

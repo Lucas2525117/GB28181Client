@@ -52,11 +52,9 @@ int CGBTcpClientStreamReceiver::Start(int streamType)
 
 int CGBTcpClientStreamReceiver::Stop()
 {
-	return 0;
-}
+	if (m_tcpClient.get())
+		m_tcpClient->TcpDestroy();
 
-int CGBTcpClientStreamReceiver::SetCodec(int codec)
-{
 	return 0;
 }
 

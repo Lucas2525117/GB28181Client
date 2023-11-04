@@ -30,14 +30,13 @@ void GBRegisterDlg::InitAction()
 		std::string gbid = ui.le_gbid->text().toStdString();
 		std::string ip = ui.le_localIp->text().toStdString();
 		int sipport = ui.le_sipPort->text().toInt();
-		int transType = ui.cbx_transMode->currentIndex();
 		if (gbid.empty() || ip.empty() || sipport <= 0)
 		{
 			QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("参数不合法,请重新输入"), QMessageBox::Ok);
 			return;
 		}
 
-		emit sigSipConnect(gbid, ip, sipport, transType);
+		emit sigSipConnect(gbid, ip, sipport);
 		});
 
 	connect(ui.pb_serverDisConnect, &QPushButton::clicked, [=]() {

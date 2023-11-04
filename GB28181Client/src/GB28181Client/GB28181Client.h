@@ -25,6 +25,7 @@
 #include "AddChannelDlg.h"
 #include "PTZControlDlg.h"
 #include "GBVoiceBroadcastDlg.h"
+#include "GlobalConfigDlg.h"
 #include "public.h"
 #include "GB28181Server.h"
 #include "MySipInfo.h"
@@ -60,6 +61,7 @@ private:
     void HandleRecordInfoData(void* data);
     void HandleAlarmInfoData(void* data);
     void HandleVoiceBroadcastData(void* data);
+    void HandleVideoInviteData(void* data);
 
 public slots:
     void slotItemDoubleClick(QTreeWidgetItem* item, int index);
@@ -68,7 +70,7 @@ public slots:
     void slotAddDevice(const QString& deviceIp);
     void slotAddChannel(const QString& channelNum);
 
-    void Start(const std::string& gbid, const std::string& ip, int sipport, int transType);
+    void Start(const std::string& gbid, const std::string& ip, int sipport);
     void Stop();
 
 protected:
@@ -82,6 +84,7 @@ private slots:
     void slotQueryRecordInfo(const QString& gbid, const QString& startTime, const QString& endTime);
     void slotPTZControl(const QString& gbid, int type, int paramValue);
     void slotSubscribe(const QString& gbid, const QString& ipp, const QString& startTime, const QString& endTime, int subType, int expires);
+    void slotSetGlobalParam(GlobalConfigParam param) { m_globalParam = param; }
 
 private:
     Ui::GB28181ClientClass ui;
@@ -106,6 +109,7 @@ private:
     AddChannelDlg*     m_addChannelDlg   = nullptr;
     PTZControlDlg*     m_ptzControlDlg   = nullptr;
     GBVoiceBroadcastDlg* m_GBVoiceBroadcastDlg = nullptr;
+    GlobalConfigDlg*   m_globalConfigDlg = nullptr;
 
     QTabWidget*        m_tabWidget       = nullptr;
     QWidget*           m_widget          = nullptr;
@@ -120,6 +124,9 @@ private:
     CMyDeviceStatus    m_deviceStatus;
     CMyAlarmInfo       m_alarmInfo;
     CMyBroadcastInfo   m_broadcastInfo;
+    CMyVideoInviteInfo m_videoInviteInfo;
+    GlobalConfigParam  m_globalParam;
+    QString            m_localIP;
     std::string        m_registerCBMsg;
     std::string        m_gbid;
     std::string        m_token = "";

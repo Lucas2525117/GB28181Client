@@ -232,4 +232,14 @@ typedef struct CMyBroadcastInfo
 	}
 }CMyBroadcastInfo;
 
+typedef struct CMyVideoInviteInfo
+{
+	int transport;
+
+	CMyVideoInviteInfo()
+	{
+		transport = 0;
+	}
+}CMyVideoInviteInfo;
+
 #endif

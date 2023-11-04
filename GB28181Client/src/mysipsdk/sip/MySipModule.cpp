@@ -64,6 +64,7 @@ void CMySipModule::RegisterHandler(int type, DataCallback dataCB, void* user)
 		handle = std::make_shared<CMyVoiceBroadcastHandler>();
 		break;
 	case Type_Invite:
+	case Type_VideoInvite:
 		handle = std::make_shared<CMyInviteHandler>();
 		break;
 	case Type_Bye:

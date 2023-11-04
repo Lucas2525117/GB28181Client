@@ -14,6 +14,7 @@ enum HandlerType
 	Type_Alarm,
 	Type_VoiceBroadcast,
 	Type_Invite,
+	Type_VideoInvite,
 	Type_Bye,
 };
 
@@ -64,6 +65,13 @@ enum PTZControlType
 	PTZ_CTRL_ZOOM,              // 镜头放大/缩小 速度值 >0:放大 <0:缩小 0:停止 -255~255
 	PTZ_CTRL_IRIS,              // 光圈放大/缩小 速度值 >0:放大 <0:缩小 0:停止 -255~255
 	PTZ_CTRL_FOCUS,             // 镜头聚焦/放焦 速度值 >0:聚焦近 <0:聚焦远 0:停止 -255~255
+};
+
+enum StreamTransMode
+{
+	MODE_UDP = 0,               // udp
+	MODE_TCP_PASSIVE,           // tcp被动
+	MODE_TCP_ACTIVE,            // tcp主动
 };
 
 class GB28181MediaContext
@@ -122,6 +130,9 @@ public:
 	void SetStreamType(StreamRequiredType streamRequiredType) { m_streamRequiredType = streamRequiredType; }
 	StreamRequiredType GetStreamType() const { return m_streamRequiredType; }
 
+	void SetStreamTransMode(StreamTransMode mode) { m_streamTransMode = mode; }
+	StreamTransMode GetStreamTransMode() const { return m_streamTransMode; }
+
 	void SetDownloadSpeed(int speed) { m_downloadSpeed = speed; }
 	int GetDownloadSpeed() const { return m_downloadSpeed; }
 
@@ -138,6 +149,7 @@ private:
 	int64_t        m_downloadEndTime;
 	unsigned short m_recvPort;
 	StreamRequiredType  m_streamRequiredType;
+	StreamTransMode m_streamTransMode;
 	int            m_downloadSpeed = 1;  // 默认1倍速
 };
 

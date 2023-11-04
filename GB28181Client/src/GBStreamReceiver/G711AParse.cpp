@@ -3,9 +3,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-CG711AParse::CG711AParse(int codec, GBDataCallBack dataCB, void* user)
-	: m_codec(codec)
-	, m_func(dataCB)
+CG711AParse::CG711AParse(GBDataCallBack dataCB, void* user)
+	: m_func(dataCB)
 	, m_user(user)
 {
 }

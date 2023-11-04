@@ -36,7 +36,7 @@
     <ClInclude Include="GBTcpClientReceiver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="TcpClient.h">
+    <ClInclude Include="GBTcpServerReceiver.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,10 +56,16 @@
     <ClCompile Include="GBTcpClientReceiver.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="TcpClient.cpp">
+    <ClCompile Include="..\public\Rtp2PS.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\public\Rtp2PS.cpp">
+    <ClCompile Include="GBTcpServerReceiver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\TcpClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\TcpServer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

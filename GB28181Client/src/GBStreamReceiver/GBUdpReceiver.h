@@ -39,9 +39,6 @@ public:
 	// 停止收流
 	virtual int Stop() override;
 
-	// 设置码流类型
-	virtual int SetCodec(int codec) override;
-
 public:
 	void VideoDataWorker();
 	void AudioDataWorker();
@@ -85,7 +82,6 @@ private:
 	bool              m_needIframe = false;
 
 	std::thread       m_thread;
-	int               m_codec = PSI_STREAM_H264;
 	int               m_streamType = 0;
 };
 

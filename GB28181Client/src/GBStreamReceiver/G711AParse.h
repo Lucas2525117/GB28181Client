@@ -10,7 +10,7 @@
 class CG711AParse
 {
 public:
-	CG711AParse(int codec, GBDataCallBack dataCB, void* user);
+	CG711AParse(GBDataCallBack dataCB, void* user);
 	~CG711AParse();
 
 	int InputData(void* data, int len);
@@ -18,7 +18,6 @@ public:
 	int Package(int streamid, void* data, size_t bytes);
 
 private:
-	int m_codec;
 	GBDataCallBack m_func;
 	void* m_user;
 };

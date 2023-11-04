@@ -51,7 +51,7 @@ public:
 		return sipMedia;
 	}
 
-	bool Init(const std::string& concat, int loglevel, int transType);
+	bool Init(const std::string& concat, int loglevel);
 
 	bool UnInit();
 
@@ -145,24 +145,56 @@ private:
 
 	static std::string CreateSDPForRealStream(const GB28181MediaContext& mediaContext)
 	{
+		std::string sStreamMode = "";
+		if (MODE_TCP_PASSIVE == mediaContext.GetStreamTransMode())
+			sStreamMode = "a=setup:passive";
+		else if(MODE_TCP_ACTIVE == mediaContext.GetStreamTransMode())
+			sStreamMode = "a=setup:active";
+
 		char str[500] = { 0 };
-		pj_ansi_snprintf(str, 500,
-			"v=0\n"
-			"o=%s 0 0 IN IP4 %s\n"
-			"s=Play\n"
-			"c=IN IP4 %s\n"
-			"t=0 0\n"
-			"m=video %d RTP/AVP 96 98 97\n"
-			"a=recvonly\n"
-			"a=rtpmap:96 PS/90000\n"
-			"a=rtpmap:98 H264/90000\n"
-			"a=rtpmap:97 MPEG4/90000\n"
-			"y=0100000001\n",
-			mediaContext.GetDeviceId().c_str(),
-			mediaContext.GetRecvAddress().c_str(),
-			mediaContext.GetRecvAddress().c_str(),
-			mediaContext.GetRecvPort()
-		);
+		if (sStreamMode.empty())
+		{
+			pj_ansi_snprintf(str, 500,
+				"v=0\n"
+				"o=%s 0 0 IN IP4 %s\n"
+				"s=Play\n"
+				"c=IN IP4 %s\n"
+				"t=0 0\n"
+				"m=video %d RTP/AVP 96 98 97\n"
+				"a=recvonly\n"
+				"a=rtpmap:96 PS/90000\n"
+				"a=rtpmap:98 H264/90000\n"
+				"a=rtpmap:97 MPEG4/90000\n"
+				"y=0100000001\n",
+				mediaContext.GetDeviceId().c_str(),
+				mediaContext.GetRecvAddress().c_str(),
+				mediaContext.GetRecvAddress().c_str(),
+				mediaContext.GetRecvPort()
+			);
+		}
+		else
+		{
+			pj_ansi_snprintf(str, 500,
+				"v=0\n"
+				"o=%s 0 0 IN IP4 %s\n"
+				"s=Play\n"
+				"c=IN IP4 %s\n"
+				"t=0 0\n"
+				"m=video %d TCP/RTP/AVP 96 98 97\n"
+				"a=recvonly\n"
+				"a=rtpmap:96 PS/90000\n"
+				"a=rtpmap:98 H264/90000\n"
+				"a=rtpmap:97 MPEG4/90000\n"
+				"%s\n"
+				"y=0100000001\n",
+				mediaContext.GetDeviceId().c_str(),
+				mediaContext.GetRecvAddress().c_str(),
+				mediaContext.GetRecvAddress().c_str(),
+				mediaContext.GetRecvPort(),
+				sStreamMode.c_str()
+			);
+		}
+		
 		return str;
 	}
 

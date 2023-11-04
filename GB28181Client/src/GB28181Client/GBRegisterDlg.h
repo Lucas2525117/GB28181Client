@@ -21,7 +21,7 @@ private:
 	void InitAction();
 
 signals:
-	void sigSipConnect(const std::string& gbid, const std::string& ip, int sipport, int transType);
+	void sigSipConnect(const std::string& gbid, const std::string& ip, int sipport);
 	void sigSipDisConnect();
 
 private:

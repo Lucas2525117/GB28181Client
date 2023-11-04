@@ -205,10 +205,18 @@ void GB28181Client::InitUi()
 	{
 		connect(m_addDeviceDlg, SIGNAL(sigAddDevice(const QString&)), this, SLOT(slotAddDevice(const QString&)));
 	}
+	// 添加通道界面
 	m_addChannelDlg = new(std::nothrow) AddChannelDlg();
 	if (m_addChannelDlg)
 	{
 		connect(m_addChannelDlg, SIGNAL(sigAddChannel(const QString&)), this, SLOT(slotAddChannel(const QString&)));
+	}
+
+	// 全局配置界面
+	m_globalConfigDlg = new(std::nothrow) GlobalConfigDlg();
+	if (m_globalConfigDlg)
+	{
+		connect(m_globalConfigDlg, &GlobalConfigDlg::sigGlobalConfig, this, &GB28181Client::slotSetGlobalParam);
 	}
 
 	m_stackedWidget = new(std::nothrow) QStackedWidget();
@@ -298,9 +306,11 @@ void GB28181Client::InitAction()
 
 	QMenu* menuConnect = new QMenu(QString::fromLocal8Bit("开始"), this);
 	QMenu* menuOper = new QMenu(QString::fromLocal8Bit("操作"), this);
+	QMenu* menuConfig = new QMenu(QString::fromLocal8Bit("配置"), this);
 	QMenu* menuHelp = new QMenu(QString::fromLocal8Bit("帮助"), this);
 	menuBar->addMenu(menuConnect);
 	menuBar->addMenu(menuOper);
+	menuBar->addMenu(menuConfig);
 	menuBar->addMenu(menuHelp);
 
 	QAction* actAddOrg = new QAction(QString::fromLocal8Bit("添加组织"), this);
@@ -316,6 +326,9 @@ void GB28181Client::InitAction()
 	menuOper->addAction(actHideOper);
 	menuOper->addAction(actShowAlarm);
 	menuOper->addAction(actHideAlarm);
+
+	QAction* actGlobalConfig = new QAction(QString::fromLocal8Bit("全局配置"), this);
+	menuConfig->addAction(actGlobalConfig);
 
 	QAction* actVersion = new QAction(QString::fromLocal8Bit("版本信息"), this);
 	menuHelp->addAction(actVersion);
@@ -347,6 +360,11 @@ void GB28181Client::InitAction()
 
 	connect(actClose, &QAction::triggered, [=]() {
 		exit(0);
+		});
+
+	connect(actGlobalConfig, &QAction::triggered, [=]() {
+		if (m_globalConfigDlg)
+			m_globalConfigDlg->show();
 		});
 
 	connect(actVersion, &QAction::triggered, [=]() {
@@ -497,11 +515,11 @@ void GB28181Client::slotAddChannel(const QString& channelNum)
 	}
 }
 
-void GB28181Client::Start(const std::string& gbid, const std::string& ip, int sipport, int transType)
+void GB28181Client::Start(const std::string& gbid, const std::string& ip, int sipport)
 {
 	// 初始化协议栈并启动
 	std::string localcontact = "SIP:" + gbid +"@" + ip + ":" + std::to_string(sipport);
-	if (!GB_Init(localcontact.c_str(), 3, transType))
+	if (!GB_Init(localcontact.c_str(), 3))
 	{
 		QMessageBox::critical(this, QString::fromLocal8Bit("错误"), QString::fromLocal8Bit("SIP初始化失败"), QMessageBox::Ok);
 		return;
@@ -518,6 +536,7 @@ void GB28181Client::Start(const std::string& gbid, const std::string& ip, int si
 	GB_RegisterHandler(Type_Alarm, MyGBMsgCB, this);
 	GB_RegisterHandler(Type_VoiceBroadcast, MyGBMsgCB, this);
 	GB_RegisterHandler(Type_Invite, MyGBMsgCB, this);
+	GB_RegisterHandler(Type_VideoInvite, MyGBMsgCB, this);
 	GB_RegisterHandler(Type_Bye, MyGBMsgCB, this);
 }
 
@@ -554,13 +573,20 @@ void GB28181Client::slotStartVideoPlay(const QString& gbid, const QString& devic
 	GB28181MediaContext mediaContext(requestUrl);
 	mediaContext.SetRecvAddress(localIP.toStdString());
 	mediaContext.SetRecvPort(localRecvPort.toInt());
+	mediaContext.SetStreamType(StreamType_RealStream);
+	mediaContext.SetStreamTransMode((StreamTransMode)m_globalParam.streamTransMode);
 	char* token = nullptr;
 	if (!GB_Invite(mediaContext, (GB_TOKEN*)&token))
 		QMessageBox::warning(this, QString::fromLocal8Bit("警告"), QString::fromLocal8Bit("开始视频点播失败"), QMessageBox::Ok);
 
+	m_localIP = localIP;
 	m_token = token;
-	std::thread th(VideoDataThread, this, localIP.toStdString(), localRecvPort.toStdString());
-	th.detach();
+
+	if (2 != m_globalParam.streamTransMode)
+	{
+		std::thread th(VideoDataThread, this, localIP.toStdString(), localRecvPort.toStdString());
+		th.detach();
+	}
 }
 
 void GB28181Client::slotStopVideoPlay()
@@ -706,6 +732,9 @@ void GB28181Client::HandleGBMsgCB(int type, void* data)
 	case Type_VoiceBroadcast:
 		HandleVoiceBroadcastData(data);
 		break;
+	case Type_VideoInvite:
+		HandleVideoInviteData(data);
+		break;
 	default:
 		break;
 	}
@@ -725,18 +754,25 @@ void GB28181Client::HandleAudioDataCB(int avtype, void* data, int dataLen)
 
 void GB28181Client::VidioDataWorker(const std::string& localip, const std::string& localport)
 {
-	std::string gburl = "gbudp://" + localip + ":" + localport;
+	std::string gburl = "";
+	if(0 == m_globalParam.streamTransMode)          // udp
+		gburl = "gbudp://" + localip + ":" + localport;
+	else if(1 == m_globalParam.streamTransMode)     // tcp被动
+		gburl = "gbtcps://" + localip + ":" + localport;
+	else if (2 == m_globalParam.streamTransMode)    // tcp主动
+		gburl = "gbtcpc://" + localip + ":" + QString::number(m_videoInviteInfo.transport).toStdString().c_str();
+
 	m_receiver = GB_CreateStreamReceiver(gburl.c_str(), VideoDataCB, this);
-	m_receiver->SetCodec(PSI_STREAM_H264);
-	m_receiver->Start(0);
+	if(m_receiver)
+		m_receiver->Start(0);
 }
 
 void GB28181Client::AudioDataWorker(const std::string& localip, const std::string& localport)
 {
 	std::string gburl = "gbudp://" + localip + ":" + localport;
 	m_audioReceiver = GB_CreateStreamReceiver(gburl.c_str(), AudioDataCB, this);
-	m_audioReceiver->SetCodec(PSI_STREAM_AUDIO_G711A);
-	m_audioReceiver->Start(1);
+	if(m_audioReceiver)
+		m_audioReceiver->Start(1);
 }
 
 void GB28181Client::HandleCataLogData(void* data)
@@ -873,4 +909,16 @@ void GB28181Client::HandleVoiceBroadcastData(void* data)
 
 	if (m_GBVoiceBroadcastDlg)
 		m_GBVoiceBroadcastDlg->SetBroadcastResult(m_broadcastInfo.result.c_str());
+}
+
+void GB28181Client::HandleVideoInviteData(void* data)
+{
+	if (!data)
+		return;
+
+	memcpy(&m_videoInviteInfo, data, sizeof(CMyVideoInviteInfo));
+	
+	QString transPort = QString::number(m_videoInviteInfo.transport);
+	std::thread th(VideoDataThread, this, m_localIP.toStdString(), transPort.toStdString().c_str());
+	th.detach();
 }

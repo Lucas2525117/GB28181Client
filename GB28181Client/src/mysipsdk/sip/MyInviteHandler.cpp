@@ -195,9 +195,21 @@ bool CMyInviteHandler::OnReceive(pjsip_rx_data* rdata)
 		if (!SdpDecode(bodyData.c_str(), recvSdp))
 			return false;
 
-		// 回调至上层并开始向设备发送数据
-		if (m_dataCB)
-			m_dataCB(m_handleType, m_user, nullptr);
+		if (Type_VideoInvite == m_handleType)
+		{
+			CMyVideoInviteInfo inviteInfo;
+			inviteInfo.transport = recvSdp.m_videoPort;
+
+			if (m_dataCB)
+				m_dataCB(m_handleType, m_user, &inviteInfo);
+
+			return true;
+		}
+		else if (Type_Invite == m_handleType)
+		{
+			if (m_dataCB)
+				m_dataCB(m_handleType, m_user, nullptr);
+		}
 
 		char sendSdp[500] = { 0 };
 		pj_ansi_snprintf(sendSdp, 500,
@@ -218,6 +230,10 @@ bool CMyInviteHandler::OnReceive(pjsip_rx_data* rdata)
 
 		Response(rdata, PJSIP_SC_OK, NoHead, sendSdp, SUBTYPE_SDP);
 		return true;
+	}
+	else if (PJSIP_OTHER_METHOD == rdata->msg_info.cseq->method.id)
+	{
+		
 	}
 
 	return false;

@@ -26,11 +26,7 @@ TcpClient::TcpClient(TcpDataCallBack func, void* userdata)
 
 TcpClient::~TcpClient()
 {
-	m_running = false;
-	if (m_thread.joinable())
-		m_thread.join();
-
-	TcpClose_();
+	TcpDestroy();
 	WSACleanup();
 }
 
@@ -59,6 +55,15 @@ int TcpClient::TcpConnectByTime(const char* ip, const int port, int seconds)
 	m_sockAddr.sin_port = htons(port);
 	m_sockAddr.sin_addr.S_un.S_addr = inet_addr(ip);
 	return connect(m_socket, (const sockaddr*)&m_sockAddr, sizeof(m_sockAddr));
+}
+
+void TcpClient::TcpDestroy()
+{
+	m_running = false;
+	if (m_thread.joinable())
+		m_thread.join();
+
+	TcpClose_();
 }
 
 int TcpClient::TcpSetNoBlock_(bool onoff)

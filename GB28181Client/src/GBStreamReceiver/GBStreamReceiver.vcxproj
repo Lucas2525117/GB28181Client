@@ -155,20 +155,22 @@
     <ClInclude Include="..\base\Transform.h" />
     <ClInclude Include="G711AParse.h" />
     <ClInclude Include="GBTcpClientReceiver.h" />
+    <ClInclude Include="GBTcpServerReceiver.h" />
     <ClInclude Include="GBUdpReceiver.h" />
     <ClInclude Include="PSParse.h" />
     <ClInclude Include="GBPublic.h" />
     <ClInclude Include="StreamReceiverInterface.h" />
-    <ClInclude Include="TcpClient.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\public\Rtp2PS.cpp" />
+    <ClCompile Include="..\public\TcpClient.cpp" />
+    <ClCompile Include="..\public\TcpServer.cpp" />
     <ClCompile Include="G711AParse.cpp" />
     <ClCompile Include="GBMain.cpp" />
     <ClCompile Include="GBTcpClientReceiver.cpp" />
+    <ClCompile Include="GBTcpServerReceiver.cpp" />
     <ClCompile Include="GBUdpReceiver.cpp" />
     <ClCompile Include="PSParse.cpp" />
-    <ClCompile Include="TcpClient.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

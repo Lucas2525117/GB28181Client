@@ -1,8 +1,8 @@
 #include "GB28181Server.h"
 
-bool GB_Init(const char* concat, int loglevel, int transType)
+bool GB_Init(const char* concat, int loglevel)
 {
-	return CMySipMedia::GetInstance().Init(concat, loglevel, transType);
+	return CMySipMedia::GetInstance().Init(concat, loglevel);
 }
 
 bool GB_UnInit()
