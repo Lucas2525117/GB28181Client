@@ -43,7 +43,7 @@ INT32 CRtp2Ps::InputData(void* data, INT32 len)
 
 	if (m_inputBufSize < m_inputDataLen+len)
 	{
-		auto ptr = std::make_shared<char>(m_inputBufSize + len + 8192);
+		auto ptr = std::shared_ptr<char>(new char[m_inputBufSize + len + 8192], std::default_delete<char[]>());
 		if (!ptr.get())
 			return -1;
 		if(m_inputBuf.get())
