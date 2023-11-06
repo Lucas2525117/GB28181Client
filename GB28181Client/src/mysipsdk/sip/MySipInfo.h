@@ -234,10 +234,12 @@ typedef struct CMyBroadcastInfo
 
 typedef struct CMyVideoInviteInfo
 {
+	std::string deviceIP;
 	int transport;
 
 	CMyVideoInviteInfo()
 	{
+		deviceIP = "";
 		transport = 0;
 	}
 }CMyVideoInviteInfo;

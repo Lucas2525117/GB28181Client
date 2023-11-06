@@ -198,6 +198,7 @@ bool CMyInviteHandler::OnReceive(pjsip_rx_data* rdata)
 		if (Type_VideoInvite == m_handleType)
 		{
 			CMyVideoInviteInfo inviteInfo;
+			inviteInfo.deviceIP = recvSdp.m_cIP;
 			inviteInfo.transport = recvSdp.m_videoPort;
 
 			if (m_dataCB)

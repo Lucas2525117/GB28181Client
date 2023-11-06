@@ -918,7 +918,8 @@ void GB28181Client::HandleVideoInviteData(void* data)
 
 	memcpy(&m_videoInviteInfo, data, sizeof(CMyVideoInviteInfo));
 	
+	QString deviceIP = m_videoInviteInfo.deviceIP.c_str();
 	QString transPort = QString::number(m_videoInviteInfo.transport);
-	std::thread th(VideoDataThread, this, m_localIP.toStdString(), transPort.toStdString().c_str());
+	std::thread th(VideoDataThread, this, deviceIP.toStdString(), transPort.toStdString().c_str());
 	th.detach();
 }
