@@ -415,7 +415,7 @@ void CGBUdpStreamReceiver::AudioDataWorker()
 
 					if (m_lastSeq = data.seq - 1)
 					{
-						PackAudioData_(data.data, data.len);
+						PackAudioData_((void*)data.data, data.len);
 					}
 
 					DeletePacket(packet);

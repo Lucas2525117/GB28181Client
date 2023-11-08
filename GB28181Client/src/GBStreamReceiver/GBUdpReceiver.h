@@ -13,16 +13,16 @@
 
 using namespace jrtplib;
 
+#define ARRAY_SIZE           (16)
+
 struct rtp_packet
 {
 	uint32_t  pts;
 	uint16_t  seq;
 	int       len;
 	bool      mark;
-	uint8_t*  data;
+	uint8_t* data;
 };
-
-#define ARRAY_SIZE           (16)
 
 class CGBUdpStreamReceiver : public IStreamReceiver, public RTPSession
 {

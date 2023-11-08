@@ -5,7 +5,8 @@
 #include <assert.h>
 #include <winSock2.h>
 
-#define TCP_DATA_SIZE (4*1024)
+#define TCP_SERVER_DATA_SIZE 65536
+#define RTP_HEAD_SIZE 2
 
 typedef void(*TcpDataCallBack)(void* data, int len, void* userData);
 
@@ -23,7 +24,17 @@ public:
 	// num: tcp三次握手后、accept之前的队列数
 	int TcpListen(int num);
 
+	int TcpAccept();
+
 	void TcpDestroy();
+
+	SOCKET GetClientSocket() const;
+
+	enum RECV_STATUS
+	{
+		RECV_HEAD = 1,   // 接收数据头
+		RECV_BODY = 2,   // 接收数据内容
+	};
 
 public:
 	void TcpDataWorker();
@@ -34,6 +45,9 @@ private:
 	int TcpAccept_();
 	int TcpRecv_(void* buf, int len);
 	void TcpClose_();
+
+	int BeginReceive_(void*& buf, int& len);
+	int EndReceive_();
 
 public:
 	TcpDataCallBack m_func;
@@ -47,6 +61,10 @@ public:
 
 	std::thread m_thread;
 	bool m_running;
+
+	std::shared_ptr<char> m_recvBuf;
+	int m_recvLen = 0;
+	int m_status = RECV_HEAD;
 };
 
 typedef std::shared_ptr<TcpServer> TcpServerPtr;

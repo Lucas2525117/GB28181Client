@@ -23,6 +23,7 @@ TcpServer::TcpServer(TcpDataCallBack func, void* userdata)
 	{
 		m_running = true;
 		m_thread = std::thread(TcpDataThread, this);
+		m_recvBuf = std::shared_ptr<char>(new char[TCP_SERVER_DATA_SIZE], std::default_delete<char[]>());
 	}
 }
 
@@ -64,6 +65,11 @@ int TcpServer::TcpListen(int num)
 	return listen(m_socketS, num);
 }
 
+int TcpServer::TcpAccept()
+{
+	return TcpAccept_();
+}
+
 void TcpServer::TcpDestroy()
 {
 	m_running = false;
@@ -71,6 +77,11 @@ void TcpServer::TcpDestroy()
 		m_thread.join();
 
 	TcpClose_();
+}
+
+SOCKET TcpServer::GetClientSocket() const
+{
+	return m_socketC;
 }
 
 int TcpServer::TcpSetNoBlock_(bool onoff)
@@ -129,10 +140,46 @@ void TcpServer::TcpClose_()
 	}
 }
 
+int TcpServer::BeginReceive_(void*& buf, int& len)
+{
+	if (RECV_HEAD == m_status)
+	{
+		buf = m_recvBuf.get();
+		len = RTP_HEAD_SIZE;
+	}
+	else if (RECV_BODY == m_status)
+	{
+		buf = m_recvBuf.get() + RTP_HEAD_SIZE;
+		len = (m_recvBuf.get()[0] << 8) + (m_recvBuf.get()[1] & 0xff);
+	}
+
+	return 0;
+}
+
+int TcpServer::EndReceive_()
+{
+	if (RECV_HEAD == m_status)
+	{
+		m_status = RECV_BODY;
+	}
+	else if (RECV_BODY == m_status)
+	{
+		m_recvLen = (m_recvBuf.get()[0] << 8) + (m_recvBuf.get()[1] & 0xff);
+		if (m_func)
+			m_func(m_recvBuf.get() + RTP_HEAD_SIZE, m_recvLen, m_userdata);
+		m_status = RECV_HEAD;
+
+		memset(m_recvBuf.get(), 0, TCP_SERVER_DATA_SIZE);
+	}
+
+	return 0;
+}
+
 void TcpServer::TcpDataWorker()
 {
-	std::shared_ptr<char> recvBuf(new char[TCP_DATA_SIZE], std::default_delete<char[]>());
-	memset(recvBuf.get(), 0x00, TCP_DATA_SIZE);
+	//void* recvBuf = nullptr;
+	auto recvBuf = std::shared_ptr<char>(new char[TCP_SERVER_DATA_SIZE], std::default_delete<char[]>());
+	int recvLen = 0;
 
 	bool bAccept = false;
 	while (m_running)
@@ -148,16 +195,42 @@ void TcpServer::TcpDataWorker()
 
 			continue;
 		}
+
+		//BeginReceive_(recvBuf, recvLen);
 		
-		int recvLen = TcpRecv_(recvBuf.get(), TCP_DATA_SIZE);
-		if (recvLen <= 0)
+		if (RECV_HEAD == m_status)
+		{
+			recvLen = RTP_HEAD_SIZE;
+		}
+		else if (RECV_BODY == m_status)
+		{
+			//buf = m_recvBuf.get() + RTP_HEAD_SIZE;
+			//recvLen = (m_recvBuf.get()[0] << 8) + (m_recvBuf.get()[1] & 0xff);
+		}
+
+		int len = TcpRecv_(recvBuf.get(), recvLen);
+		if (len <= 0)
 		{
 			continue;
 		}
 
-		if (m_func)
-			m_func(recvBuf.get(), recvLen, m_userdata);
+		if (RECV_HEAD == m_status)
+		{
+			m_status = RECV_BODY;
+			recvLen = (recvBuf.get()[0] << 8) + (recvBuf.get()[1] & 0xff);
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			continue;
+		}
+		else if (RECV_BODY == m_status)
+		{
+			recvLen = len;
+			if (m_func)
+				m_func(recvBuf.get(), recvLen, m_userdata);
+			m_status = RECV_HEAD;
+		}
 
-		memset(recvBuf.get(), 0x00, TCP_DATA_SIZE);
+		//EndReceive_();
+		//Sleep(2);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 }
