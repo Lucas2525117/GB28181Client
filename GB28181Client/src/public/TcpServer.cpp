@@ -22,7 +22,7 @@ TcpServer::TcpServer(TcpDataCallBack func, void* userdata)
 	if (0 == WSAStartup(MAKEWORD(2, 2), &wsaData))
 	{
 		m_running = true;
-		m_thread = std::thread(TcpDataThread, this);
+		//m_thread = std::thread(TcpDataThread, this);
 		m_recvBuf = std::shared_ptr<char>(new char[TCP_SERVER_DATA_SIZE], std::default_delete<char[]>());
 	}
 }
@@ -51,6 +51,7 @@ int TcpServer::TcpBind(int port)
 	if (INVALID_SOCKET == m_socketS || port <= 0)
 		return -1;
 
+	memset(&m_sockAddrS, 0, sizeof(m_sockAddrS));
 	m_sockAddrS.sin_family = AF_INET;
 	m_sockAddrS.sin_port = htons(port);//转网络字节序
 	m_sockAddrS.sin_addr.S_un.S_addr = INADDR_ANY;//任何ip
@@ -114,6 +115,9 @@ int TcpServer::TcpAccept_()
 	if (INVALID_SOCKET == m_socketC)
 		return -1;
 
+	//int bufSize = 1024 * 1024 * 10; //设置缓存区大小为10MB
+	//setsockopt(m_socketC, SOL_SOCKET, SO_RCVBUF, (const char*)&bufSize, sizeof(bufSize));
+
 	return 0;
 }
 
@@ -150,7 +154,7 @@ int TcpServer::BeginReceive_(void*& buf, int& len)
 	else if (RECV_BODY == m_status)
 	{
 		buf = m_recvBuf.get() + RTP_HEAD_SIZE;
-		len = (m_recvBuf.get()[0] << 8) + (m_recvBuf.get()[1] & 0xff);
+		len = (m_recvBuf.get()[0] << 8) | (m_recvBuf.get()[1] & 0xff);
 	}
 
 	return 0;
@@ -164,12 +168,10 @@ int TcpServer::EndReceive_()
 	}
 	else if (RECV_BODY == m_status)
 	{
-		m_recvLen = (m_recvBuf.get()[0] << 8) + (m_recvBuf.get()[1] & 0xff);
+		m_recvLen = (m_recvBuf.get()[0] << 8) | (m_recvBuf.get()[1] & 0xff);
 		if (m_func)
 			m_func(m_recvBuf.get() + RTP_HEAD_SIZE, m_recvLen, m_userdata);
 		m_status = RECV_HEAD;
-
-		memset(m_recvBuf.get(), 0, TCP_SERVER_DATA_SIZE);
 	}
 
 	return 0;
@@ -179,6 +181,7 @@ void TcpServer::TcpDataWorker()
 {
 	//void* recvBuf = nullptr;
 	auto recvBuf = std::shared_ptr<char>(new char[TCP_SERVER_DATA_SIZE], std::default_delete<char[]>());
+	memset(recvBuf.get(), 0, TCP_SERVER_DATA_SIZE);
 	int recvLen = 0;
 
 	bool bAccept = false;
@@ -217,8 +220,9 @@ void TcpServer::TcpDataWorker()
 		if (RECV_HEAD == m_status)
 		{
 			m_status = RECV_BODY;
-			recvLen = (recvBuf.get()[0] << 8) + (recvBuf.get()[1] & 0xff);
-			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			recvLen = (recvBuf.get()[0] << 8) | (recvBuf.get()[1] & 0xff);
+			//std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			Sleep(1);
 			continue;
 		}
 		else if (RECV_BODY == m_status)
@@ -230,7 +234,7 @@ void TcpServer::TcpDataWorker()
 		}
 
 		//EndReceive_();
-		//Sleep(2);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		Sleep(1);
+		//std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 }

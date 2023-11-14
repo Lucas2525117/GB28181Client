@@ -6,6 +6,14 @@
 #include "TcpServer.h"
 #include "Rtp2PS.h"
 #include "PSParse.h"
+#include "rtpsessionparams.h"
+#include "rtptcptransmitter.h"
+#include "rtptcpaddress.h"
+#include "rtppacket.h"
+#include "rtpsources.h"
+#include "rtpsourcedata.h"
+#include "rtpaddress.h"
+#include "rtpipv4address.h"
 #include <string>
 #include <thread>
 
@@ -62,6 +70,8 @@ private:
 	TcpServerPtr      m_tcpServer;
 	CRtp2Ps           m_rtp2PS;
 	std::shared_ptr<CPSParse> m_parse;
+
+	RTPTCPTransmitter* m_rtpTcpTransmitter = nullptr;
 };
 
 #endif  // _GB_TCP_SERVER_RECEIVER_H_

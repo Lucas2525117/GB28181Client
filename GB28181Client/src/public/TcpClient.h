@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <winSock2.h>
 
-#define TCP_DATA_SIZE (4*1024)
+#define TCP_DATA_SIZE (65536)
 
 typedef void(*TcpDataCallBack)(void* data, int len, void* userData);
 
@@ -25,6 +25,12 @@ public:
 
 	void TcpDestroy();
 
+	enum RECV_STATUS
+	{
+		RECV_HEAD = 1,   // 接收数据头
+		RECV_BODY = 2,   // 接收数据内容
+	};
+
 public:
 	void TcpDataWorker();
 
@@ -42,6 +48,7 @@ public:
 	sockaddr_in m_sockAddr;
 	std::thread m_thread;
 	bool m_running;
+	int m_status = RECV_HEAD;
 };
 
 typedef std::shared_ptr<TcpClient> TcpClientPtr;

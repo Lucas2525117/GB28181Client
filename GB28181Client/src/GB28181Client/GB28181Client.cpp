@@ -297,6 +297,12 @@ void GB28181Client::InitUi()
 		this->addDockWidget(Qt::TopDockWidgetArea, m_operView, Qt::Orientation::Vertical);
 		m_operView->setWidget(m_tabWidget);
 	}
+
+	m_rtpUnpackDlg = new(std::nothrow) RtpUnpackDlg();
+	if (m_rtpUnpackDlg)
+	{
+
+	}
 }
 
 void GB28181Client::InitAction()
@@ -307,10 +313,12 @@ void GB28181Client::InitAction()
 	QMenu* menuConnect = new QMenu(QString::fromLocal8Bit("开始"), this);
 	QMenu* menuOper = new QMenu(QString::fromLocal8Bit("操作"), this);
 	QMenu* menuConfig = new QMenu(QString::fromLocal8Bit("配置"), this);
+	QMenu* menuTool = new QMenu(QString::fromLocal8Bit("工具"), this);
 	QMenu* menuHelp = new QMenu(QString::fromLocal8Bit("帮助"), this);
 	menuBar->addMenu(menuConnect);
 	menuBar->addMenu(menuOper);
 	menuBar->addMenu(menuConfig);
+	menuBar->addMenu(menuTool);
 	menuBar->addMenu(menuHelp);
 
 	QAction* actAddOrg = new QAction(QString::fromLocal8Bit("添加组织"), this);
@@ -329,6 +337,9 @@ void GB28181Client::InitAction()
 
 	QAction* actGlobalConfig = new QAction(QString::fromLocal8Bit("全局配置"), this);
 	menuConfig->addAction(actGlobalConfig);
+
+	QAction* actRtpUnpack = new QAction(QString::fromLocal8Bit("Rtp解包工具"), this);
+	menuTool->addAction(actRtpUnpack);
 
 	QAction* actVersion = new QAction(QString::fromLocal8Bit("版本信息"), this);
 	menuHelp->addAction(actVersion);
@@ -365,6 +376,11 @@ void GB28181Client::InitAction()
 	connect(actGlobalConfig, &QAction::triggered, [=]() {
 		if (m_globalConfigDlg)
 			m_globalConfigDlg->show();
+		});
+
+	connect(actRtpUnpack, &QAction::triggered, [=]() {
+		if (m_rtpUnpackDlg)
+			m_rtpUnpackDlg->show();
 		});
 
 	connect(actVersion, &QAction::triggered, [=]() {

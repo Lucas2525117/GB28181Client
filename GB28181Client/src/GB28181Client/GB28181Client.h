@@ -32,6 +32,7 @@
 #include "StreamReceiverInterface.h"
 #include "PlayWidget.h"
 #include "AudioPlayWidget.h"
+#include "RtpUnpackTool/RtpUnpackDlg.h"
 
 class GB28181Client : public QMainWindow
 {
@@ -110,6 +111,8 @@ private:
     PTZControlDlg*     m_ptzControlDlg   = nullptr;
     GBVoiceBroadcastDlg* m_GBVoiceBroadcastDlg = nullptr;
     GlobalConfigDlg*   m_globalConfigDlg = nullptr;
+
+    RtpUnpackDlg*      m_rtpUnpackDlg = nullptr;
 
     QTabWidget*        m_tabWidget       = nullptr;
     QWidget*           m_widget          = nullptr;

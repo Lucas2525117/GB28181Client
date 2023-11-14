@@ -39,6 +39,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -122,13 +123,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;..\mysipsdk\xml;..\tinyXml;..\..\include\pjsip;..\jsoncpp\include;..\GBStreamReceiver;..\..\include\ffmpeg\include;.\;..\ireader\libmpeg\include;..\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;..\mysipsdk\xml;..\tinyXml;..\..\include\pjsip;..\jsoncpp\include;..\GBStreamReceiver;..\..\include\ffmpeg\include;.\;..\ireader\libmpeg\include;..\public;..\ireader\librtp\include;.\RtpUnpackTool;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>__x86_64;GB28181_EXPORTS;GB_STREAM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__x86_64;GB28181_EXPORTS;GB_STREAM_EXPORTS;OS_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\..\lib\mysipsdk\x64;..\..\lib\GBStreamReceiver\x64;..\..\lib\ffmpeg;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mysipsdk.lib;GBStreamReceiver.lib;avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;postproc.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\mysipsdk\x64;..\..\lib\GBStreamReceiver\x64;..\..\lib\ffmpeg;..\..\lib\librtp\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mysipsdk.lib;librtp.lib;GBStreamReceiver.lib;avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;postproc.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -195,6 +196,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\ireader\librtp\payload\rtp-av1-unpack.c" />
+    <ClCompile Include="..\ireader\librtp\payload\rtp-payload.c" />
     <ClCompile Include="..\public\AudioDecoder.cpp" />
     <ClCompile Include="..\public\VideoDecoder.cpp" />
     <ClCompile Include="..\public\VideoEncoder.cpp" />
@@ -210,6 +213,7 @@
     <ClCompile Include="PlayBackWidget.cpp" />
     <ClCompile Include="PlayWidget.cpp" />
     <ClCompile Include="PTZControlDlg.cpp" />
+    <ClCompile Include="RtpUnpackTool\RtpUnpackDlg.cpp" />
     <QtRcc Include="GB28181Client.qrc" />
     <QtUic Include="AddChannelDlg.ui" />
     <QtUic Include="AddDeviceDlg.ui" />
@@ -241,11 +245,14 @@
     <QtUic Include="GlobalConfigDlg.ui" />
     <QtUic Include="PlayBackDlg.ui" />
     <QtUic Include="PTZControlDlg.ui" />
+    <QtUic Include="RtpUnpackTool\RtpUnpackDlg.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RtpUnpackTool\RtpUnpackDefine.h" />
+    <QtMoc Include="RtpUnpackTool\RtpUnpackDlg.h" />
     <QtMoc Include="GBRecordInfoDlg.h" />
     <QtMoc Include="GBRecordInfoResultDlg.h" />
     <QtMoc Include="PlayBackDlg.h" />

@@ -107,18 +107,36 @@ void TcpClient::TcpDataWorker()
 {
 	std::shared_ptr<char> recvBuf(new char[TCP_DATA_SIZE], std::default_delete<char[]>());
 	memset(recvBuf.get(), 0x00, TCP_DATA_SIZE);
+	int recvLen = 0;
 
 	while (m_running)
 	{
-		int recvLen = TcpRecv_(recvBuf.get(), TCP_DATA_SIZE);
-		if (recvLen <= 0)
+		if (RECV_HEAD == m_status)
+		{
+			recvLen = 2;
+		}
+
+		int len = TcpRecv_(recvBuf.get(), recvLen);
+		if (len <= 0)
 		{
 			continue;
 		}
 
-		if (m_func)
-			m_func(recvBuf.get(), recvLen, m_userdata);
+		if (RECV_HEAD == m_status)
+		{
+			m_status = RECV_BODY;
+			recvLen = (recvBuf.get()[0] << 8) + (recvBuf.get()[1] & 0xff);
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			continue;
+		}
+		else if (RECV_BODY == m_status)
+		{
+			recvLen = len;
+			if (m_func)
+				m_func(recvBuf.get(), recvLen, m_userdata);
+			m_status = RECV_HEAD;
+		}
 
-		memset(recvBuf.get(), 0x00, TCP_DATA_SIZE);
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 }

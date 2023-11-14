@@ -1,12 +1,5 @@
 #include "GBTcpServerReceiver.h"
-#include "rtpsessionparams.h"
-#include "rtptcptransmitter.h"
-#include "rtptcpaddress.h"
-#include "rtppacket.h"
-#include "rtpsources.h"
-#include "rtpsourcedata.h"
-#include "rtpaddress.h"
-#include "rtpipv4address.h"
+
 
 static void TcpDataCB(void* data, int len, void* userData)
 {
@@ -41,6 +34,7 @@ CGBTcpServerStreamReceiver::CGBTcpServerStreamReceiver(const char* gbUrl, GBData
 
 CGBTcpServerStreamReceiver::~CGBTcpServerStreamReceiver()
 {
+	Stop();
 }
 
 void CGBTcpServerStreamReceiver::DeleteThis()
@@ -65,7 +59,7 @@ int CGBTcpServerStreamReceiver::Start(int streamType)
 		|| 0 != m_tcpServer->TcpListen(5))
 		return -1;
 
-	//m_thread = std::thread(TcpDataThread, this);
+	m_thread = std::thread(TcpDataThread, this);
 	return 0;
 }
 
@@ -77,6 +71,12 @@ int CGBTcpServerStreamReceiver::Stop()
 
 	if (m_tcpServer.get())
 		m_tcpServer->TcpDestroy();
+
+	if (m_rtpTcpTransmitter)
+	{
+		delete m_rtpTcpTransmitter;
+		m_rtpTcpTransmitter = nullptr;
+	}
 
 	return 0;
 }
@@ -122,17 +122,17 @@ int CGBTcpServerStreamReceiver::ParseUrl_(const std::string& gburl)
 
 int CGBTcpServerStreamReceiver::InitRtpSession_()
 {
-	const int packSize = 1500;
+	const int packSize = 45678;
 	RTPSessionParams sessionParams;
 	sessionParams.SetProbationType(RTPSources::NoProbation);
-	sessionParams.SetOwnTimestampUnit(1.0 / packSize);
+	sessionParams.SetOwnTimestampUnit(90000.0 / 25.0);
 	sessionParams.SetMaximumPacketSize(packSize + 64);
 
-	RTPTCPTransmitter transmitter(0);
-	transmitter.Init(true);
-	transmitter.Create(65535, 0);
+	m_rtpTcpTransmitter = new RTPTCPTransmitter(nullptr);
+	m_rtpTcpTransmitter->Init(true);
+	m_rtpTcpTransmitter->Create(65535, 0);
 
-	if (0 != Create(sessionParams, &transmitter))
+	if (0 != Create(sessionParams, m_rtpTcpTransmitter))
 		return -1;
 
 	if (0 != AddDestination(RTPTCPAddress(m_tcpServer->GetClientSocket())))

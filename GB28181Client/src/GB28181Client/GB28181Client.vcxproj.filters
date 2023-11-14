@@ -21,6 +21,9 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
+    <Filter Include="RtpUnpackTool">
+      <UniqueIdentifier>{094930be-0924-49db-85dc-64e06aa0d2a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="GB28181Client.qrc">
@@ -109,6 +112,15 @@
     <ClCompile Include="GlobalConfigDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RtpUnpackTool\RtpUnpackDlg.cpp">
+      <Filter>RtpUnpackTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ireader\librtp\payload\rtp-payload.c">
+      <Filter>RtpUnpackTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ireader\librtp\payload\rtp-av1-unpack.c">
+      <Filter>RtpUnpackTool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h">
@@ -164,6 +176,9 @@
     </QtMoc>
     <QtMoc Include="GlobalConfigDlg.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="RtpUnpackTool\RtpUnpackDlg.h">
+      <Filter>RtpUnpackTool</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +236,9 @@
     <QtUic Include="GlobalConfigDlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="RtpUnpackTool\RtpUnpackDlg.ui">
+      <Filter>RtpUnpackTool</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="public.h">
@@ -231,6 +249,9 @@
     </ClInclude>
     <ClInclude Include="PlayBackWidget.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RtpUnpackTool\RtpUnpackDefine.h">
+      <Filter>RtpUnpackTool</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
