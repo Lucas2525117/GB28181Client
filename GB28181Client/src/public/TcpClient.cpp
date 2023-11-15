@@ -20,7 +20,7 @@ TcpClient::TcpClient(TcpDataCallBack func, void* userdata)
 	if (0 == WSAStartup(MAKEWORD(2, 2), &wsaData))
 	{
 		m_running = true;
-		m_thread = std::thread(TcpDataThread, this);
+		//m_thread = std::thread(TcpDataThread, this);
 	}
 }
 
@@ -47,9 +47,6 @@ int TcpClient::TcpConnectByTime(const char* ip, const int port, int seconds)
 {
 	if (INVALID_SOCKET == m_socket || seconds <= 0)
 		return -1;
-
-	if (0 != TcpSetNoBlock_(true) || 0 != TcpTimeout_(seconds))
-		return -1;
 	
 	m_sockAddr.sin_family = AF_INET;
 	m_sockAddr.sin_port = htons(port);
@@ -64,26 +61,6 @@ void TcpClient::TcpDestroy()
 		m_thread.join();
 
 	TcpClose_();
-}
-
-int TcpClient::TcpSetNoBlock_(bool onoff)
-{
-	if (INVALID_SOCKET == m_socket)
-		return -1;
-
-	DWORD val = (onoff ? 1 : 0);
-	return ioctlsocket(m_socket, FIONBIO, &val);
-}
-
-int TcpClient::TcpTimeout_(int seconds)
-{
-	if (INVALID_SOCKET == m_socket || seconds <= 0)
-		return -1;
-
-	struct timeval tv;
-	tv.tv_sec  = seconds; //Ãë
-	tv.tv_usec = 0;       //Î¢Ãë
-	return setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
 }
 
 int TcpClient::TcpRecv_(void* buf, int len)

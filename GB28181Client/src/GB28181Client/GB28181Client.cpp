@@ -759,7 +759,7 @@ void GB28181Client::HandleGBMsgCB(int type, void* data)
 void GB28181Client::HandleVideoDataCB(int avtype, void* data, int dataLen)
 {
 	if (m_playWidget)
-		m_playWidget->AddData(CODEC_VIDEO_H264, data, dataLen);
+		m_playWidget->AddData(avtype, data, dataLen);
 }
 
 void GB28181Client::HandleAudioDataCB(int avtype, void* data, int dataLen)

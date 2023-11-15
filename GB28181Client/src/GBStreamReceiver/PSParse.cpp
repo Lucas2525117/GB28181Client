@@ -15,16 +15,14 @@ static void Free(void* /*param*/, void* packet)
 
 static int Write(void* param, int avtype, void* pes, size_t bytes)
 {
-	assert(param);
-	CPSParse* parse = (CPSParse*)param;
-	return parse->Package(avtype, pes, bytes);
+	return 0;;
 }
 
 static int OnDemuxerPacket(void* param, int stream, int codecid, int flags, int64_t pts, int64_t dts, const void* data, size_t bytes)
 {
 	assert(param);
 	CPSParse* parse = (CPSParse*)param;
-	return parse->Package(stream, (void*)data, bytes);
+	return parse->Package(stream, codecid, (void*)data, bytes);
 }
 
 static void mpeg_ps_dec_testonstream_10000(void* param, int stream, int codecid, const void* extra, int bytes, int finish)
@@ -64,7 +62,7 @@ void CPSParse::SetBaseTime(int64_t time)
 
 }
 
-int CPSParse::Package(int streamid, void* data, size_t bytes)
+int CPSParse::Package(int streamid, int codecid, void* data, size_t bytes)
 {
 	if (!data || 0 == bytes)
 		return -1;
@@ -74,7 +72,7 @@ int CPSParse::Package(int streamid, void* data, size_t bytes)
 		return -1;*/
 
 	if (m_func)
-		m_func(streamid, data, bytes, m_user);
+		m_func(codecid, data, bytes, m_user);
 	return 0;
 }
 

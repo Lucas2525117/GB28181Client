@@ -25,6 +25,8 @@ public:
 
 	void TcpDestroy();
 
+	SOCKET GetClientSocket() const { return m_socket; }
+
 	enum RECV_STATUS
 	{
 		RECV_HEAD = 1,   // 接收数据头
@@ -35,8 +37,6 @@ public:
 	void TcpDataWorker();
 
 private:
-	int TcpSetNoBlock_(bool onoff);
-	int TcpTimeout_(int seconds);
 	int TcpRecv_(void* buf, int len);
 	void TcpClose_();
 

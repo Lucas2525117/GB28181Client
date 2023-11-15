@@ -64,8 +64,8 @@ private:
 	std::string       m_gbUrl;
 	std::string       m_localIP;
 	int               m_localPort = 0;
-	unsigned char     m_payload;
-	int               m_lastSeq;
+	unsigned char     m_payload = 0;
+	int               m_lastSeq = 0;
 
 	TcpServerPtr      m_tcpServer;
 	CRtp2Ps           m_rtp2PS;

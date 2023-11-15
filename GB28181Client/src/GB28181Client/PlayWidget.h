@@ -1,3 +1,6 @@
+#ifndef _PLAY_WIDGET_H_
+#define _PLAY_WIDGET_H_
+
 #include <QtWidgets/qwidget.h>
 #include <QOpenGLWidget>
 #include <QOpenGLShaderProgram>
@@ -53,4 +56,6 @@ private:
     unsigned char* m_pBufU = nullptr;
     unsigned char* m_pBufV = nullptr;
 };
+
+#endif
 

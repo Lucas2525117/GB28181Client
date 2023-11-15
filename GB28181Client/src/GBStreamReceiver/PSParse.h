@@ -17,7 +17,7 @@ public:
 
 	void SetBaseTime(int64_t time);
 
-	int Package(int streamid, void* data, size_t bytes);
+	int Package(int streamid, int codecid, void* data, size_t bytes);
 
 private:
 	int64_t time64_now();
