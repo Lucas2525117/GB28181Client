@@ -62,7 +62,14 @@ void CRtspStreamReceiver::RtspWorker()
 		{
 			if (!bFirstRecv) // 第一次数据接收即失败,直接退出
 			{
-				break;
+				recvTimes++;
+				if (recvTimes >= 100)
+				{
+					m_status = -1; 
+					break;
+				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(5));
+				continue;
 			}
 			else              // 非第一次数据接收失败,等待
 			{
@@ -127,7 +134,6 @@ int CRtspStreamReceiver::InitRtspSession_()
 		if (0 != ret)
 			break;
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(2));
 		return 0;
 	} while (0);
 
