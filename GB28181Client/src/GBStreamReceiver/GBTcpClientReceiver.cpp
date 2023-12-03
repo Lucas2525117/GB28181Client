@@ -24,7 +24,7 @@ static void PSDataCB(void* data, INT32 len, void* userData)
 	receiver->InputPSData(data, len);
 }
 
-CGBTcpClientStreamReceiver::CGBTcpClientStreamReceiver(const char* gbUrl, GBDataCallBack func, void* userParam)
+CGBTcpClientStreamReceiver::CGBTcpClientStreamReceiver(const char* gbUrl, StreamDataCallBack func, void* userParam)
 	: m_func(func)
 	, m_userdata(userParam)
 	, m_gbUrl(gbUrl)
@@ -63,13 +63,11 @@ int CGBTcpClientStreamReceiver::Start(int streamType)
 		return -1;
 
 	m_thread = std::thread(TcpDataThread, this);
+	return 0;
 }
 
 int CGBTcpClientStreamReceiver::Stop()
 {
-	if (m_tcpClient.get())
-		m_tcpClient->TcpDestroy();
-
 	if (m_tcpClient.get())
 		m_tcpClient->TcpDestroy();
 

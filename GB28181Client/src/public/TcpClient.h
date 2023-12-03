@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <winSock2.h>
 
+#define SOCKET_TIMEDOUT -WSAETIMEDOUT
 #define TCP_DATA_SIZE (65536)
 
 typedef void(*TcpDataCallBack)(void* data, int len, void* userData);
@@ -23,6 +24,14 @@ public:
 	// 返回值: 0-成功；非0-失败。
 	int TcpConnectByTime(const char* ip, const int port, int seconds);
 
+	int TcpSetNoBlock(bool onoff);
+
+	int TcpRecvTimeout(int seconds);
+
+	int TcpSend(void* buf, int len, int flags, int timeout);
+
+	int TcpRecv(void* buf, int len);
+
 	void TcpDestroy();
 
 	SOCKET GetClientSocket() const { return m_socket; }
@@ -37,7 +46,12 @@ public:
 	void TcpDataWorker();
 
 private:
+	int TcpSetNoBlock_(bool onoff);
+	int TcpRecvTimeout_(int seconds);
+	int TcpSend_(const char* buf, int len, int flags, int timeout);
 	int TcpRecv_(void* buf, int len);
+	int TcpSelectWrite_(int timeout);
+	int TcpSelectWriteFds_(int n, fd_set* fds, struct timeval* timeout);
 	void TcpClose_();
 
 public:

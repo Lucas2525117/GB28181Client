@@ -26,7 +26,7 @@
 	#define GB_STREAM_API GB_STREAM_DECL
 #endif
 
-#include "GBPublic.h"
+#include "StreamPublic.h"
 
 struct IStreamReceiver
 {
@@ -46,6 +46,6 @@ public:
 };
 
 // ÊÕÁ÷url gbudp://192.168.1.2:36000
-GB_STREAM_API IStreamReceiver* GB_CreateStreamReceiver(const char* gbUrl, GBDataCallBack func, void* userParam);
+GB_STREAM_API IStreamReceiver* GB_CreateStreamReceiver(const char* gbUrl, StreamDataCallBack func, void* userParam);
 
 #endif

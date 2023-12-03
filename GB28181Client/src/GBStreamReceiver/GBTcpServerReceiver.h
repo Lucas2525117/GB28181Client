@@ -31,7 +31,7 @@ struct rtp_packet_tcp
 class CGBTcpServerStreamReceiver : public IStreamReceiver, public RTPSession
 {
 public:
-	CGBTcpServerStreamReceiver(const char* gbUrl, GBDataCallBack func, void* userParam);
+	CGBTcpServerStreamReceiver(const char* gbUrl, StreamDataCallBack func, void* userParam);
 	virtual ~CGBTcpServerStreamReceiver();
 
 	void InputTcpData(void* data, int len);
@@ -56,7 +56,7 @@ private:
 	void PackData_(void* data, int len);
 
 private:
-	GBDataCallBack    m_func;
+	StreamDataCallBack    m_func;
 	void*             m_userdata;
 	std::thread       m_thread;
 	bool              m_running = true;

@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="StreamReceiverInterface.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="GBPublic.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="GBUdpReceiver.h">
       <Filter>头文件</Filter>
     </ClInclude>

@@ -23,7 +23,7 @@ static void PSDataCB(void* data, INT32 len, void* userData)
 	client->InputRtpData(data, len);
 }
 
-CGBTcpServerStreamReceiver::CGBTcpServerStreamReceiver(const char* gbUrl, GBDataCallBack func, void* userParam)
+CGBTcpServerStreamReceiver::CGBTcpServerStreamReceiver(const char* gbUrl, StreamDataCallBack func, void* userParam)
 	: m_func(func)
 	, m_userdata(userParam)
 	, m_gbUrl(gbUrl)

@@ -3,7 +3,7 @@
 
 #include "StreamReceiverInterface.h"
 #include "rtpsession.h"
-#include "GBPublic.h"
+#include "StreamPublic.h"
 #include "PSParse.h"
 #include "G711AParse.h"
 #include <winsock2.h>
@@ -27,7 +27,7 @@ struct rtp_packet
 class CGBUdpStreamReceiver : public IStreamReceiver, public RTPSession
 {
 public:
-	CGBUdpStreamReceiver(const char* gbUrl, GBDataCallBack func, void* userParam);
+	CGBUdpStreamReceiver(const char* gbUrl, StreamDataCallBack func, void* userParam);
 	virtual ~CGBUdpStreamReceiver();
 
 public:
@@ -67,7 +67,7 @@ private:
 	int               m_bufSize = 0;
 	int               m_dataLen = 0;
 
-	GBDataCallBack    m_func;
+	StreamDataCallBack    m_func;
 	void*             m_user = nullptr;
 
 	struct rtp_packet* m_packets[ARRAY_SIZE];

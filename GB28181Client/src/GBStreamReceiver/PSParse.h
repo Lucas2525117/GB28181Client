@@ -2,7 +2,7 @@
 #define _PS_PARSE_H_
 
 #include "mpeg-ps.h"
-#include "GBPublic.h"
+#include "StreamPublic.h"
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
@@ -10,7 +10,7 @@
 class CPSParse
 {
 public:
-	CPSParse(GBDataCallBack dataCB, void* user);
+	CPSParse(StreamDataCallBack dataCB, void* user);
 	~CPSParse();
 
 	int InputData(void* data, int len);
@@ -29,7 +29,7 @@ private:
 
 	ps_demuxer_t* m_ps = nullptr;
 
-	GBDataCallBack m_func;
+	StreamDataCallBack m_func;
 	void* m_user;
 };
 

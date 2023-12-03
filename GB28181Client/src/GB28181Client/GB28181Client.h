@@ -33,6 +33,7 @@
 #include "PlayWidget.h"
 #include "AudioPlayWidget.h"
 #include "RtpUnpackTool/RtpUnpackDlg.h"
+#include "RtspTool/ZDRtspDlg.h"
 
 class GB28181Client : public QMainWindow
 {
@@ -113,6 +114,7 @@ private:
     GlobalConfigDlg*   m_globalConfigDlg = nullptr;
 
     RtpUnpackDlg*      m_rtpUnpackDlg = nullptr;
+    ZDRtspDlg*         m_zdRtspDlg = nullptr;
 
     QTabWidget*        m_tabWidget       = nullptr;
     QWidget*           m_widget          = nullptr;

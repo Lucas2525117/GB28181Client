@@ -122,7 +122,7 @@ void RtpUnpackDlg::StartRtpUnpack()
 void* RtpUnpackDlg::PacketAlloc()
 {
 	static uint8_t buffer[2 * 1024 * 1024 + 4] = { 0, 0, 0, 1, };
-	assert(bytes <= sizeof(buffer) - 4);
+	//assert(bytes <= sizeof(buffer) - 4);
 	return buffer + 4;
 }
 
@@ -164,7 +164,7 @@ void RtpUnpackDlg::RtpDataReadWorker()
 			break;
 
 		m_rtpPayloadParam.size = (s2[0] << 8) | s2[1];
-		assert(ctx.size < sizeof(ctx.packet));
+		//assert(ctx.size < sizeof(ctx.packet));
 		if (m_rtpPayloadParam.size != (int)fread(m_rtpPayloadParam.packet, 1, m_rtpPayloadParam.size, m_rtpPayloadParam.frtp))
 			break;
 

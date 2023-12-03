@@ -26,7 +26,7 @@ int AudioWorkerThread(void* param)
 	return 0;
 }
 
-CGBUdpStreamReceiver::CGBUdpStreamReceiver(const char* gbUrl, GBDataCallBack func, void* userParam)
+CGBUdpStreamReceiver::CGBUdpStreamReceiver(const char* gbUrl, StreamDataCallBack func, void* userParam)
 	: m_gbUrl(gbUrl)
 	, m_func(func)
 	, m_user(userParam)

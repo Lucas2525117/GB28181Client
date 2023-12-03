@@ -27,6 +27,12 @@
     <ClInclude Include="GBSenderPublic.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="GBTcpServerSender.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="GBTcpClientSender.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GBUdpSender.cpp">
@@ -36,6 +42,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Data2PS.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GBTcpServerSender.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\TcpClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\public\TcpServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="GBTcpClientSender.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

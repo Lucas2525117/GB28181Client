@@ -54,6 +54,16 @@ int TcpClient::TcpConnectByTime(const char* ip, const int port, int seconds)
 	return connect(m_socket, (const sockaddr*)&m_sockAddr, sizeof(m_sockAddr));
 }
 
+int TcpClient::TcpSetNoBlock(bool onoff)
+{
+	return TcpSetNoBlock_(onoff);
+}
+
+int TcpClient::TcpRecvTimeout(int seconds)
+{
+	return TcpRecvTimeout_(seconds);
+}
+
 void TcpClient::TcpDestroy()
 {
 	m_running = false;
@@ -63,12 +73,87 @@ void TcpClient::TcpDestroy()
 	TcpClose_();
 }
 
+int TcpClient::TcpSetNoBlock_(bool onoff)
+{
+	if (INVALID_SOCKET == m_socket)
+		return -1;
+
+	DWORD val = (onoff ? 1 : 0);
+	return ioctlsocket(m_socket, FIONBIO, &val);
+}
+
+int TcpClient::TcpRecvTimeout_(int seconds)
+{
+	if (INVALID_SOCKET == m_socket || seconds <= 0)
+		return -1;
+
+	struct timeval tv;
+	tv.tv_sec = seconds;  //Ãë
+	tv.tv_usec = 0;       //Î¢Ãë
+	return setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
+}
+
+int TcpClient::TcpSend(void* buf, int len, int flags, int timeout)
+{
+	int r;
+	size_t bytes = 0;
+
+	while (bytes < len)
+	{
+		r = TcpSend_((const char*)buf + bytes, len - bytes, flags, timeout);
+		if (r <= 0)
+			return r;	// <0-error
+
+		bytes += r;
+	}
+
+	return (int)bytes;
+}
+
+int TcpClient::TcpRecv(void* buf, int len)
+{
+	return TcpRecv_(buf, len);
+}
+
+int TcpClient::TcpSend_(const char* buf, int len, int flags, int timeout)
+{
+	if (INVALID_SOCKET == m_socket)
+		return -1;
+
+	/*int r = TcpSelectWrite_(timeout);
+	if (r <= 0)
+		return 0 == r ? SOCKET_TIMEDOUT : r;*/
+
+	return send(m_socket, (char*)buf, len, 0);
+}
+
 int TcpClient::TcpRecv_(void* buf, int len)
 {
 	if (INVALID_SOCKET == m_socket)
 		return -1;
 
 	return recv(m_socket, (char*)buf, len, 0);
+}
+
+int TcpClient::TcpSelectWrite_(int timeout)
+{
+	if (INVALID_SOCKET == m_socket)
+		return -1;
+
+	fd_set fds;
+	struct timeval tv;
+
+	FD_ZERO(&fds);
+	FD_SET(m_socket, &fds);
+
+	tv.tv_sec = timeout / 1000;
+	tv.tv_usec = (timeout % 1000) * 1000;
+	return TcpSelectWriteFds_(0 /*sock+1*/, &fds, timeout < 0 ? NULL : &tv);
+}
+
+int TcpClient::TcpSelectWriteFds_(int n, fd_set* fds, struct timeval* timeout)
+{
+	return select(n, fds, NULL, NULL, timeout);
 }
 
 void TcpClient::TcpClose_()

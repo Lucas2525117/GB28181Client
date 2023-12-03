@@ -24,6 +24,9 @@
     <Filter Include="RtpUnpackTool">
       <UniqueIdentifier>{094930be-0924-49db-85dc-64e06aa0d2a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RtspTool">
+      <UniqueIdentifier>{07f38aae-c225-4f5b-8bdc-2ae54fb03639}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="GB28181Client.qrc">
@@ -121,6 +124,9 @@
     <ClCompile Include="..\ireader\librtp\payload\rtp-av1-unpack.c">
       <Filter>RtpUnpackTool</Filter>
     </ClCompile>
+    <ClCompile Include="RtspTool\ZDRtspDlg.cpp">
+      <Filter>RtspTool</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h">
@@ -180,6 +186,9 @@
     <QtMoc Include="RtpUnpackTool\RtpUnpackDlg.h">
       <Filter>RtpUnpackTool</Filter>
     </QtMoc>
+    <QtMoc Include="RtspTool\ZDRtspDlg.h">
+      <Filter>RtspTool</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="GBRegisterDlg.ui">
@@ -238,6 +247,9 @@
     </QtUic>
     <QtUic Include="RtpUnpackTool\RtpUnpackDlg.ui">
       <Filter>RtpUnpackTool</Filter>
+    </QtUic>
+    <QtUic Include="RtspTool\ZDRtspDlg.ui">
+      <Filter>RtspTool</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>

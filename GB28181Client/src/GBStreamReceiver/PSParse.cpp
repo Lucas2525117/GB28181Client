@@ -33,7 +33,7 @@ static void mpeg_ps_dec_testonstream_10000(void* param, int stream, int codecid,
 //rtp ½â°ü
 struct ps_demuxer_notify_t notify_10000 = { mpeg_ps_dec_testonstream_10000, };
 
-CPSParse::CPSParse(GBDataCallBack dataCB, void* user)
+CPSParse::CPSParse(StreamDataCallBack dataCB, void* user)
 	: m_func(dataCB)
 	, m_user(user)
 {

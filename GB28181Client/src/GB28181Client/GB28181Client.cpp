@@ -303,6 +303,12 @@ void GB28181Client::InitUi()
 	{
 
 	}
+
+	m_zdRtspDlg = new(std::nothrow) ZDRtspDlg();
+	if (m_zdRtspDlg)
+	{
+
+	}
 }
 
 void GB28181Client::InitAction()
@@ -339,7 +345,9 @@ void GB28181Client::InitAction()
 	menuConfig->addAction(actGlobalConfig);
 
 	QAction* actRtpUnpack = new QAction(QString::fromLocal8Bit("Rtp解包工具"), this);
+	QAction* actRtspTool = new QAction(QString::fromLocal8Bit("Rtsp测试工具"), this);
 	menuTool->addAction(actRtpUnpack);
+	menuTool->addAction(actRtspTool);
 
 	QAction* actVersion = new QAction(QString::fromLocal8Bit("版本信息"), this);
 	menuHelp->addAction(actVersion);
@@ -383,8 +391,12 @@ void GB28181Client::InitAction()
 			m_rtpUnpackDlg->show();
 		});
 
+	connect(actRtspTool, &QAction::triggered, [=]() {
+		if (m_zdRtspDlg)
+			m_zdRtspDlg->show();
+		});
+
 	connect(actVersion, &QAction::triggered, [=]() {
-		
 		});
 }
 
