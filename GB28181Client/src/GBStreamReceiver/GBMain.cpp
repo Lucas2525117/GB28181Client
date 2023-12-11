@@ -4,7 +4,7 @@
 #include "GBTcpServerReceiver.h"
 #include <string>
 
-IStreamReceiver* GB_CreateStreamReceiver(const char* gbUrl, GBDataCallBack func, void* userParam)
+IStreamReceiver* GB_CreateStreamReceiver(const char* gbUrl, StreamDataCallBack func, void* userParam)
 {
 	if (!gbUrl)
 		return nullptr;

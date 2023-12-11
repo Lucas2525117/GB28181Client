@@ -1,5 +1,5 @@
-#ifndef _GB_TCP_CLIENT_H_
-#define _GB_TCP_CLIENT_H_
+#ifndef _ZD_TCP_CLIENT_H_
+#define _ZD_TCP_CLIENT_H_
 
 #include <thread>
 #include <assert.h>
@@ -10,19 +10,20 @@
 
 typedef void(*TcpDataCallBack)(void* data, int len, void* userData);
 
-class TcpClient
+class ZDTcpClient
 {
 public:
-	TcpClient(TcpDataCallBack func, void* userdata);
-	~TcpClient();
+	ZDTcpClient(TcpDataCallBack func, void* userdata);
+	~ZDTcpClient();
 
 	// 返回值: 0-成功；非0-失败。
 	int TcpCreate();
+	int TcpCreate_ipv6();
 
 	// ip: 服务端的ip地址。
 	// port: 服务端监听的端口。
 	// 返回值: 0-成功；非0-失败。
-	int TcpConnectByTime(const char* ip, const int port, int seconds);
+	int TcpConnect(const char* ip, const int port);
 
 	int TcpSetNoBlock(bool onoff);
 
@@ -65,6 +66,6 @@ public:
 	int m_status = RECV_HEAD;
 };
 
-typedef std::shared_ptr<TcpClient> TcpClientPtr;
+typedef std::shared_ptr<ZDTcpClient> ZDTcpClientPtr;
 
 #endif

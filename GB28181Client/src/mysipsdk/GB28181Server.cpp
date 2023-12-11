@@ -1,4 +1,6 @@
 #include "GB28181Server.h"
+#include "GBDeviceControl.h"
+#include "GBDeviceConfig.h"
 
 bool GB_Init(const char* concat, int loglevel)
 {
@@ -18,6 +20,16 @@ void GB_RegisterHandler(int handleType, DataCallback dataCB, void* user)
 int GB_PTZControl(const char* gbid, int controlType, int paramValue)
 {
 	return CMySipMedia::GetInstance().PTZControl(gbid, (PTZControlType)controlType, paramValue);
+}
+
+int GB_DeviceControl(const char* gbid, const char* method, const char* request)
+{
+	return CGBDeviceControl::GetInstance().SetCommand(gbid, method, request);
+}
+
+int GB_DeviceConfig(const char* gbid, const char* method, const char* request)
+{
+	return CGBDeviceConfig::GetInstance().SetCommand(gbid, method, request);
 }
 
 bool GB_Invite(const GB28181MediaContext& mediaContext, GB_TOKEN* token)

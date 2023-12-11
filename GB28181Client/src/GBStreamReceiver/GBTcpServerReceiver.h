@@ -3,7 +3,7 @@
 
 #include "StreamReceiverInterface.h"
 #include "rtpsession.h"
-#include "TcpServer.h"
+#include "ZDTcpServer.h"
 #include "Rtp2PS.h"
 #include "PSParse.h"
 #include "rtpsessionparams.h"
@@ -67,7 +67,7 @@ private:
 	unsigned char     m_payload = 0;
 	int               m_lastSeq = 0;
 
-	TcpServerPtr      m_tcpServer;
+	ZDTcpServerPtr    m_tcpServer;
 	CRtp2Ps           m_rtp2PS;
 	std::shared_ptr<CPSParse> m_parse;
 

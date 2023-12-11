@@ -1,31 +1,31 @@
-#include "RtspStreamReceiver.h"
+#include "RtspUdpStreamReceiver.h"
 
-int RtspThread(void* param)
+int RtspUdpThread(void* param)
 {
 	assert(param);
-	CRtspStreamReceiver* receiver = (CRtspStreamReceiver*)param;
-	receiver->RtspWorker();
+	CRtspUdpStreamReceiver* receiver = (CRtspUdpStreamReceiver*)param;
+	receiver->RtspUdpWorker();
 	return 0;
 }
 
-CRtspStreamReceiver::CRtspStreamReceiver(const char* url, StreamDataCallBack func, void* userParam)
+CRtspUdpStreamReceiver::CRtspUdpStreamReceiver(const char* url, StreamDataCallBack func, void* userParam)
 	: m_rtspUrl(url)
 	, m_func(func)
 	, m_user(userParam)
 {
 }
 
-CRtspStreamReceiver::~CRtspStreamReceiver()
+CRtspUdpStreamReceiver::~CRtspUdpStreamReceiver()
 {
 	Stop();
 }
 
-void CRtspStreamReceiver::DeleteThis()
+void CRtspUdpStreamReceiver::DeleteThis()
 {
 	delete this;
 }
 
-int CRtspStreamReceiver::Start(int streamType)
+int CRtspUdpStreamReceiver::Start(int streamType)
 {
 	m_status = InitRtspSession_();
 	if (0 != m_status)
@@ -33,39 +33,38 @@ int CRtspStreamReceiver::Start(int streamType)
 		return m_status;
 	}
 
-	m_thread = std::thread(RtspThread, this);
+	m_thread = std::thread(RtspUdpThread, this);
 	return 0;
 }
 
-int CRtspStreamReceiver::Stop()
+int CRtspUdpStreamReceiver::Stop()
 {
 	m_running = false;
 	if (m_thread.joinable())
 		m_thread.join();
 
-	UnInitRtspSession_();
 	return 0;
 }
 
-void CRtspStreamReceiver::RtspWorker()
+void CRtspUdpStreamReceiver::RtspUdpWorker()
 {
-	std::shared_ptr<char> dataPacket(new char[STREAM_DATA_SIZE], std::default_delete<char[]>());
-	memset(dataPacket.get(), 0x00, STREAM_DATA_SIZE);
+	std::shared_ptr<char> dataPacket(new char[UDP_STREAM_DATA_SIZE], std::default_delete<char[]>());
+	memset(dataPacket.get(), 0x00, UDP_STREAM_DATA_SIZE);
 	int recvLen = 0;
 	int recvTimes = 0;
 	bool bFirstRecv = false;
 
 	while (m_running)
 	{
-		recvLen = m_tcpClient->TcpRecv(dataPacket.get(), STREAM_DATA_SIZE);
+		recvLen = m_tcpClient->TcpRecv(dataPacket.get(), UDP_STREAM_DATA_SIZE);
 		if (recvLen <= 0)       // 数据接收失败
 		{
-			if (!bFirstRecv) // 第一次数据接收即失败,直接退出
+			if (!bFirstRecv)
 			{
 				recvTimes++;
 				if (recvTimes >= 100)
 				{
-					m_status = -1; 
+					m_status = -1;
 					break;
 				}
 				std::this_thread::sleep_for(std::chrono::milliseconds(5));
@@ -94,12 +93,12 @@ void CRtspStreamReceiver::RtspWorker()
 			break;
 		}
 
-		memset(dataPacket.get(), 0x00, STREAM_DATA_SIZE);
+		memset(dataPacket.get(), 0x00, UDP_STREAM_DATA_SIZE);
 		bFirstRecv = true;
 	}
 }
 
-int CRtspStreamReceiver::InitRtspSession_()
+int CRtspUdpStreamReceiver::InitRtspSession_()
 {
 	if (m_rtspUrl.empty())
 		return -1;
@@ -111,23 +110,21 @@ int CRtspStreamReceiver::InitRtspSession_()
 		return -1;
 	}
 
-	do
+	do 
 	{
-		// 建立tcp连接
-		m_tcpClient = std::make_shared<TcpClient>(nullptr, this);
+		m_tcpClient = std::make_shared<ZDTcpClient>(nullptr, this);
 		if (!m_tcpClient.get()
 			|| 0 != m_tcpClient->TcpCreate()
-			|| 0 != m_tcpClient->TcpConnectByTime(ip.c_str(), port, 5)
+			|| 0 != m_tcpClient->TcpConnect(ip.c_str(), port)
 			|| 0 != m_tcpClient->TcpSetNoBlock(true)
 			|| 0 != m_tcpClient->TcpRecvTimeout(10))
 			break;
 
-		// 以tcp方式收流
-		m_command = std::make_shared<CRtspCommand>(RTSP_TRANSPORT_RTP_TCP, m_tcpClient, m_func, m_user);
+		m_command = std::make_shared<CRtspCommand>(RTSP_TRANSPORT_RTP_UDP, m_tcpClient, m_func, m_user);
 		if (!m_command.get())
 			break;
 
-		if(!m_command->CreateRtspClient(m_rtspUrl, username, userpasswd))
+		if (!m_command->CreateRtspClient(m_rtspUrl, username, userpasswd))
 			break;
 
 		int ret = m_command->SendDescribe();
@@ -141,7 +138,7 @@ int CRtspStreamReceiver::InitRtspSession_()
 	return -1;
 }
 
-void CRtspStreamReceiver::UnInitRtspSession_()
+void CRtspUdpStreamReceiver::UnInitRtspSession_()
 {
 	if (m_command.get())
 	{
@@ -156,7 +153,7 @@ void CRtspStreamReceiver::UnInitRtspSession_()
 	}
 }
 
-int CRtspStreamReceiver::ParseUrl_(const std::string& url, std::string& username, std::string& userpasswd, std::string& ip, int& port)
+int CRtspUdpStreamReceiver::ParseUrl_(const std::string& url, std::string& username, std::string& userpasswd, std::string& ip, int& port)
 {
 	std::string::size_type pos_0 = url.find("rtsp://");
 	if (std::string::npos == pos_0)

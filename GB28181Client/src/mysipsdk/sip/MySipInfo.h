@@ -2,6 +2,7 @@
 #define _MY_SIPINFO_H_
 
 #include <string>
+#include <list>
 
 class CMyCatalogInfo
 {
@@ -243,5 +244,57 @@ typedef struct CMyVideoInviteInfo
 		transport = 0;
 	}
 }CMyVideoInviteInfo;
+
+typedef struct CMySnopShotFinishInfo
+{
+	std::string deviceID;
+	std::string sessionID;
+	std::list<std::string> fileIDs;
+
+	CMySnopShotFinishInfo()
+	{
+		deviceID = "";
+		sessionID = "";
+	}
+}CMySnopShotFinishInfo;
+
+typedef struct CMyOSDText
+{
+	std::string text;    // 文字内容 返回0~32
+	int x;               // 文字X坐标
+	int y;               // 文字Y坐标
+
+	CMyOSDText()
+	{
+		text = "";
+		x = 0;
+		y = 0;
+	}
+}CMyOSDText;
+
+typedef struct CMyOSDInfo
+{
+	bool timeEnable;                     // 显示时间开关 0:关闭 1:打开(默认)
+	int length;                          // 配置窗口长度像素值
+	int width;                           // 配置窗口宽度像素值
+	int timeX;                           // 时间X像素坐标，以播放窗口左上角像素为原点，水平向右为正
+	int timeY;                           // 时间Y像素坐标，以播放窗口左上角像素为原点，水平向下为正
+	int timeType;                        // 时间显示类型 0:YYYY-MM-DD HH:MM:SS 1:YYYY年MM月DD日 HH:MM:SS
+	int textEnable;                      // 显示文字开关 0:关闭 1:打开(默认)
+	int sumNum;                          // 显示文字总行数
+	std::list<CMyOSDText> osdTexts;      // 显示文字 0~8
+
+	CMyOSDInfo()
+	{
+		timeEnable = false;
+		length = 0;
+		width = 0;
+		timeX = 0;
+		timeY = 0;
+		timeType = 0;
+		textEnable = 0;
+		sumNum = 0;
+	}
+}CMyOSDInfo;
 
 #endif

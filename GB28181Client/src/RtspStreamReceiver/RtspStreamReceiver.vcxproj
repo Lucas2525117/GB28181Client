@@ -129,7 +129,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;RTSP_STREAM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_WINSOCK_DEPRECATED_NO_WARNINGS;WIN32;RTSP_STREAM_EXPORTS;OS_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>..\public;..\ireader\librtsp\include;..\ireader\sdk\libhttp\include;..\ireader\sdk\include;..\ireader\librtp\include;..\Base\ZDBaseLib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
@@ -139,8 +139,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\ireader\librtsp\x64;..\..\lib\ireader\libhttp\x64;..\..\lib\ireader\librtp\x64;..\..\lib\ireader\libmpeg\x64;..\..\lib\ZDBaseLib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>librtsp.lib;librtp.lib;libhttp.lib;libmpeg.lib;ws2_32.lib;ZDBaseLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\ireader\librtsp\x64;..\..\lib\ireader\libhttp\x64;..\..\lib\ireader\librtp\x64;..\..\lib\ireader\libmpeg\x64;..\..\lib\ZDBaseLib\x64;..\..\lib\ireader\sdk\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>librtsp.lib;librtp.lib;libhttp.lib;libmpeg.lib;sdk.lib;ws2_32.lib;ZDBaseLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(OutDir)*.dll" ..\..\bin\ /Y</Command>
@@ -149,21 +149,24 @@
   <ItemGroup>
     <ClCompile Include="..\ireader\sdk\source\base64.c" />
     <ClCompile Include="..\ireader\sdk\source\digest\md5.c" />
-    <ClCompile Include="..\public\TcpClient.cpp" />
     <ClCompile Include="H264Inpack.cpp" />
     <ClCompile Include="H265Inpack.cpp" />
     <ClCompile Include="RtspCommand.cpp" />
     <ClCompile Include="RtspMain.cpp" />
-    <ClCompile Include="RtspStreamReceiver.cpp" />
-    <ClCompile Include="RtspTcpDataReceiver.cpp" />
+    <ClCompile Include="RtspTcpStreamReceiver.cpp" />
+    <ClCompile Include="RtspTcpData.cpp" />
+    <ClCompile Include="RtspUdpData.cpp" />
+    <ClCompile Include="RtspUdpStreamReceiver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="H264Inpack.h" />
     <ClInclude Include="H265Inpack.h" />
     <ClInclude Include="RtspCommand.h" />
     <ClInclude Include="RtspDefine.h" />
-    <ClInclude Include="RtspStreamReceiver.h" />
-    <ClInclude Include="RtspTcpDataReceiver.h" />
+    <ClInclude Include="RtspTcpStreamReceiver.h" />
+    <ClInclude Include="RtspTcpData.h" />
+    <ClInclude Include="RtspUdpData.h" />
+    <ClInclude Include="RtspUdpStreamReceiver.h" />
     <ClInclude Include="XXXInpack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

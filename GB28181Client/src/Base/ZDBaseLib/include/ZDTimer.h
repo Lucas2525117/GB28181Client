@@ -1,3 +1,4 @@
+// ¶¨Ê±Æ÷Àà
 #ifndef _ZD_TIMER_H_
 #define _ZD_TIMER_H_
 

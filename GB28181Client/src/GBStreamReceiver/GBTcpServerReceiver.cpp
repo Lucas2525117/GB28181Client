@@ -50,7 +50,7 @@ int CGBTcpServerStreamReceiver::Start(int streamType)
 	if (m_tcpServer.get())
 		return 0;
 
-	m_tcpServer = std::make_shared<TcpServer>(TcpDataCB, this);
+	m_tcpServer = std::make_shared<ZDTcpServer>(TcpDataCB, this);
 	if (!m_tcpServer.get())
 		return -1;
 

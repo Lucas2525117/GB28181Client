@@ -60,7 +60,7 @@
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>msvc2017_x64</QtInstall>
+    <QtInstall>Qt5.15.2_x64</QtInstall>
     <QtModules>core;gui;multimedia;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
@@ -203,6 +203,7 @@
     <ClCompile Include="..\public\VideoEncoder.cpp" />
     <ClCompile Include="AudioPlayWidget.cpp" />
     <ClCompile Include="DownloadDlg.cpp" />
+    <ClCompile Include="GBDeviceControlDlg.cpp" />
     <ClCompile Include="GBRecordInfoDlg.cpp" />
     <ClCompile Include="GBRecordInfoResultDlg.cpp" />
     <ClCompile Include="GBSubscribeDlg.cpp" />
@@ -234,6 +235,7 @@
     <ClCompile Include="GBVideoPlayDlg.cpp" />
     <ClCompile Include="main.cpp" />
     <QtUic Include="GBCataLogDlg.ui" />
+    <QtUic Include="GBDeviceControlDlg.ui" />
     <QtUic Include="GBDeviceInfoDlg.ui" />
     <QtUic Include="GBDeviceStatusDlg.ui" />
     <QtUic Include="GBRecordInfoDlg.ui" />
@@ -253,6 +255,7 @@
     <QtMoc Include="GBRegisterDlg.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="GBDeviceControlDlg.h" />
     <ClInclude Include="RtpUnpackTool\RtpUnpackDefine.h" />
     <QtMoc Include="RtspTool\ZDRtspDlg.h" />
     <QtMoc Include="RtpUnpackTool\RtpUnpackDlg.h" />

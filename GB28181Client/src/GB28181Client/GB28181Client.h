@@ -20,6 +20,7 @@
 #include "GBRecordInfoResultDlg.h"
 #include "GBSubscribeDlg.h"
 #include "GBTalkDlg.h"
+#include "GBDeviceControlDlg.h"
 #include "AddOrgDlg.h"
 #include "AddDeviceDlg.h"
 #include "AddChannelDlg.h"
@@ -106,6 +107,7 @@ private:
     GBRecordInfoResultDlg* m_GBRecordInfoResultDlg = nullptr;
     GBSubscribeDlg*    m_GBSubscribeDlg  = nullptr;
     GBTalkDlg*         m_GBTalkDlg       = nullptr;
+    GBDeviceControlDlg* m_GBDeviceControlDlg = nullptr;
     AddOrgDlg*         m_addOrgDlg       = nullptr;
     AddDeviceDlg*      m_addDeviceDlg    = nullptr;
     AddChannelDlg*     m_addChannelDlg   = nullptr;

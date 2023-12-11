@@ -131,15 +131,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;WIN32;GB_SENDER_STREAM_EXPORTS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\include\jrtplib;..\..\include;..\ireader\libmpeg\include;..\public;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include\jrtplib;..\..\include;..\ireader\libmpeg\include;..\public;..\Base\ZDBaseLib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\jrtplib\x64;..\..\lib\jthread\x64;..\..\lib\ireader\libmpeg\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>jrtplib.lib;jthread.lib;ws2_32.lib;libmpeg.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\jrtplib\x64;..\..\lib\jthread\x64;..\..\lib\ireader\libmpeg\x64;..\..\lib\ZDBaseLib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>jrtplib.lib;jthread.lib;ws2_32.lib;libmpeg.lib;ZDBaseLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(OutDir)*.dll" ..\..\bin\ /Y</Command>
@@ -154,8 +154,6 @@
     <ClInclude Include="StreamSenderInterface.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\public\TcpClient.cpp" />
-    <ClCompile Include="..\public\TcpServer.cpp" />
     <ClCompile Include="Data2PS.cpp" />
     <ClCompile Include="GBMain.cpp" />
     <ClCompile Include="GBTcpClientSender.cpp" />

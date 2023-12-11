@@ -72,6 +72,8 @@ public:
 	std::string GetSipIP() const;
 	std::string GetSipCode() const;
 
+	int SendSipMessage(CMyGBDevice* device, const std::string& sipMsg);
+
 private:
 	CMySipContext();
 	~CMySipContext();
@@ -88,7 +90,6 @@ private:
 	int GetPort();
 	std::string GetLocalDomain();
 	
-	int SendSipMessage(CMyGBDevice* device, const std::string& sipMsg);
 	std::string ParsePTZCmd(CMyGBDevice* device, const std::string& gbid, PTZControlType ptzType, int paramValue);
 
 private:

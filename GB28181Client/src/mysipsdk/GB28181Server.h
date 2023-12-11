@@ -42,6 +42,11 @@ GB28181_API void GB_RegisterHandler(int handleType, DataCallback dataCB, void* u
 
 GB28181_API int GB_PTZControl(const char* gbid, int controlType, int paramValue);
 
+GB28181_API int GB_DeviceControl(const char* gbid, const char* method, const char* request);
+
+// request内容为json格式
+GB28181_API int GB_DeviceConfig(const char* gbid, const char* method, const char* request);
+
 GB28181_API bool GB_Invite(const GB28181MediaContext& mediaContext, GB_TOKEN* token);
 
 GB28181_API bool GB_Subscribe(const GBSubscribeContext& subContext, GB_TOKEN* token);

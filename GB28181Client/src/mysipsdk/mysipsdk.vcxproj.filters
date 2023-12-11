@@ -78,6 +78,15 @@
     <ClCompile Include="sip\MyByeHandler.cpp">
       <Filter>sip</Filter>
     </ClCompile>
+    <ClCompile Include="GBDeviceConfig.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sip\MyDeviceConfigHandler.cpp">
+      <Filter>sip</Filter>
+    </ClCompile>
+    <ClCompile Include="GBDeviceControl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sip\MyEventHandler.h">
@@ -151,6 +160,15 @@
     </ClInclude>
     <ClInclude Include="sip\MyByeHandler.h">
       <Filter>sip</Filter>
+    </ClInclude>
+    <ClInclude Include="GBDeviceConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sip\MyDeviceConfigHandler.h">
+      <Filter>sip</Filter>
+    </ClInclude>
+    <ClInclude Include="GBDeviceControl.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

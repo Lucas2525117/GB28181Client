@@ -1,4 +1,4 @@
-// 时间相关函数
+// 时间类
 #ifndef _ZD_TIME_H_
 #define _ZD_TIME_H_
 

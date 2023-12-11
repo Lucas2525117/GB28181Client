@@ -18,10 +18,7 @@
     <ClCompile Include="RtspMain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RtspStreamReceiver.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\public\TcpClient.cpp">
+    <ClCompile Include="RtspTcpStreamReceiver.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="RtspCommand.cpp">
@@ -33,7 +30,7 @@
     <ClCompile Include="..\ireader\sdk\source\digest\md5.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RtspTcpDataReceiver.cpp">
+    <ClCompile Include="RtspTcpData.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="H264Inpack.cpp">
@@ -42,15 +39,21 @@
     <ClCompile Include="H265Inpack.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="RtspUdpData.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RtspUdpStreamReceiver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RtspStreamReceiver.h">
+    <ClInclude Include="RtspTcpStreamReceiver.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="RtspCommand.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="RtspTcpDataReceiver.h">
+    <ClInclude Include="RtspTcpData.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="RtspDefine.h">
@@ -63,6 +66,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="H265Inpack.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RtspUdpData.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RtspUdpStreamReceiver.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,7 +2,7 @@
 #define _GB_TCP_CLIENT_RECEIVER_H_
 
 #include "StreamReceiverInterface.h"
-#include "TcpClient.h"
+#include "ZDTcpClient.h"
 #include "Rtp2PS.h"
 #include "PSParse.h"
 #include "rtpsession.h"
@@ -61,7 +61,7 @@ private:
 	std::string       m_localIP;
 	int               m_localPort = 0;
 
-	TcpClientPtr      m_tcpClient;
+	ZDTcpClientPtr    m_tcpClient;
 	CRtp2Ps           m_rtp2PS;
 	std::shared_ptr<CPSParse> m_parse;
 

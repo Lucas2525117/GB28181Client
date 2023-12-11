@@ -56,11 +56,5 @@
     <ClCompile Include="GBTcpServerReceiver.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\public\TcpClient.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\public\TcpServer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

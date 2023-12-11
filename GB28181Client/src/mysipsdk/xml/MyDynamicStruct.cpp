@@ -35,11 +35,9 @@ DynamicStruct CMyDynamicStruct::StructAdd(TiXmlNode* rootNode)
 			if (isArray(node))
 			{
 				Json::Value records;
-				if (0 == key.compare("DeviceList"))
-				{
-					DeviceListAdd(node, records);
-				}
-				else if (0 == key.compare("RecordList"))
+				if (0 == key.compare("DeviceList")
+					|| 0 == key.compare("RecordList")
+					|| 0 == key.compare("SnapShotList"))
 				{
 					DeviceListAdd(node, records);
 				}

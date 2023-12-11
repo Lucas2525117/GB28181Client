@@ -1,21 +1,21 @@
-#include "RtspTcpDataReceiver.h"
+#include "RtspTcpData.h"
 
 static int RtpPacketCallback (void* param, const void* packet, int bytes, uint32_t timestamp, int flags)
 {
 	assert(param);
-	CRtspTcpDataReceiver* receiver = (CRtspTcpDataReceiver*)param;
+	CRtspTcpData* receiver = (CRtspTcpData*)param;
 	receiver->Package(packet, bytes, timestamp, flags);
 	return 0;
 }
 
-CRtspTcpDataReceiver::CRtspTcpDataReceiver(bool isVideo, StreamDataCallBack func, void* userParam)
+CRtspTcpData::CRtspTcpData(bool isVideo, StreamDataCallBack func, void* userParam)
 	: m_isVideo(isVideo)
 	, m_func(func)
 	, m_user(userParam)
 {
 }
 
-CRtspTcpDataReceiver::~CRtspTcpDataReceiver()
+CRtspTcpData::~CRtspTcpData()
 {
 	if (m_demuxer)
 	{
@@ -24,7 +24,7 @@ CRtspTcpDataReceiver::~CRtspTcpDataReceiver()
 	}
 }
 
-int CRtspTcpDataReceiver::Start(int interleave1, int interleave2, int payload, const std::string& encoding)
+int CRtspTcpData::Start(int interleave1, int interleave2, int payload, const std::string& encoding)
 {
 	const struct rtp_profile_t* profile = rtp_profile_find(payload);
 	m_demuxer = rtp_demuxer_create(100, profile ? profile->frequency : 90000, payload, encoding.c_str(), RtpPacketCallback, this);
@@ -37,12 +37,12 @@ int CRtspTcpDataReceiver::Start(int interleave1, int interleave2, int payload, c
 	return 0;
 }
 
-bool CRtspTcpDataReceiver::Stop()
+bool CRtspTcpData::Stop()
 {
 	return true;
 }
 
-void CRtspTcpDataReceiver::InputRtpData(const void* data, int len)
+void CRtspTcpData::InputRtpData(const void* data, int len)
 {
 	if (!m_demuxer)
 		return;
@@ -50,7 +50,7 @@ void CRtspTcpDataReceiver::InputRtpData(const void* data, int len)
 	rtp_demuxer_input(m_demuxer, data, len);
 }
 
-int CRtspTcpDataReceiver::Package(const void* packet, int bytes, uint32_t timestamp, int flags)
+int CRtspTcpData::Package(const void* packet, int bytes, uint32_t timestamp, int flags)
 {
 	if (RTP_PAYLOAD_FLAG_PACKET_LOST == flags && 0 == bytes)
 		return -1;
@@ -61,7 +61,7 @@ int CRtspTcpDataReceiver::Package(const void* packet, int bytes, uint32_t timest
 	return 0;
 }
 
-int CRtspTcpDataReceiver::CreatePacker_(int payload, const std::string& encoding)
+int CRtspTcpData::CreatePacker_(int payload, const std::string& encoding)
 {
 	switch (payload)
 	{

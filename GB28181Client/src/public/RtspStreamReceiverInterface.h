@@ -45,7 +45,7 @@ public:
 	virtual int Stop() = 0;
 };
 
-// ÊÕÁ÷url gbudp://192.168.1.2:36000
-RTSP_STREAM_API IRtspStreamReceiver* Rtsp_CreateStreamReceiver(const char* gbUrl, StreamDataCallBack func, void* userParam);
+// transType 0:tcp 1:udp
+RTSP_STREAM_API IRtspStreamReceiver* Rtsp_CreateStreamReceiver(int transType, const char* url, StreamDataCallBack func, void* userParam);
 
 #endif

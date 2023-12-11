@@ -1,14 +1,14 @@
-#include "TcpClient.h"
+#include "ZDTcpClient.h"
 
 static int TcpDataThread(void* param)
 {
 	assert(param);
-	TcpClient* client = (TcpClient*)param;
+	ZDTcpClient* client = (ZDTcpClient*)param;
 	client->TcpDataWorker();
 	return 0;
 }
 
-TcpClient::TcpClient(TcpDataCallBack func, void* userdata)
+ZDTcpClient::ZDTcpClient(TcpDataCallBack func, void* userdata)
 	: m_func(func)
 	, m_userdata(userdata)
 	, m_socket(INVALID_SOCKET)
@@ -24,16 +24,17 @@ TcpClient::TcpClient(TcpDataCallBack func, void* userdata)
 	}
 }
 
-TcpClient::~TcpClient()
+ZDTcpClient::~ZDTcpClient()
 {
 	TcpDestroy();
 	WSACleanup();
 }
 
-int TcpClient::TcpCreate()
+int ZDTcpClient::TcpCreate()
 {
 	TcpClose_();
 
+	// protocol为0时，会自动选择type类型对应的默认协议
 	m_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (INVALID_SOCKET == m_socket)
 	{
@@ -43,9 +44,22 @@ int TcpClient::TcpCreate()
 	return 0;
 }
 
-int TcpClient::TcpConnectByTime(const char* ip, const int port, int seconds)
+int ZDTcpClient::TcpCreate_ipv6()
 {
-	if (INVALID_SOCKET == m_socket || seconds <= 0)
+	TcpClose_();
+
+	m_socket = socket(PF_INET6, SOCK_STREAM, 0);
+	if (INVALID_SOCKET == m_socket)
+	{
+		return -1;
+	}
+
+	return 0;
+}
+
+int ZDTcpClient::TcpConnect(const char* ip, const int port)
+{
+	if (INVALID_SOCKET == m_socket)
 		return -1;
 	
 	m_sockAddr.sin_family = AF_INET;
@@ -54,17 +68,17 @@ int TcpClient::TcpConnectByTime(const char* ip, const int port, int seconds)
 	return connect(m_socket, (const sockaddr*)&m_sockAddr, sizeof(m_sockAddr));
 }
 
-int TcpClient::TcpSetNoBlock(bool onoff)
+int ZDTcpClient::TcpSetNoBlock(bool onoff)
 {
 	return TcpSetNoBlock_(onoff);
 }
 
-int TcpClient::TcpRecvTimeout(int seconds)
+int ZDTcpClient::TcpRecvTimeout(int seconds)
 {
 	return TcpRecvTimeout_(seconds);
 }
 
-void TcpClient::TcpDestroy()
+void ZDTcpClient::TcpDestroy()
 {
 	m_running = false;
 	if (m_thread.joinable())
@@ -73,7 +87,7 @@ void TcpClient::TcpDestroy()
 	TcpClose_();
 }
 
-int TcpClient::TcpSetNoBlock_(bool onoff)
+int ZDTcpClient::TcpSetNoBlock_(bool onoff)
 {
 	if (INVALID_SOCKET == m_socket)
 		return -1;
@@ -82,7 +96,7 @@ int TcpClient::TcpSetNoBlock_(bool onoff)
 	return ioctlsocket(m_socket, FIONBIO, &val);
 }
 
-int TcpClient::TcpRecvTimeout_(int seconds)
+int ZDTcpClient::TcpRecvTimeout_(int seconds)
 {
 	if (INVALID_SOCKET == m_socket || seconds <= 0)
 		return -1;
@@ -93,7 +107,7 @@ int TcpClient::TcpRecvTimeout_(int seconds)
 	return setsockopt(m_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
 }
 
-int TcpClient::TcpSend(void* buf, int len, int flags, int timeout)
+int ZDTcpClient::TcpSend(void* buf, int len, int flags, int timeout)
 {
 	int r;
 	size_t bytes = 0;
@@ -110,12 +124,12 @@ int TcpClient::TcpSend(void* buf, int len, int flags, int timeout)
 	return (int)bytes;
 }
 
-int TcpClient::TcpRecv(void* buf, int len)
+int ZDTcpClient::TcpRecv(void* buf, int len)
 {
 	return TcpRecv_(buf, len);
 }
 
-int TcpClient::TcpSend_(const char* buf, int len, int flags, int timeout)
+int ZDTcpClient::TcpSend_(const char* buf, int len, int flags, int timeout)
 {
 	if (INVALID_SOCKET == m_socket)
 		return -1;
@@ -127,7 +141,7 @@ int TcpClient::TcpSend_(const char* buf, int len, int flags, int timeout)
 	return send(m_socket, (char*)buf, len, 0);
 }
 
-int TcpClient::TcpRecv_(void* buf, int len)
+int ZDTcpClient::TcpRecv_(void* buf, int len)
 {
 	if (INVALID_SOCKET == m_socket)
 		return -1;
@@ -135,7 +149,7 @@ int TcpClient::TcpRecv_(void* buf, int len)
 	return recv(m_socket, (char*)buf, len, 0);
 }
 
-int TcpClient::TcpSelectWrite_(int timeout)
+int ZDTcpClient::TcpSelectWrite_(int timeout)
 {
 	if (INVALID_SOCKET == m_socket)
 		return -1;
@@ -151,12 +165,12 @@ int TcpClient::TcpSelectWrite_(int timeout)
 	return TcpSelectWriteFds_(0 /*sock+1*/, &fds, timeout < 0 ? NULL : &tv);
 }
 
-int TcpClient::TcpSelectWriteFds_(int n, fd_set* fds, struct timeval* timeout)
+int ZDTcpClient::TcpSelectWriteFds_(int n, fd_set* fds, struct timeval* timeout)
 {
 	return select(n, fds, NULL, NULL, timeout);
 }
 
-void TcpClient::TcpClose_()
+void ZDTcpClient::TcpClose_()
 {
 	if (INVALID_SOCKET != m_socket)
 	{
@@ -165,7 +179,7 @@ void TcpClient::TcpClose_()
 	}
 }
 
-void TcpClient::TcpDataWorker()
+void ZDTcpClient::TcpDataWorker()
 {
 	std::shared_ptr<char> recvBuf(new char[TCP_DATA_SIZE], std::default_delete<char[]>());
 	memset(recvBuf.get(), 0x00, TCP_DATA_SIZE);

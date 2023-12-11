@@ -1,9 +1,9 @@
 // rtsp ’¡˜¿‡
-#ifndef _RTSP_STREAM_RECEIVER_H_
-#define _RTSP_STREAM_RECEIVER_H_
+#ifndef _RTSP_TCP_STREAM_RECEIVER_H_
+#define _RTSP_TCP_STREAM_RECEIVER_H_
 
 #include "RtspStreamReceiverInterface.h"
-#include "TcpClient.h"
+#include "ZDTcpClient.h"
 #include "RtspCommand.h"
 #include <string>
 #include <thread>
@@ -11,11 +11,11 @@
 
 #define  STREAM_DATA_SIZE  (512*1024)
 
-class CRtspStreamReceiver : public IRtspStreamReceiver
+class CRtspTcpStreamReceiver : public IRtspStreamReceiver
 {
 public:
-	CRtspStreamReceiver(const char* url, StreamDataCallBack func, void* userParam);
-	virtual ~CRtspStreamReceiver();
+	CRtspTcpStreamReceiver(const char* url, StreamDataCallBack func, void* userParam);
+	virtual ~CRtspTcpStreamReceiver();
 
 	void RtspWorker();
 
@@ -40,7 +40,7 @@ private:
 	void*         m_user;
 
 	RtspCommandPtr m_command;
-	TcpClientPtr   m_tcpClient;
+	ZDTcpClientPtr m_tcpClient;
 
 	int           m_status = -1;
 	std::thread   m_thread;

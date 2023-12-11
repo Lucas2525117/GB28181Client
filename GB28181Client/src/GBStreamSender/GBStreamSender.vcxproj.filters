@@ -47,12 +47,6 @@
     <ClCompile Include="GBTcpServerSender.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\public\TcpClient.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\public\TcpServer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="GBTcpClientSender.cpp">
       <Filter>源文件</Filter>
     </ClCompile>

@@ -27,6 +27,18 @@
     <ClCompile Include="source\ZDTimer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="source\ZDUDPServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ZDUDPClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ZDTcpClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ZDTcpServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ZDFile.h">
@@ -51,6 +63,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\ZDMemPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ZDUDPServer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ZDUDPClient.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ZDTcpClient.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ZDTcpServer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

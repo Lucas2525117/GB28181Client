@@ -16,6 +16,7 @@ enum HandlerType
 	Type_Invite,
 	Type_VideoInvite,
 	Type_Bye,
+	Type_SnapShotFinished,
 };
 
 enum StreamRequiredType

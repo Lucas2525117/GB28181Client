@@ -4,8 +4,11 @@
 #include "StreamPublic.h"
 #include "rtsp-client-internal.h"
 #include "rtsp-client.h"
-#include "RtspTcpDataReceiver.h"
-#include "TcpClient.h"
+#include "sockpair.h"
+#include "RtspTcpData.h"
+#include "RtspUdpData.h"
+#include "ZDTcpClient.h"
+#include "ZDUDPClient.h"
 #include "ZDTimer.h"
 #include <string>
 #include <memory>
@@ -14,7 +17,7 @@
 class CRtspCommand
 {
 public:
-	CRtspCommand(int transport, TcpClientPtr client, StreamDataCallBack func, void* userParam);  // transport 1:udp 2:tcp
+	CRtspCommand(int transport, ZDTcpClientPtr tcpClient, StreamDataCallBack func, void* userParam);  // transport 1:udp 2:tcp
 	~CRtspCommand();
 
 	bool CreateRtspClient(const std::string& uri, const std::string& username, const std::string& userpasswd);
@@ -39,14 +42,18 @@ public:
 
 private:
 	int                    m_transport;
-	TcpClientPtr           m_tcpClient;
+	ZDTcpClientPtr         m_tcpClient;
 	StreamDataCallBack     m_func;
 	void*                  m_user;
 
 	rtsp_client_t*         m_rtsp = nullptr;
-	RtspTcpDataReceiverPtr m_tcpReceiver;
+	RtspTcpDataPtr         m_tcpData;
+	RtspUdpDataPtr         m_udpData;
 	std::shared_ptr<ZDTimer> m_timer;
 	bool                   m_bStartTimer = false;
+
+	socket_t               m_rtp[5][2];
+	unsigned short         m_port[5][2];
 };
 
 typedef std::shared_ptr<CRtspCommand> RtspCommandPtr;

@@ -16,6 +16,7 @@
 #include "MyVoiceBroadcastHandler.h"
 #include "MyInviteHandler.h"
 #include "MyByeHandler.h"
+#include "MyDeviceConfigHandler.h"
 #include <vector>
 #include <memory>
 

@@ -20,9 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\ZDFile.cpp" />
+    <ClCompile Include="source\ZDTcpClient.cpp" />
+    <ClCompile Include="source\ZDTcpServer.cpp" />
     <ClCompile Include="source\ZDThreadPool.cpp" />
     <ClCompile Include="source\ZDTime.cpp" />
     <ClCompile Include="source\ZDTimer.cpp" />
+    <ClCompile Include="source\ZDUDPClient.cpp" />
+    <ClCompile Include="source\ZDUDPServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ZDFile.h" />
@@ -30,9 +34,13 @@
     <ClInclude Include="include\ZDMemPool.h" />
     <ClInclude Include="include\ZDPublic.h" />
     <ClInclude Include="include\ZDSyncQueue.h" />
+    <ClInclude Include="include\ZDTcpClient.h" />
+    <ClInclude Include="include\ZDTcpServer.h" />
     <ClInclude Include="include\ZDThreadPool.h" />
     <ClInclude Include="include\ZDTime.h" />
     <ClInclude Include="include\ZDTimer.h" />
+    <ClInclude Include="include\ZDUDPClient.h" />
+    <ClInclude Include="include\ZDUDPServer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -145,7 +153,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;OS_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;OS_WINDOWS;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>

@@ -1,6 +1,7 @@
-#ifndef _RTSP_TCPDATA_RECEIVER_H_
-#define _RTSP_TCPDATA_RECEIVER_H_
+#ifndef _RTSP_TCPDATA_H_
+#define _RTSP_TCPDATA_H_
 
+#include "RtspStreamReceiverInterface.h"
 #include "StreamDefine.h"
 #include "StreamPublic.h"
 #include "RtspDefine.h"
@@ -15,11 +16,11 @@
 #include <string>
 #include <assert.h>
 
-class CRtspTcpDataReceiver
+class CRtspTcpData
 {
 public:
-	CRtspTcpDataReceiver(bool isVideo, StreamDataCallBack func, void* userParam);
-	~CRtspTcpDataReceiver();
+	CRtspTcpData(bool isVideo, StreamDataCallBack func, void* userParam);
+	~CRtspTcpData();
 
 	int Start(int interleave1, int interleave2, int payload, const std::string& encoding);
 
@@ -40,7 +41,7 @@ private:
 	std::shared_ptr<XXX2InPack> m_xxx2Inpack;
 };
 
-typedef std::shared_ptr<CRtspTcpDataReceiver> RtspTcpDataReceiverPtr;
+typedef std::shared_ptr<CRtspTcpData> RtspTcpDataPtr;
 
 #endif
 

@@ -70,6 +70,9 @@ void CMySipModule::RegisterHandler(int type, DataCallback dataCB, void* user)
 	case Type_Bye:
 		handle = std::make_shared<CMyByeHandler>();
 		break;
+	case Type_SnapShotFinished:
+		handle = std::make_shared<CMyDeviceConfigHandler>();
+		break;
 	default:
 		break;
 	}

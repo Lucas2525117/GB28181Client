@@ -1,5 +1,5 @@
-#ifndef _GB_TCP_SERVER_H_
-#define _GB_TCP_SERVER_H_
+#ifndef _ZD_TCP_SERVER_H_
+#define _ZD_TCP_SERVER_H_
 
 #include <thread>
 #include <assert.h>
@@ -10,13 +10,14 @@
 
 typedef void(*TcpDataCallBack)(void* data, int len, void* userData);
 
-class TcpServer
+class ZDTcpServer
 {
 public:
-	TcpServer(TcpDataCallBack func, void* userdata);
-	~TcpServer();
+	ZDTcpServer(TcpDataCallBack func, void* userdata);
+	~ZDTcpServer();
 
 	int TcpCreate();
+	int TcpCreate_ipv6();
 
 	// port: °ó¶¨µÄ¶Ë¿Ú
 	int TcpBind(int port);
@@ -67,6 +68,6 @@ public:
 	int m_status = RECV_HEAD;
 };
 
-typedef std::shared_ptr<TcpServer> TcpServerPtr;
+typedef std::shared_ptr<ZDTcpServer> ZDTcpServerPtr;
 
 #endif  // _GB_TCP_SERVER_H_

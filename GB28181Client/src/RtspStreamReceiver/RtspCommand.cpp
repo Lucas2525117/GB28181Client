@@ -65,12 +65,22 @@ static void RtpDataCallback(void* param, uint8_t channel, const void* data, uint
 	command->InputRtpData(channel, data, bytes);
 }
 
-CRtspCommand::CRtspCommand(int transport, TcpClientPtr client, StreamDataCallBack func, void* userParam)
+CRtspCommand::CRtspCommand(int transport, ZDTcpClientPtr tcpClient, StreamDataCallBack func, void* userParam)
 	: m_transport(transport)
-	, m_tcpClient(client)
+	, m_tcpClient(tcpClient)
 	, m_func(func)
 	, m_user(userParam)
 {
+	if (RTSP_TRANSPORT_RTP_UDP == m_transport)
+	{
+		m_udpData = std::make_shared<CRtspUdpData>(false, m_func, m_user);
+	}
+	else if (RTSP_TRANSPORT_RTP_TCP == m_transport)
+	{
+		m_tcpData = std::make_shared<CRtspTcpData>(false, m_func, m_user);
+	}
+
+	// tcp方式开启定时器
 	m_timer = std::make_shared<ZDTimer>(10, 1000);
 	m_timer->Start();
 }
@@ -141,10 +151,10 @@ int CRtspCommand::InputData(void* data, size_t bytes)
 
 int CRtspCommand::InputRtpData(uint8_t channel, const void* data, uint16_t bytes)
 {
-	if (!m_tcpReceiver.get())
+	if (!m_tcpData.get())
 		return -1;
 
-	m_tcpReceiver->InputRtpData(data, bytes);
+	m_tcpData->InputRtpData(data, bytes);
 	return 0;
 }
 
@@ -153,7 +163,7 @@ int CRtspCommand::HandleMethodSend(const char* uri, const void* req, size_t byte
 	if (!m_tcpClient.get())
 		return -1;
 
-	return m_tcpClient->TcpSend((void*)req, bytes, 0, 2000);;
+	return m_tcpClient->TcpSend((void*)req, bytes, 0, 2000);
 }
 
 int CRtspCommand::HandleMethodAnnounce()
@@ -180,10 +190,6 @@ int CRtspCommand::HandleMethodSetup(int timeout, int64_t duration)
 		return -1;
 	}
 
-	m_tcpReceiver = std::make_shared<CRtspTcpDataReceiver>(false, m_func, m_user);
-	if (!m_tcpReceiver.get())
-		return -1;
-
 	int count = rtsp_client_media_count((rtsp_client_t*)m_rtsp);
 	for (int i = 0; i < count; ++i)
 	{
@@ -192,10 +198,29 @@ int CRtspCommand::HandleMethodSetup(int timeout, int64_t duration)
 		int payload = rtsp_client_get_media_payload((rtsp_client_t*)m_rtsp, i);
 		if (RTSP_TRANSPORT_RTP_UDP == transport->transport)
 		{
+			assert(0 == transport->multicast); 
+			assert(transport->rtp.u.client_port1 == command->port[i][0]);
+			assert(transport->rtp.u.client_port2 == command->port[i][1]);
+
+			int port[2] = {0};
+			port[0] = transport->rtp.u.server_port1;
+			port[1] = transport->rtp.u.server_port2;
+
+			if (*transport->source)
+			{
+				m_udpData->Start(i, m_rtp[i], transport->source, port, payload, encoding);
+			}
+			else
+			{
+				char ip[65] = {0};
+				u_short rtspport;
+				socket_getpeername(m_tcpClient->GetClientSocket(), ip, &rtspport);
+				m_udpData->Start(i, m_rtp[i], ip, port, payload, encoding);
+			}
 		}
 		else if (RTSP_TRANSPORT_RTP_TCP == transport->transport)
 		{
-			m_tcpReceiver->Start(transport->interleaved1, transport->interleaved2, payload, encoding);
+			m_tcpData->Start(transport->interleaved1, transport->interleaved2, payload, encoding);
 		}
 		else
 		{
@@ -228,15 +253,23 @@ int CRtspCommand::HandleMethodPlay()
 
 int CRtspCommand::HandleRtpPort(int media, const char* source, unsigned short rtp[2], char* ip, int len)
 {
+	int ret = -1;
 	switch (m_transport)
 	{
 	case RTSP_TRANSPORT_RTP_UDP:
+		ret = sockpair_create("0.0.0.0", m_rtp[media], m_port[media]);
+		if (0 != ret)
+		{
+			return -1;
+		}
+
+		rtp[0] = m_port[media][0];
+		rtp[1] = m_port[media][1];
 		break;
 	case RTSP_TRANSPORT_RTP_TCP:
 		rtp[0] = (unsigned short)(2 * media);
 		rtp[1] = (unsigned short)(2 * media + 1);
 		break;
-
 	default:
 		assert(0);
 		return -1;

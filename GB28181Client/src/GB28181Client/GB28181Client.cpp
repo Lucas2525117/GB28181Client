@@ -160,6 +160,14 @@ void GB28181Client::InitUi()
 			});
 	}
 
+	m_GBDeviceControlDlg = new(std::nothrow) GBDeviceControlDlg();
+	if (m_GBDeviceControlDlg)
+	{
+		connect(m_GBDeviceControlDlg, &GBDeviceControlDlg::sigTeleReboot, [=]() {
+			GB_DeviceControl("34020000001320000001"/*m_gbid.c_str()*/, "TeleRebootControl", "1");
+			});
+	}
+
 	m_tabWidget = new(std::nothrow) QTabWidget();
 	if (m_tabWidget)
 	{
@@ -191,6 +199,7 @@ void GB28181Client::InitUi()
 		m_tabWidget->addTab(m_GBSubscribeDlg, QString::fromLocal8Bit("订阅与通知"));
 		m_tabWidget->addTab(m_GBTalkDlg, QString::fromLocal8Bit("语音对讲"));
 		m_tabWidget->addTab(m_GBVoiceBroadcastDlg, QString::fromLocal8Bit("语音广播"));
+		m_tabWidget->addTab(m_GBDeviceControlDlg, QString::fromLocal8Bit("设备控制"));
 	}
 
 	// 添加组织界面

@@ -27,6 +27,9 @@
     <Filter Include="RtspTool">
       <UniqueIdentifier>{07f38aae-c225-4f5b-8bdc-2ae54fb03639}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DeviceControl">
+      <UniqueIdentifier>{4967edb7-ec37-4894-b52d-dc7d0e9dbf84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="GB28181Client.qrc">
@@ -127,6 +130,9 @@
     <ClCompile Include="RtspTool\ZDRtspDlg.cpp">
       <Filter>RtspTool</Filter>
     </ClCompile>
+    <ClCompile Include="GBDeviceControlDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GBRegisterDlg.h">
@@ -189,6 +195,9 @@
     <QtMoc Include="RtspTool\ZDRtspDlg.h">
       <Filter>RtspTool</Filter>
     </QtMoc>
+    <QtMoc Include="GBDeviceControlDlg.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="GBRegisterDlg.ui">
@@ -250,6 +259,9 @@
     </QtUic>
     <QtUic Include="RtspTool\ZDRtspDlg.ui">
       <Filter>RtspTool</Filter>
+    </QtUic>
+    <QtUic Include="GBDeviceControlDlg.ui">
+      <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>

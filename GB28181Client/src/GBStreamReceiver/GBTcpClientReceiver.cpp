@@ -50,12 +50,12 @@ int CGBTcpClientStreamReceiver::Start(int streamType)
 	if (m_tcpClient.get())
 		return 0;
 
-	m_tcpClient = std::make_shared<TcpClient>(TcpDataCB, this);
+	m_tcpClient = std::make_shared<ZDTcpClient>(TcpDataCB, this);
 	if (!m_tcpClient.get() || 0 != m_tcpClient->TcpCreate())
 		return -1;
 
 	// ÉèÖÃ2s³¬Ê±
-	int ret = m_tcpClient->TcpConnectByTime(m_localIP.c_str(), m_localPort, 5);
+	int ret = m_tcpClient->TcpConnect(m_localIP.c_str(), m_localPort);
 	if (0 != ret)
 		return -1;
 
