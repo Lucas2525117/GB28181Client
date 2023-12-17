@@ -1,7 +1,7 @@
 #ifndef _RTSP_TCPDATA_H_
 #define _RTSP_TCPDATA_H_
 
-#include "RtspStreamReceiverInterface.h"
+#include "ZDStreamReceiverInterface.h"
 #include "StreamDefine.h"
 #include "StreamPublic.h"
 #include "RtspDefine.h"

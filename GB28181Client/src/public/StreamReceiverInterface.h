@@ -1,7 +1,7 @@
 #ifndef _STREAMRECEIVER_INTERFACE_H_
 #define _STREAMRECEIVER_INTERFACE_H_
 
-#if defined(GB_STREAM__DECL)
+#if defined(GB_STREAM_DECL)
 	#undef GB_STREAM_DECL
 	#define GB_STREAM_DECL
 #else

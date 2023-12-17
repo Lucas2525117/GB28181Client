@@ -125,7 +125,7 @@
     <ClCompile>
       <AdditionalIncludeDirectories>..\mysipsdk;..\mysipsdk\sip;..\mysipsdk\xml;..\tinyXml;..\..\include\pjsip;..\jsoncpp\include;..\GBStreamReceiver;..\..\include\ffmpeg\include;.\;..\ireader\libmpeg\include;..\public;..\ireader\librtp\include;.\RtpUnpackTool;..\RtspStreamReceiver;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <PreprocessorDefinitions>__x86_64;GB28181_EXPORTS;GB_STREAM_EXPORTS;OS_WINDOWS;RTSP_STREAM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__x86_64;GB28181_EXPORTS;GB_STREAM_EXPORTS;OS_WINDOWS;ZD_STREAM_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\..\lib\mysipsdk\x64;..\..\lib\GBStreamReceiver\x64;..\..\lib\ffmpeg;..\..\lib\ireader\librtp\x64;..\..\lib\RtspStreamReceiver\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

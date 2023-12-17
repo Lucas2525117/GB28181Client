@@ -1,23 +1,23 @@
-#include "RtspStreamReceiverInterface.h"
+#include "ZDStreamReceiverInterface.h"
 #include "RtspTcpStreamReceiver.h"
 #include "RtspUdpStreamReceiver.h"
 
-IRtspStreamReceiver* Rtsp_CreateStreamReceiver(int transType, const char* gbUrl, StreamDataCallBack func, void* userParam)
+IZDStreamReceiver* ZD_CreateStreamReceiver(int transType, const char* streamUrl, StreamDataCallBack func, void* userParam)
 {
-	if (!gbUrl)
+	if (!streamUrl)
 		return nullptr;
 
-	IRtspStreamReceiver* receiver = nullptr;
-	std::string url = gbUrl;
+	IZDStreamReceiver* receiver = nullptr;
+	std::string url = streamUrl;
 	if (0 == url.find("rtsp://"))
 	{
 		if (0 == transType)              // tcp
 		{
-			receiver = new CRtspTcpStreamReceiver(gbUrl, func, userParam);
+			receiver = new CRtspTcpStreamReceiver(streamUrl, func, userParam);
 		}
 		else if (1 == transType)         // udp
 		{
-			receiver = new CRtspUdpStreamReceiver(gbUrl, func, userParam);
+			receiver = new CRtspUdpStreamReceiver(streamUrl, func, userParam);
 		}
 	}
 	

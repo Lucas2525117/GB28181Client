@@ -58,7 +58,7 @@ void ZDRtspDlg::StartRtspPlay()
 	}
 
 	int streamType = ui.cbx_streamType->currentIndex();
-	m_receiver = Rtsp_CreateStreamReceiver(streamType, strUrl.toStdString().c_str(), RtspDataCB, this);
+	m_receiver = ZD_CreateStreamReceiver(streamType, strUrl.toStdString().c_str(), RtspDataCB, this);
 	if (m_receiver)
 		m_receiver->Start(0);
 }

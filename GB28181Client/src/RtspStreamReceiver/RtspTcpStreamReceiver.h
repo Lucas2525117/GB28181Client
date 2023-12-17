@@ -2,7 +2,7 @@
 #ifndef _RTSP_TCP_STREAM_RECEIVER_H_
 #define _RTSP_TCP_STREAM_RECEIVER_H_
 
-#include "RtspStreamReceiverInterface.h"
+#include "ZDStreamReceiverInterface.h"
 #include "ZDTcpClient.h"
 #include "RtspCommand.h"
 #include <string>
@@ -11,7 +11,7 @@
 
 #define  STREAM_DATA_SIZE  (512*1024)
 
-class CRtspTcpStreamReceiver : public IRtspStreamReceiver
+class CRtspTcpStreamReceiver : public IZDStreamReceiver
 {
 public:
 	CRtspTcpStreamReceiver(const char* url, StreamDataCallBack func, void* userParam);

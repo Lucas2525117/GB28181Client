@@ -301,22 +301,150 @@ int CGBDeviceControl::HomePositionControl_(CMyGBDevice* device, const std::strin
 	return CMySipContext::GetInstance().SendSipMessage(device, homePositionInfo);
 }
 
+// TODO
 int CGBDeviceControl::PTZPreciseControl_(CMyGBDevice* device, const std::string& deviceID, const std::string& request)
 {
-	return 0;
+	if (!device || deviceID.empty())
+		return -1;
+
+	std::string sn = GetControlSN();
+	char ptzPreciseInfo[200] = { 0 };
+	snprintf(ptzPreciseInfo, 200,
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+		"<Control>\n"
+		"<CmdType>DeviceControl</CmdType>\n"
+		"<SN>%s</SN>\n"
+		"<DeviceID>%s</DeviceID>\n"
+		"<PTZPreciseCtrl>\n"
+		"</PTZPreciseCtrl>\n"
+		"</Control>\n"
+		, sn.c_str()
+		, deviceID.c_str()
+	);
+
+	return CMySipContext::GetInstance().SendSipMessage(device, ptzPreciseInfo);
 }
 
 int CGBDeviceControl::DeviceUpgradeControl_(CMyGBDevice* device, const std::string& deviceID, const std::string& request)
 {
-	return 0;
+	if (!device || deviceID.empty() || request.empty())
+		return -1;
+
+	Json::Value value;
+	Json::Reader reader;
+	if (!reader.parse(request.c_str(), value))
+		return -1;
+
+	std::string sn = GetControlSN(); 
+	std::string firmware = value["Firmware"].asString();           // 设备固件版本
+	std::string fileURL = value["FileURL"].asString();             // 升级文件完整路径
+	std::string manufacturer = value["Manufacturer"].asString();   // 设备厂商
+	std::string sessionID = value["SessionID"].asString();         // 会话ID，由平台生成 32~128字节
+
+	char deviceUpgradeInfo[500] = { 0 };
+	snprintf(deviceUpgradeInfo, 500,
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+		"<Control>\n"
+		"<CmdType>DeviceControl</CmdType>\n"
+		"<SN>%s</SN>\n"
+		"<DeviceID>%s</DeviceID>\n"
+		"<DeviceUpgrade>\n"
+		"<Firmware>%s</Firmware>\n"
+		"<FileURL>%s</FileURL>\n"
+		"<Manufacturer>%s</Manufacturer>\n"
+		"<SessionID>%s</SessionID>\n"
+		"</DeviceUpgrade>\n"
+		"</Control>\n"
+		, sn.c_str()
+		, deviceID.c_str()
+		, firmware.c_str()
+		, fileURL.c_str()
+		, manufacturer.c_str()
+		, sessionID.c_str()
+	);
+
+	return CMySipContext::GetInstance().SendSipMessage(device, deviceUpgradeInfo);
 }
 
 int CGBDeviceControl::FormatSDCardControl_(CMyGBDevice* device, const std::string& deviceID, const std::string& request)
 {
-	return 0;
+	if (!device || deviceID.empty() || request.empty())
+		return -1;
+
+	Json::Value value;
+	Json::Reader reader;
+	if (!reader.parse(request.c_str(), value))
+		return -1;
+
+	std::string sn = GetControlSN();
+	int sdIndex = value["SDIndex"].asInt();
+
+	char formatSDCardInfo[200] = { 0 };
+	snprintf(formatSDCardInfo, 200,
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+		"<Control>\n"
+		"<CmdType>DeviceControl</CmdType>\n"
+		"<SN>%s</SN>\n"
+		"<DeviceID>%s</DeviceID>\n"
+		"<FormatSDCard>%d</FormatSDCard>\n"
+		"</Control>\n"
+		, sn.c_str()
+		, deviceID.c_str()
+		, sdIndex
+	);
+
+	return CMySipContext::GetInstance().SendSipMessage(device, formatSDCardInfo);
 }
 
 int CGBDeviceControl::TargetTrackControl_(CMyGBDevice* device, const std::string& deviceID, const std::string& request)
 {
-	return 0;
+	if (!device || deviceID.empty() || request.empty())
+		return -1;
+
+	Json::Value value;
+	Json::Reader reader;
+	if (!reader.parse(request.c_str(), value))
+		return -1;
+
+	std::string sn = GetControlSN();
+	std::string targetTrack = value["TargetTrack"].asString();
+	std::string deviceID2 = value["DeviceID2"].asString();
+	int length = value["Length"].asInt();
+	int width = value["Width"].asInt();
+	int midPointX = value["MidPointX"].asInt();
+	int midPointY = value["MidPointY"].asInt();
+	int lengthX = value["LengthX"].asInt();
+	int lengthY = value["LengthY"].asInt();
+
+	char targetTrackInfo[400] = { 0 };
+	snprintf(targetTrackInfo, 400,
+		"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+		"<Control>\n"
+		"<CmdType>DeviceControl</CmdType>\n"
+		"<SN>%s</SN>\n"
+		"<DeviceID>%s</DeviceID>\n"
+		"<TargetTrack>%s</TargetTrack>\n"
+		"<DeviceID2>%s</DeviceID2>\n"
+		"<TargetArea>\n"
+		"<Length>%d</Length>\n"
+		"<Width>%d</Width>\n"
+		"<MidPointX>%d</MidPointX>\n"
+		"<MidPointY>%d</MidPointY>\n"
+		"<LengthX>%d</LengthX>\n"
+		"<LengthY>%d</LengthY>\n"
+		"</TargetArea>\n"
+		"</Control>\n"
+		, sn.c_str()
+		, deviceID.c_str()
+		, targetTrack.c_str()
+		, deviceID2.c_str()
+		, length
+		, width
+		, midPointX
+		, midPointY
+		, lengthX
+		, lengthY
+	);
+
+	return CMySipContext::GetInstance().SendSipMessage(device, targetTrackInfo);
 }

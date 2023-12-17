@@ -164,7 +164,7 @@ void GB28181Client::InitUi()
 	if (m_GBDeviceControlDlg)
 	{
 		connect(m_GBDeviceControlDlg, &GBDeviceControlDlg::sigTeleReboot, [=]() {
-			GB_DeviceControl("34020000001320000001"/*m_gbid.c_str()*/, "TeleRebootControl", "1");
+			GB_DeviceControl("37010000002000000001"/*m_gbid.c_str()*/, "TeleRebootControl", "1");
 			});
 	}
 

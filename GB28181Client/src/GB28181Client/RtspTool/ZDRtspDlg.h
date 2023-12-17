@@ -4,7 +4,7 @@
 #include <qpushbutton.h>
 #include <qmessagebox.h>
 #include "PlayWidget.h"
-#include "RtspStreamReceiverInterface.h"
+#include "ZDStreamReceiverInterface.h"
 #include "ui_ZDRtspDlg.h"
 
 class ZDRtspDlg : public QWidget
@@ -31,5 +31,5 @@ private:
 	Ui::ZDRtspDlgClass ui;
 
 	PlayWidget* m_playWidget = nullptr;
-	IRtspStreamReceiver* m_receiver = nullptr;
+	IZDStreamReceiver* m_receiver = nullptr;
 };
