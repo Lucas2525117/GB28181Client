@@ -1,0 +1,11 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output 目录未以斜杠结尾。  此生成实例将添加斜杠，因为必须有这个斜杠才能正确计算 Output 目录。
+  ZDFile.cpp
+  ZDTcpClient.cpp
+E:\音视频\GB28181\gb-code\GB28181Client\src\Base\ZDBaseLib\source\ZDTcpClient.cpp(117,69): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+  ZDTcpServer.cpp
+  ZDThreadPool.cpp
+  ZDTime.cpp
+  ZDTimer.cpp
+  ZDUDPClient.cpp
+  ZDUDPServer.cpp
+  ZDBaseLib.vcxproj -> E:\音视频\GB28181\gb-code\GB28181Client\lib\ZDBaseLib\x64\ZDBaseLib.lib

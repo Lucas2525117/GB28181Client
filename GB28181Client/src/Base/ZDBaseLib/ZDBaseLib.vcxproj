@@ -33,6 +33,7 @@
     <ClInclude Include="include\ZDLRUCache.h" />
     <ClInclude Include="include\ZDMemPool.h" />
     <ClInclude Include="include\ZDPublic.h" />
+    <ClInclude Include="include\ZDRingBuffer.h" />
     <ClInclude Include="include\ZDSyncQueue.h" />
     <ClInclude Include="include\ZDTcpClient.h" />
     <ClInclude Include="include\ZDTcpServer.h" />
@@ -157,6 +158,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
