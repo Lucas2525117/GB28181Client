@@ -9,6 +9,7 @@
 #include "ZDThreadPool.h"
 #include "ZDTime.h"
 #include "ZDMemPool.h"
+#include "ZDSafeDeque.h"
 
 using namespace std;
 
@@ -17,7 +18,8 @@ using namespace std;
 #define _IS_TEST_SYNCQUEUE_       0
 #define _IS_TEST_THREADPOOL_      0
 #define _IS_TEST_TIME_            0
-#define _IS_TEST_MEMPOOL_         1
+#define _IS_TEST_MEMPOOL_         0
+#define _IS_TEST_SAFE_DEQUE_      1
 
 #if _IS_TEST_MEMPOOL_
 class ActualClass
@@ -59,7 +61,22 @@ void ActualClass::operator delete(void* p)
 
 int main()
 {
-#if _IS_TEST_FILE_
+#if _IS_TEST_SAFE_DEQUE_
+	ZDSafeDeque<int> deque;
+
+	deque.pushFront(10);
+	deque.pushBack(20);
+	deque.pushFront(5);
+
+	std::cout << "Front: " << deque.front() << std::endl;
+	std::cout << "Back: " << deque.back() << std::endl;
+
+	deque.popFront();
+	std::cout << "After popFront, Front: " << deque.front() << std::endl;
+
+	deque.popBack();
+	std::cout << "After popBack, Back: " << deque.back() << std::endl;
+#elif _IS_TEST_FILE_
     if (!IsExistFile("C:\\rtp.tcp"))
     {
         printf("file is not existed\n");
