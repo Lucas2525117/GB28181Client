@@ -30,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ZDFile.h" />
+    <ClInclude Include="include\ZDInterruptibleSleep.h" />
     <ClInclude Include="include\ZDLRUCache.h" />
     <ClInclude Include="include\ZDMemPool.h" />
     <ClInclude Include="include\ZDPublic.h" />

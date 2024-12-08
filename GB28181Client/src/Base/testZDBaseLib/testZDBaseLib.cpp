@@ -10,6 +10,7 @@
 #include "ZDTime.h"
 #include "ZDMemPool.h"
 #include "ZDSafeDeque.h"
+#include "ZDInterruptibleSleep.h"
 
 using namespace std;
 
@@ -19,7 +20,8 @@ using namespace std;
 #define _IS_TEST_THREADPOOL_      0
 #define _IS_TEST_TIME_            0
 #define _IS_TEST_MEMPOOL_         0
-#define _IS_TEST_SAFE_DEQUE_      1
+#define _IS_TEST_SAFE_DEQUE_      0
+#define _IS_TEST_INTERRUPT_SLEEP_ 1
 
 #if _IS_TEST_MEMPOOL_
 class ActualClass
@@ -61,7 +63,21 @@ void ActualClass::operator delete(void* p)
 
 int main()
 {
-#if _IS_TEST_SAFE_DEQUE_
+#if _IS_TEST_INTERRUPT_SLEEP_
+    ZDSInterruptibleSleep sleep_obj;
+
+	cout << "Starting interruptible sleep..." << endl;
+
+	// 启动一个可打断的 sleep，设定睡眠时间为 5 秒
+	sleep_obj.start_sleep(5);
+
+	// 模拟一些操作，2 秒后中断睡眠
+	this_thread::sleep_for(chrono::seconds(2));
+	sleep_obj.interrupt();
+
+	// 等待睡眠线程结束
+	sleep_obj.join();
+#elif _IS_TEST_SAFE_DEQUE_
 	ZDSafeDeque<int> deque;
 
 	deque.pushFront(10);
