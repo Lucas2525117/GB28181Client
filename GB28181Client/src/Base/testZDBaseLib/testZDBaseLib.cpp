@@ -11,6 +11,7 @@
 #include "ZDMemPool.h"
 #include "ZDSafeDeque.h"
 #include "ZDInterruptibleSleep.h"
+#include "ZDRandNum.h"
 
 using namespace std;
 
@@ -21,7 +22,8 @@ using namespace std;
 #define _IS_TEST_TIME_            0
 #define _IS_TEST_MEMPOOL_         0
 #define _IS_TEST_SAFE_DEQUE_      0
-#define _IS_TEST_INTERRUPT_SLEEP_ 1
+#define _IS_TEST_INTERRUPT_SLEEP_ 0
+#define _IS_TEST_RAND_NUM_        1
 
 #if _IS_TEST_MEMPOOL_
 class ActualClass
@@ -63,7 +65,20 @@ void ActualClass::operator delete(void* p)
 
 int main()
 {
-#if _IS_TEST_INTERRUPT_SLEEP_
+#if _IS_TEST_RAND_NUM_
+    {
+        ZDRandomGenerator32 gen;
+        cout << "32-bit random interger: " << gen.generateInt(1, 100) << endl;
+        cout << "32-bit random double: " << gen.generateInt(0.1, 0.9) << endl;
+    }
+
+	{
+        ZDRandomGenerator64 gen;
+		cout << "64-bit random interger: " << gen.generateInt(INT_MIN, INT_MAX) << endl;
+		cout << "64-bit random double: " << gen.generateInt(0.1, 0.9) << endl;
+	}
+
+#elif _IS_TEST_INTERRUPT_SLEEP_
     ZDSInterruptibleSleep sleep_obj;
 
 	cout << "Starting interruptible sleep..." << endl;
